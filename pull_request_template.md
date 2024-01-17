@@ -8,12 +8,12 @@
 
 ## Checklist (Definition of Done)
 
-- [ ] Unit tests passed
-- [ ] Code reviewed
 - [ ] Acceptance criteria met
+- [ ] Unit tests passed
 - [ ] Test cases passed
-- [ ] C4 diagram checked
-- [ ] Product owner accepted
+- [ ] Technical documentation written
+- [ ] Code reviewed
+- [ ] Task accepted
 
 ## Screenshots (if applicable)
 
