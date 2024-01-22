@@ -4,18 +4,16 @@ import Link from '@mui/material/Link';
 
 const preventDefault = (event) => event.preventDefault();
 
-export default function Links({color, value}) {
+export default function Links({color, value, link}) {
   return (
     <Box
       sx={{
-        typography: 'body1',
-        '& > :not(style) ~ :not(style)': {
-          ml: 2,
-        },
+        fontWeight: "bold",
+        padding: "5px"
       }}
       onClick={preventDefault}
     >
-      <Link href="#" color={color}>{value}</Link>
+      <Link href={link} color={color} underline="none">{value}</Link>
     </Box>
   );
 }

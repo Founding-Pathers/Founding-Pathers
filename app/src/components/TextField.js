@@ -17,6 +17,12 @@ export default function FormPropsTextFields({id, label, type, width}) {
             id={id}
             label={label}
             type={type}
+            InputProps={{
+                style: {
+                  borderRadius: "50px",
+                  borderColor: "#000000"
+                }
+              }}
           />
         </div>
       </Box>
