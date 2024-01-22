@@ -6,6 +6,7 @@ import Link from '../components/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import Logo from '../assets/Logo.png';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const StyledContainer = styled('div')({
     display: 'flex',
@@ -66,7 +67,7 @@ const Login = () => {
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton text="LOG IN" color="primary" />
+          <ReusableButton text="LOG IN" color="primary" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
