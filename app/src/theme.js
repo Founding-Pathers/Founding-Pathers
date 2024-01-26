@@ -3,18 +3,19 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#6CB661', 
+      main: '#F0A73A', 
     },
     secondary: {
-      main: '#6CB661', 
+      main: '#F0A73A', 
     }
   },
   typography: {
     fontFamily: 'sans-serif',
+    fontSize: '14px',
     h1: {
       fontSize: '30px', 
       fontWeight: 700, 
-      color: '#6CB661'
+      color: '#F0A73A'
     },
     button: {
       fontSize: '20px', 

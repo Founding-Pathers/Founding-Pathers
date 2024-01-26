@@ -7,7 +7,7 @@ export default function FormPropsTextFields({id, label, type, width}) {
       <Box
         component="form"
         sx={{
-          '& .MuiTextField-root': { m: 1, width: {width} },
+          '& .MuiTextField-root': { width: {width}, my: 1 },
         }}
         noValidate
         autoComplete="off"
@@ -20,7 +20,12 @@ export default function FormPropsTextFields({id, label, type, width}) {
             InputProps={{
                 style: {
                   borderRadius: "50px",
-                  borderColor: "#000000"
+                  borderColor: "#000000",
+                  border: "1px solid var(--Black, #000)",
+                  width: "310px",
+                  height: "40px",
+                  paddingLeft: "3.5px",
+                  paddingRight: "3.5px"
                 }
               }}
           />

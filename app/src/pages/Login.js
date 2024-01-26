@@ -53,12 +53,12 @@ const Login = () => {
 
         <VerticalSpace>
         Email
-        <TextField width="40ch" id="outlined-required" label="" />
+        <TextField width="310px" id="outlined-required" label="" />
         </VerticalSpace>
 
         <VerticalSpace>
         Password
-        <TextField width="40ch" id="outlined-password-input" type="password" label="" />
+        <TextField width="310px" id="outlined-password-input" type="password" label="" />
         </VerticalSpace>
 
         <VerticalSpace>
@@ -67,7 +67,7 @@ const Login = () => {
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton text="LOG IN" color="primary" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
