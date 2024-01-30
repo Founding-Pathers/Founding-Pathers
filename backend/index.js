@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const uri = process.env.MONGODB_URI;
+
 // const { MongoClient, ServerApiVersion } = require("mongodb");
 // const client = new MongoClient(uri, {
 //   serverApi: {

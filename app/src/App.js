@@ -3,6 +3,18 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 
+function App() {
+  return (
+    <div className="App">
+      <ThemeProvider theme={theme}>
+        <Router></Router>
+      </ThemeProvider>
+    </div>
+  );
+}
+
+export default App;
+
 // const { MongoClient, ServerApiVersion } = require("mongodb");
 // const uri = process.env.MONGODB_URI;
 
@@ -51,16 +63,6 @@ import theme from './theme';
 //   );
 // }
 
-function App() {
-  return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <Router></Router>
-      </ThemeProvider>
-    </div>
-  );
-}
-
 // DB testing form
 
 // import { useState } from 'react'
@@ -98,6 +100,3 @@ function App() {
 
 //     </>
 // );
-
-
-export default App;
