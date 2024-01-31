@@ -3,19 +3,25 @@ services:
   frontend:
     build:
       context: ./app
+      dockerfile: Dockerfile
     image: frontend:latest
+    container_name: app-frontend-client
     stdin_open: true
     ports:
-      - 3000:3000
+      - "3000:3000"
     networks:
       - mern-app
     depends_on:
-      - mongo
+      - server
     
-  api-server:
-    image: api-server
+  server:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    image: server:latest
+    container_name: app-backend-nodeserver
     ports:
-      - 5000:5000
+      - "5000:5000"
     networks:
       - mern-app
     depends_on:
