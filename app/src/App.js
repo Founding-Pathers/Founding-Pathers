@@ -1,19 +1,19 @@
-import Router from './Routes';
+// import Router from './Routes';
 import React from 'react';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
+// import { ThemeProvider } from '@mui/material/styles';
+// import theme from './theme';
 
-function App() {
-  return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <Router></Router>
-      </ThemeProvider>
-    </div>
-  );
-}
+// function App() {
+//   return (
+//     <div className="App">
+//       <ThemeProvider theme={theme}>
+//         <Router></Router>
+//       </ThemeProvider>
+//     </div>
+//   );
+// }
 
-export default App;
+// export default App;
 
 // const { MongoClient, ServerApiVersion } = require("mongodb");
 // const uri = process.env.MONGODB_URI;
@@ -65,38 +65,63 @@ export default App;
 
 // DB testing form
 
-// import { useState } from 'react'
-// const [name, setName] = useState("");
-// const [email, setEmail] = useState("");
-// const handleOnSubmit = async (e) => {
-//     e.preventDefault();
-//     let result = await fetch(
-//     'http://localhost:5000/register', {
-//         method: "post",
-//         body: JSON.stringify({ name, email }),
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }
-//     })
-//     result = await result.json();
-//     console.warn(result);
-//     if (result) {
-//         alert("Data saved succesfully");
-//         setEmail("");
-//         setName("");
-//     }
-// }
-// return (
-//     <>
-//         <h1>This is React WebApp </h1>
-//         <form action="">
-//             <input type="text" placeholder="name"
-//             value={name} onChange={(e) => setName(e.target.value)} />
-//             <input type="email" placeholder="email"
-//             value={email} onChange={(e) => setEmail(e.target.value)} />
-//             <button type="submit"
-//             onClick={handleOnSubmit}>submit</button>
-//         </form>
+import { useState } from 'react';
 
-//     </>
-// );
+function App() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleOnSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost/register', {
+                method: "post",
+                body: JSON.stringify({ name, email }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save data');
+            }
+
+            const result = await response.json();
+            console.warn(result);
+            setSuccessMessage("Data saved successfully");
+            setEmail("");
+            setName("");
+        } catch (error) {
+            console.error(error);
+            setErrorMessage("Something went wrong. Please try again.");
+        }
+    }
+
+    return (
+        <>
+            <h1>This is React WebApp</h1>
+            <form>
+                <input
+                    type="text"
+                    placeholder="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <input
+                    type="email"
+                    placeholder="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <button type="submit" onClick={handleOnSubmit}>Submit</button>
+            </form>
+
+            {successMessage && <div className="success-message">{successMessage}</div>}
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
+        </>
+    );
+}
+
+export default App;
