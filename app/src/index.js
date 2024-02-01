@@ -12,7 +12,10 @@ root.render(
 );
 
 // for Testing of Backend integration
+// import './index.css';
+// import React from 'react';
 // import { BrowserRouter } from "react-router-dom";
+// import App from './App';
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
