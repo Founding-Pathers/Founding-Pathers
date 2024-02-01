@@ -38,9 +38,16 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 - Express.js
 - MongoDB
 
+#### Containerized application software framework
+- Docker
+
 #### Continuous Integration
 - ![Codacy](https://img.shields.io/badge/Codacy-222F29.svg?style=for-the-badge&logo=Codacy&logoColor=white)
 - ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
+
+#### Continuous Deployment
+- ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
+- Amazon Web Services
 
 ## Getting Started
 ### Prerequisites
@@ -51,11 +58,15 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
    ```sh
    git clone 
     ```
-2. Navigate to the project directory.
+2. Pull the repo.
     ```sh
-    cd 
+    git pull 
     ```
-3. Install npm and composer packages.
+3. Navigate to the project directory.
+    ```sh
+    cd
+    ```
+4. Install npm and composer packages.
     ```sh
     
     ```
@@ -73,5 +84,5 @@ To use the application, follow these steps:
 || <img src="https://avatars.githubusercontent.com/u/68149788?v=4" width="100"></img> | <img src="https://avatars.githubusercontent.com/u/111420736?v=4" width="100"></img> | <img src="https://avatars.githubusercontent.com/u/111410622?v=4" width="100"></img> | <img src="https://avatars.githubusercontent.com/u/144538254?v=4" width="100"></img> | <img src="https://avatars.githubusercontent.com/u/65487985?v=4" width="100"></img> | <img src="https://avatars.githubusercontent.com/u/140048767?v=4" width="100"></img> |
 | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | 
 | Name | Gic Ci | Keith | Jaymie | Megan | Kyla | Jeremy | 
-| Role | Product Owner, Developer | Scrum Master, Cloud | Developer | Developer | Full-Stack Developer | Backend and Database Developer |
-| Github | Gic Ci | Keith | Jaymie | Megan | Kyla  | [![jeremy](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/jeremygmc) |
+| Role | Product Owner, Developer | Scrum Master, Cloud and Backend Developer | Developer | Developer | Full-Stack Developer | Backend and Database Developer |
+| Github | Gic Ci | [![keith](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/KeithLaww) | Jaymie | Megan | Kyla  | [![jeremy](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/jeremygmc) |
