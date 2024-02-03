@@ -48,8 +48,8 @@ export default function Edit() {
    e.preventDefault();
    const editedPerson = {
      name: form.name,
-     position: form.position,
-     level: form.level,
+     email: form.email,
+     gender: form.gender,
    };
  
    // This will send a post request to update the data in the database.
@@ -80,12 +80,12 @@ export default function Edit() {
          />
        </div>
        <div className="form-group">
-         <label htmlFor="position">Position: </label>
+         <label htmlFor="position">Email: </label>
          <input
            type="text"
            className="form-control"
-           id="position"
-           value={form.position}
+           id="email"
+           value={form.email}
            onChange={(e) => updateForm({ position: e.target.value })}
          />
        </div>
@@ -94,37 +94,37 @@ export default function Edit() {
            <input
              className="form-check-input"
              type="radio"
-             name="positionOptions"
-             id="positionIntern"
-             value="Intern"
-             checked={form.level === "Intern"}
-             onChange={(e) => updateForm({ level: e.target.value })}
+             name="accountType"
+             id="accountUser"
+             value="User"
+             checked={form.type === "User"}
+             onChange={(e) => updateForm({ type: e.target.value })}
            />
-           <label htmlFor="positionIntern" className="form-check-label">Intern</label>
+           <label htmlFor="accountUser" className="form-check-label">User</label>
          </div>
          <div className="form-check form-check-inline">
            <input
              className="form-check-input"
              type="radio"
-             name="positionOptions"
-             id="positionJunior"
-             value="Junior"
-             checked={form.level === "Junior"}
-             onChange={(e) => updateForm({ level: e.target.value })}
+             name="accountType"
+             id="accountAdmin"
+             value="Admin"
+             checked={form.type === "Admin"}
+             onChange={(e) => updateForm({ type: e.target.value })}
            />
-           <label htmlFor="positionJunior" className="form-check-label">Junior</label>
+           <label htmlFor="accountAdmin" className="form-check-label">Admin</label>
          </div>
          <div className="form-check form-check-inline">
            <input
              className="form-check-input"
              type="radio"
-             name="positionOptions"
-             id="positionSenior"
-             value="Senior"
-             checked={form.level === "Senior"}
+             name="accountType"
+             id="accountAdmin"
+             value="Other"
+             checked={form.type === "Other"}
              onChange={(e) => updateForm({ level: e.target.value })}
            />
-           <label htmlFor="positionSenior" className="form-check-label">Senior</label>
+           <label htmlFor="accountAdmin" className="form-check-label">Other</label>
        </div>
        </div>
        <br />
