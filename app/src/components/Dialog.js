@@ -5,8 +5,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 
-export default function AlertDialog({buttonText, dialogContent, dialogHeader, agreeText, closeText, fontSize, textTransform, textColor}) {
+export default function AlertDialog({buttonText, src, dialogHeader, agreeText, closeText, fontSize, textTransform, textColor, onYes}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -19,7 +20,7 @@ export default function AlertDialog({buttonText, dialogContent, dialogHeader, ag
 
   return (
     <React.Fragment>
-      <Button variant="text" onClick={handleClickOpen} sx={{ textTransform: textTransform, fontSize: fontSize, color: textColor }}>
+      <Button variant="text" onClick={handleClickOpen} sx={{ textTransform: textTransform, fontSize: fontSize, color: textColor, paddingTop: 0 }}>
         {buttonText}
       </Button>
       <Dialog
@@ -27,18 +28,21 @@ export default function AlertDialog({buttonText, dialogContent, dialogHeader, ag
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        sx={{ borderRadius: "20px", width: "336px", height: "244.5px", fontSize: 18, marginLeft: "auto", marginRight: "auto", marginTop: "auto", marginBottom: "auto" }}
       >
-        <DialogTitle id="alert-dialog-title">
-          {dialogHeader}
+        <DialogTitle sx={{ textAlign: "center", paddingBottom: 0 }} id="alert-dialog-title">
+            <img src={src} alt="icon" style={{ height: '35px', width: '35px', marginRight: '8px'}} />
         </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {dialogContent}
+        <DialogContent sx={{ paddingBottom: 1, paddingTop: 0 }}>
+          <DialogContentText sx={{ fontSize: "18px", fontWeight: 600, textAlign: "center", color: "black" }} id="alert-dialog-description">
+            {dialogHeader}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>{closeText}</Button>
-          <Button onClick={handleClose} autoFocus>
+        <Divider />
+        <DialogActions sx={{ justifyContent: 'space-around', paddingTop: 0, paddingBottom: 0 }}>
+          <Button sx={{ fontSize: "16px", color: "#858585", paddingLeft: 2, width: '100%', fontWeight: 600, textTransform: "none" }} onClick={handleClose}>{closeText}</Button>
+          <Divider orientation="vertical" flexItem />
+          <Button sx={{ fontSize: "16px", paddingRight: 2, width: '100%', fontWeight: 600, textTransform: "none" }} onClick={onYes} autoFocus>
             {agreeText}
           </Button>
         </DialogActions>

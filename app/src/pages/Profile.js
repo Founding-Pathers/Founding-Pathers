@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import ReusableButton from '../components/Button';
 import TextField from '../components/TextField';
-import Link from '../components/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import User from '../assets/User.png';
 import Dialog from '../components/Dialog';
+import DeleteImg from '../assets/Delete.png';
+import LogoutImg from '../assets/Logout.png';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -45,6 +46,11 @@ const Profile = () => {
     setEditMode(!editMode);
   };
 
+  const onYesLogout = () => {
+    // Add logic here for logging out, e.g., clearing user data from localStorage
+    window.location.href = '/';
+  };
+
   return (
     <StyledContainer>
       <StyledFormContainer>
@@ -65,7 +71,17 @@ const Profile = () => {
         </CenterItem>
 
         <CenterItem>
-            <Link link="/" value="Log Out" color="primary" />
+            <Dialog
+            buttonText="Log Out"
+            textColor="#FF9900"
+            fontSize="14px"
+            textTransform="none"
+            dialogHeader="Are you sure you want to log out?"
+            src={LogoutImg}
+            agreeText="Yes"
+            closeText="No"
+            onYes={onYesLogout}
+            />
         </CenterItem>
 
         <VerticalSpace>
@@ -116,7 +132,7 @@ const Profile = () => {
             fontSize="14px"
             textTransform="none"
             dialogHeader="Are you sure you want to delete your account?"
-            dialogContent="This action cannot be undone."
+            src={DeleteImg}
             agreeText="Yes"
             closeText="No"
           />
