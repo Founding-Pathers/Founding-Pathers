@@ -16,7 +16,8 @@ const theme = createTheme({
     h1: {
       fontSize: '30px', 
       fontWeight: 700, 
-      color: '#F0A73A'
+      color: '#F0A73A',
+      textAlign: 'center'
     },
     h2: {
       fontSize: '30px',

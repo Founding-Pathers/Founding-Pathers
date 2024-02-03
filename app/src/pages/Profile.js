@@ -48,7 +48,12 @@ const Profile = () => {
 
   const onYesLogout = () => {
     // Add logic here for logging out, e.g., clearing user data from localStorage
-    window.location.href = '/';
+    window.location.href = '/logout';
+  };
+
+  const onYesDelete = () => {
+    // Add logic here for deleting account
+    window.location.href = '/deleted';
   };
 
   return (
@@ -81,6 +86,7 @@ const Profile = () => {
             agreeText="Yes"
             closeText="No"
             onYes={onYesLogout}
+            showTwoButtons={true}
             />
         </CenterItem>
 
@@ -135,6 +141,8 @@ const Profile = () => {
             src={DeleteImg}
             agreeText="Yes"
             closeText="No"
+            showTwoButtons={true}
+            onYes={onYesDelete}
           />
         </RightItem>
 

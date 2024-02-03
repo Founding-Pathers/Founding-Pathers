@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 
-export default function AlertDialog({buttonText, src, dialogHeader, agreeText, closeText, fontSize, textTransform, textColor, onYes}) {
+export default function AlertDialog({buttonText, src, dialogHeader, agreeText, closeText, fontSize, textTransform, textColor, onYes, showTwoButtons}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -33,18 +33,40 @@ export default function AlertDialog({buttonText, src, dialogHeader, agreeText, c
         <DialogTitle sx={{ textAlign: "center", paddingBottom: 0 }} id="alert-dialog-title">
             <img src={src} alt="icon" style={{ height: '35px', width: '35px', marginRight: '8px'}} />
         </DialogTitle>
+
         <DialogContent sx={{ paddingBottom: 1, paddingTop: 0 }}>
           <DialogContentText sx={{ fontSize: "18px", fontWeight: 600, textAlign: "center", color: "black" }} id="alert-dialog-description">
             {dialogHeader}
           </DialogContentText>
         </DialogContent>
+
         <Divider />
+
         <DialogActions sx={{ justifyContent: 'space-around', paddingTop: 0, paddingBottom: 0 }}>
-          <Button sx={{ fontSize: "16px", color: "#858585", paddingLeft: 2, width: '100%', fontWeight: 600, textTransform: "none" }} onClick={handleClose}>{closeText}</Button>
-          <Divider orientation="vertical" flexItem />
+          <Button sx={{ fontSize: "16px", color: "#858585", width: '100%', fontWeight: 600, textTransform: "none" }} onClick={handleClose}>{closeText}</Button>
+          {/* <Divider orientation="vertical" flexItem />
           <Button sx={{ fontSize: "16px", paddingRight: 2, width: '100%', fontWeight: 600, textTransform: "none" }} onClick={onYes} autoFocus>
             {agreeText}
-          </Button>
+          </Button> */}
+          {showTwoButtons && (
+            <>
+              <Divider orientation="vertical" flexItem />
+              <Button
+                sx={{
+                  fontSize: "16px",
+                  paddingRight: 8,
+                  paddingLeft: 7,
+                  width: '50%',
+                  fontWeight: 600,
+                  textTransform: "none",
+                }}
+                onClick={onYes}
+                autoFocus
+              >
+                {agreeText}
+              </Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </React.Fragment>
