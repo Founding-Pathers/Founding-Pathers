@@ -7,6 +7,8 @@ import User from '../assets/User.png';
 import Dialog from '../components/Dialog';
 import DeleteImg from '../assets/Delete.png';
 import LogoutImg from '../assets/Logout.png';
+import UpdateImg from '../assets/Updated.png';
+import Alert from '../components/Alert.js';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -41,9 +43,14 @@ const CenterItem = styled('div')({
 
 const Profile = () => {
   const [editMode, setEditMode] = useState(false);
+  const [showUpdateAlert, setShowUpdateAlert] = useState(false);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
+    if (editMode) {
+      // Add logic here for checking successful update before showing alert
+      setShowUpdateAlert(true);
+    }
   };
 
   const onYesLogout = () => {
@@ -157,6 +164,13 @@ const Profile = () => {
             />
           </CenterItem>
         </VerticalSpace></VerticalSpace>
+
+        {showUpdateAlert && (
+          <Alert alertMessage="Your profile has been updated!" 
+          onClick={() => setShowUpdateAlert(false)}
+          src={UpdateImg}
+          />
+        )}
       </StyledFormContainer>
     </StyledContainer>
   );
