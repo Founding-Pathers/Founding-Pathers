@@ -26,7 +26,7 @@ export default function ActionAlerts({alertMessage, onClick, src}) {
         height: "178.5px", 
         marginLeft: "auto", 
         marginRight: "auto", 
-        borderRadius: "20px",
+        borderRadius: "10px",
         fontSize: "18px", 
         color: "#000000",
         fontWeight: 600,

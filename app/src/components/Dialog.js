@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 
-export default function AlertDialog({buttonText, src, dialogHeader, agreeText, closeText, fontSize, textTransform, textColor, onYes, showTwoButtons}) {
+export default function AlertDialog({buttonText, src, dialogHeader, agreeText, closeText, fontSize, textTransform, textColor, onYes, showTwoButtons, widthIcon}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -31,7 +31,7 @@ export default function AlertDialog({buttonText, src, dialogHeader, agreeText, c
         sx={{ borderRadius: "20px", width: "336px", height: "244.5px", fontSize: 18, marginLeft: "auto", marginRight: "auto", marginTop: "auto", marginBottom: "auto" }}
       >
         <DialogTitle sx={{ textAlign: "center", paddingBottom: 0 }} id="alert-dialog-title">
-            <img src={src} alt="icon" style={{ height: '35px', width: '35px', marginRight: '8px'}} />
+            <img src={src} alt="icon" style={{ height: widthIcon, width: widthIcon, marginRight: '8px'}} />
         </DialogTitle>
 
         <DialogContent sx={{ paddingBottom: 1, paddingTop: 0 }}>
@@ -44,10 +44,6 @@ export default function AlertDialog({buttonText, src, dialogHeader, agreeText, c
 
         <DialogActions sx={{ justifyContent: 'space-around', paddingTop: 0, paddingBottom: 0 }}>
           <Button sx={{ fontSize: "16px", color: "#858585", width: '100%', fontWeight: 600, textTransform: "none" }} onClick={handleClose}>{closeText}</Button>
-          {/* <Divider orientation="vertical" flexItem />
-          <Button sx={{ fontSize: "16px", paddingRight: 2, width: '100%', fontWeight: 600, textTransform: "none" }} onClick={onYes} autoFocus>
-            {agreeText}
-          </Button> */}
           {showTwoButtons && (
             <>
               <Divider orientation="vertical" flexItem />

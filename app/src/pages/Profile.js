@@ -90,6 +90,7 @@ const Profile = () => {
             textTransform="none"
             dialogHeader="Are you sure you want to log out?"
             src={LogoutImg}
+            widthIcon="45px"
             agreeText="Yes"
             closeText="No"
             onYes={onYesLogout}
@@ -146,6 +147,7 @@ const Profile = () => {
             textTransform="none"
             dialogHeader="Are you sure you want to delete your account?"
             src={DeleteImg}
+            widthIcon="35px"
             agreeText="Yes"
             closeText="No"
             showTwoButtons={true}
