@@ -1,4 +1,5 @@
 # Founding-Pathers
+
 Application Repository
 
 <br />
@@ -18,22 +19,26 @@ a User-Centric Approach
   </p>
 </div>
 
-
 ## About The Project
+
 Our project entails developing an open-source, proof-of-concept, and mobile-friendly web application to enhance the WCN. Core deliverables involve an account module, QGIS-based routing, and user interface (UI) enhancements. Secondary deliverables include additional UI features allowing users to customise routes with points of interest and a cloud configuration and deployment solution tentatively utilising Amazon Web Services. A feedback loop for users to report route blockages via OneService are good-to-haves. Challenges include migrating URA’s routing engine from ArcGIS to QGIS, sourcing a suitable API for the web application, managing cloud deployment costs, and ensuring data availability from URA. Adhering to Scrum methodology, core functionalities are targeted for completion by sprints ending in Midterms and Finals. Successful completion of this project will provide URA with valuable insights into citizen transportation preferences, contributing to more effective urban policies. Improved navigation is also expected to foster safety, convenience, healthy lifestyles and inclusivity for society, promoting sustainable transportation and aligning with URA's vision for a vibrant, connected Singapore.
 
 ### Core Functionalities
+
 - A proof-of-concept web application (Software development)
 
 - A cloud configuration and deployment solution (System configuration)
 
 ## Built With
-### Major Frameworks / Libraries 
+
+### Major Frameworks / Libraries
 
 #### Front-end frameworks and libraries
+
 - React
 
 #### Back-end frameworks and libraries
+
 - Node.js
 - Express.js
 - MongoDB
@@ -42,6 +47,7 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 - Docker
 
 #### Continuous Integration
+
 - ![Codacy](https://img.shields.io/badge/Codacy-222F29.svg?style=for-the-badge&logo=Codacy&logoColor=white)
 - ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
 
@@ -50,10 +56,13 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 - Amazon Web Services
 
 ## Getting Started
+
 ### Prerequisites
-* Install the following:
-  
+
+- Install the following:
+
 ### Installation
+
 1. Clone the repo
    ```sh
    git clone 
@@ -74,7 +83,9 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 5. fill more steps here
 
 ## Usage
+
 To use the application, follow these steps:
+
 1. Open the application in a web browser.
 2. Follow the on-screen instructions to navigate through the application's features.
 3. If prompted, enter any required input values or select desired options.
