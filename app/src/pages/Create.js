@@ -1,7 +1,6 @@
 import React from 'react';
 import ReusableButton from '../components/Button'; 
 import TextField from '../components/TextField';
-import Checkbox from '../components/Checkbox';
 import Link from '../components/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
@@ -48,7 +47,7 @@ const Login = () => {
         <img src={Logo} alt="Cycle-Pathic" style={{ width: '75px', height: 'auto', marginLeft: 'auto', marginRight: 'auto', marginBottom: '24px' }} />
 
         <VerticalSpace>
-        <Typography variant="h1">Log In</Typography>
+        <Typography variant="h1">Sign Up</Typography>
         </VerticalSpace>
 
         <VerticalSpace>
@@ -62,18 +61,19 @@ const Login = () => {
         </VerticalSpace>
 
         <VerticalSpace>
-        <Checkbox labelPlacement="end" label="Keep me signed in" value="isLoggedIn" />
+        Confirm Password
+        <TextField width="310px" id="outlined-password-input" type="password" label="" />
         </VerticalSpace>
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
         <VerticalSpace>
         <CenterItem>
-          Don't have an account? <Link link="/create" value="Sign up" color="primary"/>
+          Already have an account? <Link link="/" value="Log in" color="primary"/>
         </CenterItem>
         </VerticalSpace>
 
