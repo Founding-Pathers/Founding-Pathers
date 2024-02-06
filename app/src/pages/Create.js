@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router";
 import ReusableButton from '../components/Button'; 
 import TextField from '../components/TextField';
 import Link from '../components/Link';
@@ -39,10 +40,48 @@ const CenterItem = styled('div')({
     display: 'flex'
 });
 
-const Login = () => {
+const Create = () => {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const navigate = useNavigate();
+  
+  function updateForm(value) {
+    console.log(value)
+    return setForm((prev) => {
+      return { ...prev, ...value };
+    });
+  }
+
+async function onSubmit(e){
+    e.preventDefault();
+
+  const newAccount = { ...form };
+  console.log(newAccount)
+
+  await fetch("http://localhost:5000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type" : "application/json",
+    },
+    body: JSON.stringify(newAccount),
+  })
+  .catch(error => {
+    window.alert(error);
+    return;
+  });
+
+  setForm({email: "", password: "", confirmPassword: ""});
+
+  // added to navigate back to landing
+  navigate("/")
+}
+
   return (
     <StyledContainer>
-      <StyledFormContainer>
+      <StyledFormContainer onSubmit={onSubmit}>
         
         <img src={Logo} alt="Cycle-Pathic" style={{ width: '75px', height: 'auto', marginLeft: 'auto', marginRight: 'auto', marginBottom: '24px' }} />
 
@@ -52,22 +91,23 @@ const Login = () => {
 
         <VerticalSpace>
         Email
-        <TextField width="310px" id="outlined-required" label="" />
+        <TextField width="310px" id="email" label=""name="email" value={form.email} onChange={(e) => updateForm({ email: e.target.value })}
+        />
         </VerticalSpace>
 
         <VerticalSpace>
         Password
-        <TextField width="310px" id="outlined-password-input" type="password" label="" />
+        <TextField width="310px" id="outlined-password-input" type="password" label="" name="password" value={form.password} onChange={(e) => updateForm({ password: e.target.value })}/>
         </VerticalSpace>
 
         <VerticalSpace>
         Confirm Password
-        <TextField width="310px" id="outlined-password-input" type="password" label="" />
+        <TextField width="310px" id="outlined-confirmPassword-input" type="password" label="" name="confirmPassword" value={form.confirmPassword} onChange={(e) => updateForm({ confirmPassword: e.target.value })}/>
         </VerticalSpace>
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
@@ -82,4 +122,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Create;
