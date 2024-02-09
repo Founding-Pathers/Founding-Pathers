@@ -1,7 +1,7 @@
 const dbo = require("../db/conn");
 
 // Require hashing solution
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 async function createUser(email, password) {
     try {
