@@ -39,7 +39,7 @@ const CenterItem = styled('div')({
     display: 'flex'
 });
 
-const Login = () => {
+const Create = () => {
   return (
     <StyledContainer>
       <StyledFormContainer>
@@ -73,7 +73,7 @@ const Login = () => {
 
         <VerticalSpace>
         <CenterItem>
-          Already have an account? <Link link="/" value="Log in" color="primary"/>
+          Already have an account? <Link link="/" weight="bold" value="Log in" color="primary"/>
         </CenterItem>
         </VerticalSpace>
 
@@ -82,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Create;

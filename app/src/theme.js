@@ -4,10 +4,10 @@ import 'typeface-inter';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#F0A73A', 
+      main: '#FF9900', 
     },
     secondary: {
-      main: '#F0A73A', 
+      main: '#FF9900', 
     }
   },
   typography: {
@@ -16,7 +16,13 @@ const theme = createTheme({
     h1: {
       fontSize: '30px', 
       fontWeight: 700, 
-      color: '#F0A73A'
+      color: '#F0A73A',
+      textAlign: 'center'
+    },
+    h2: {
+      fontSize: '30px',
+      fontWeight: 700,
+      color: '#00000'
     },
     button: {
       fontSize: '20px', 

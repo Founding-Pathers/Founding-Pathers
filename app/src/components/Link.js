@@ -2,11 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 
-export default function Links({color, value, link}) {
+export default function Links({color, value, link, weight}) {
   return (
     <Box
       sx={{
-        fontWeight: "bold",
+        fontWeight: weight,
         padding: "5px"
       }}
     >
