@@ -73,7 +73,7 @@ const Login = () => {
 
         <VerticalSpace>
         <CenterItem>
-          Don't have an account? <Link link="/create" value="Sign up" color="primary"/>
+          Don't have an account? <Link link="/create" weight="bold" value="Sign up" color="primary"/>
         </CenterItem>
         </VerticalSpace>
 
