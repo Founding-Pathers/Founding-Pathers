@@ -1,6 +1,8 @@
 // To connect with your mongoDB database
 var mongoose = require("mongoose"),
-  User = require("./UserSchema");
+  User = require("./models/User"),
+  UserPref = require("./models/UserPref"),
+  RoutesTaken = require("./models/RoutesTaken");
 require("dotenv").config();
 
 const uri = process.env.MONGODB_URI;
