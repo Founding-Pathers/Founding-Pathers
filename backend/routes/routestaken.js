@@ -15,7 +15,20 @@ routesTaken.route("/routes").get(async function (req, res) {
   let db_connect = dbo.getDb();
   db_connect
     .collection("routestaken")
-    .find({})
+    .find()
+    .toArray()
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    });
+});
+
+// Retrieve list of all routes taken that were not deleted
+routesTaken.route("/routes").get(async function (req, res) {
+  let db_connect = dbo.getDb();
+  db_connect
+    .collection("routestaken")
+    .find({ deleted: false })
     .toArray()
     .then((data) => {
       console.log(data);
@@ -27,10 +40,12 @@ routesTaken.route("/routes").get(async function (req, res) {
 routesTaken.route("/routes/:id").get(function (req, res) {
   let db_connect = dbo.getDb();
   let myquery = { _id: ObjectId(req.body.id) };
-  db_connect.collection("routestaken").findOne(myquery, function (err, result) {
-    if (err) throw err;
-    res.json(result);
-  });
+  db_connect
+    .collection("routestaken")
+    .findOne(myquery, { deleted: false }, function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
 });
 
 // Retrieve all routes taken by current user id
@@ -40,7 +55,7 @@ routesTaken.route("/routes/user/").get(function (req, res) {
     let myquery = { account_id: ObjectId(req.params.id) };
     const records = db_connect
       .collection("routestaken")
-      .find(myquery)
+      .find(myquery, { deleted: false })
       .toArray();
     res.json(records);
   } catch (error) {

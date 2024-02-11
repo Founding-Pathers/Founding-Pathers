@@ -11,6 +11,10 @@ const UserPrefSchema = new Schema(
       ref: "User",
       required: true,
     },
+    deleted: {
+      type: Boolean,
+      required: true,
+    },
     wheelchair_friendly: {
       type: Boolean,
       required: true,

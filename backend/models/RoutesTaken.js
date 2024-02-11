@@ -61,6 +61,10 @@ const RoutesTakenSchema = new Schema(
       type: Boolean,
       required: true,
     },
+    deleted: {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,

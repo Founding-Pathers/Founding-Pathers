@@ -23,6 +23,10 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    deleted: {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,
