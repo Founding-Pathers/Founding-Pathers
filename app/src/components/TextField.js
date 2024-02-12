@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-export default function FormPropsTextFields({id, label, type, width, disabled}) {
+export default function FormPropsTextFields({id, label, type, value, onChange, width}) {
     return (
       <Box
         component="form"
@@ -17,7 +17,8 @@ export default function FormPropsTextFields({id, label, type, width, disabled}) 
             id={id}
             label={label}
             type={type}
-            disabled={disabled}
+            value={value}
+            onChange={onChange}
             InputProps={{
                 style: {
                   borderRadius: "50px",
