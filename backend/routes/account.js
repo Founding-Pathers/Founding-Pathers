@@ -21,7 +21,7 @@ router.post('/register', async (req, res, next) => {
       httpOnly: false,
     });
 
-    // Respond with a success message or redirect as needed
+    // Respond with a success message or error message
     res.status(201).json({ message: 'User created successfully', success: true, user });
     next();
   } catch (error) {
@@ -54,6 +54,7 @@ router.post('/login', async (req, res, next) => {
        withCredentials: true,
        httpOnly: false,
      });
+     // returns that user has logged in successfully
      res.status(201).json({ message: "User logged in successfully", success: true });
      next()
   } catch (error) {
