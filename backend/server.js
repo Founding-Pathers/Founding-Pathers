@@ -2,6 +2,8 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
+const bodyParser = require("body-parser")
+const urlencodedParser = bodyParser.urlencoded({ extended: false }) 
 
 // for environment variables
 require("dotenv").config({ path: "./config.env" });
@@ -15,7 +17,9 @@ app.use(cors());
 
 //parsing JSON
 app.use(express.json());
+app.use(bodyParser.json(), urlencodedParser)
 app.use(require("./routes/record"));
+app.use(require("./routes/account"));
 
 // starting of Server
 app.listen(port, async () => {
@@ -26,7 +30,6 @@ app.listen(port, async () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-// disable 'X-Powered-By' header in response
 app.disable("x-powered-by");
 app.get('/api/welcome', function (req, res) {
     res.send("Welcome to the Server.");

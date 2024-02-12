@@ -1,8 +1,8 @@
 const express = require("express");
 
-// recordRoutes instance of express router, router will be added as a middleware 
+// router instance of express router, router will be added as a middleware 
 // and will take control of requests starting with path /record.
-const recordRoutes = express.Router();
+const router = express.Router();
 
 // Connect to the database
 const dbo = require("../db/conn");
@@ -11,7 +11,7 @@ const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
 
 // Retrieve list of all records
-recordRoutes.route("/record").get(async function (req, res) {
+router.route("/record").get(async function (req, res) {
   let db_connect = dbo.getDb();
   db_connect
     .collection("records")
@@ -24,7 +24,7 @@ recordRoutes.route("/record").get(async function (req, res) {
   });
 
 // Retrieve record by id
-recordRoutes.route("/record/:id").get(function (req, res) {
+router.route("/record/:id").get(function (req, res) {
   let db_connect = dbo.getDb();
   let myquery = { _id: ObjectId(req.params.id) };
   db_connect
@@ -36,7 +36,7 @@ recordRoutes.route("/record/:id").get(function (req, res) {
 });
 
 // Create a new record
-recordRoutes.route("/record/add").post(function (req, response) {
+router.route("/record/add").post(function (req, response) {
   let db_connect = dbo.getDb();
   let myobj = {
     name: req.body.name,
@@ -50,7 +50,7 @@ recordRoutes.route("/record/add").post(function (req, response) {
 });
 
 // Update a record by id
-recordRoutes.route("/update/:id").post(function (req, response) {
+router.route("/update/:id").post(function (req, response) {
   let db_connect = dbo.getDb();
   let myquery = { _id: ObjectId(req.params.id) };
   let newvalues = {
@@ -70,7 +70,7 @@ recordRoutes.route("/update/:id").post(function (req, response) {
 });
 
 // Delete a record
-recordRoutes.route("/:id").delete((req, res) => {
+router.route("/:id").delete((req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
   db_connect
@@ -78,4 +78,4 @@ recordRoutes.route("/:id").delete((req, res) => {
     .deleteOne(myquery)
   });
 
-module.exports = recordRoutes;
+module.exports = router;
