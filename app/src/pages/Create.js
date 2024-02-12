@@ -113,7 +113,7 @@ async function onSubmit(e){
 
         <VerticalSpace>
         <CenterItem>
-          Already have an account? <Link link="/" value="Log in" color="primary"/>
+          Already have an account? <Link link="/" weight="bold" value="Log in" color="primary"/>
         </CenterItem>
         </VerticalSpace>
 
