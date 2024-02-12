@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // for environment variables
-require("dotenv").config({ path: "./config.env" });
+require("dotenv").config({ path: "../.env" });
 
 // get driver connection
 const dbo = require("./db/conn");
@@ -15,7 +15,10 @@ app.use(cors());
 
 //parsing JSON
 app.use(express.json());
-app.use(require("./routes/record"));
+// app.use(require("./routes/record"));
+app.use(require("./routes/userpref"));
+app.use(require("./routes/routestaken"));
+// app.use(require("./routes/computedroutes"));
 
 // starting of Server
 app.listen(port, async () => {
@@ -28,6 +31,6 @@ app.listen(port, async () => {
 
 // disable 'X-Powered-By' header in response
 app.disable("x-powered-by");
-app.get('/api/welcome', function (req, res) {
-    res.send("Welcome to the Server.");
-})
+app.get("/api/welcome", function (req, res) {
+  res.send("Welcome to the Server.");
+});

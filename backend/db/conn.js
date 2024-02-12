@@ -1,29 +1,26 @@
 const { MongoClient } = require("mongodb");
 const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(uri);
 
 let _db;
 
 module.exports = {
   connectToServer: async function (callback) {
-    try{ 
+    try {
       await client.connect();
     } catch (e) {
       console.error(e);
     }
 
-    _db = client.db("myDB")
+    _db = client.db("myDB");
 
-    return (_db === undefined ? false : true);
+    return _db === undefined ? false : true;
   },
 
   getDb: function () {
     return _db;
-    },
-  };
+  },
+};
 
 // ServerApiVersion code if required
 // const { MongoClient, ServerApiVersion } = require("mongodb");
