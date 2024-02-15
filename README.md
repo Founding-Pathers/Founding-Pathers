@@ -60,27 +60,58 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 ### Prerequisites
 
 - Install the following:
+  Docker Desktop App (optional)
+  MongoDB Compass
 
-### Installation
+### App Initialization
 
 1. Clone the repo
    ```sh
    git clone 
     ```
-2. Pull the repo.
+2. Pull the repo
     ```sh
     git pull 
     ```
-3. Navigate to the project directory.
-    ```sh
-    cd
+3. Ensure you have Docker Desktop running
+4. Navigate to the project directory
+5. Create a copy of the `.env` file from the Google Drive link shared. Place this file in the main directory. (Google Drive Link provided via text file in submission document).
+6. Build the Docker images and containers (initial build will take awhile)
+   ```sh
+   docker-compose up 
+   ```
+
+### App Initialization without Docker
+
+1. Clone the repo
+   ```sh
+   git clone 
     ```
-4. Install npm and composer packages.
+2. Pull the repo
     ```sh
-    
+    git pull 
     ```
-4. Create a copy of the `.env` file from the Google Drive link shared. Place this file in the main directory. (Google Drive Link provided via text file in submission document). If you are a Mac user, please add in the password to your SQL connection under DB_PASSWORD in the `.env` file.
-5. fill more steps here
+3. Navigate to the project directory
+4. Create a copy of the `.env` file from the Google Drive link shared. Place this file in the main directory. (Google Drive Link provided via text file in submission document).
+5. Split the terminal into two
+6. On one of the terminals, run the following code:
+    ```sh
+    cd backend
+    npm install
+    ```
+   After the backend modules have been installed, initialize the backend with the following code:
+    ```sh
+    nodemon server.js
+    ```
+7. On the other terminal, run the following code:
+    ```sh
+    cd app
+    npm install
+    ```
+   After the frontend modules have been installed, initialize the frontend with the following code:
+    ```sh
+    npm start
+    ```
 
 ## Usage
 

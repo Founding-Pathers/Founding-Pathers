@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // for environment variables
@@ -13,20 +14,19 @@ const dbo = require("./db/conn");
 
 // enables CORS
 const cors = require("cors");
-app.use(cors());
+app.use(
+  cors({
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 //parsing JSON
 app.use(express.json());
-app.use(require("./routes/userpref"));
-app.use(require("./routes/routestaken"));
-app.use(require("./routes/computedroutes"));
-app.use(require("./routes/routes"));
-app.use(require("./routes/nodes"));
-app.use(require("./routes/user"));
-app.use(require("./routes/databaselogging"));
 app.use(bodyParser.json(), urlencodedParser);
 app.use(require("./routes/record"));
 app.use(require("./routes/account"));
+app.use(require("./routes/Middlewares/AuthMiddleware"));
 
 // starting of Server
 app.listen(port, async () => {
