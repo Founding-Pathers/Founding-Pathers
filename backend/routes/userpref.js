@@ -11,7 +11,7 @@ const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
 
 // Retrieve user preference by id
-router.route("/userpref/:id").get(function (req, res) {
+router.route("/userpref/:id").get(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { _id: ObjectId(req.params.id) };
   db_connect
@@ -23,7 +23,7 @@ router.route("/userpref/:id").get(function (req, res) {
 });
 
 // Create a new user preference
-router.route("/userpref/add").post(function (req, response) {
+router.route("/userpref/add").post(function (req, response, next) {
   let db_connect = dbo.getDbLogging();
   let myobj = {
     id: req.body.id,
@@ -39,7 +39,7 @@ router.route("/userpref/add").post(function (req, response) {
 });
 
 // Update a user preference by id
-router.route("/userpref/update/:id").post(function (req, response) {
+router.route("/userpref/update/:id").post(function (req, response, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { _id: ObjectId(req.params.id) };
   let newvalues = {
@@ -57,4 +57,4 @@ router.route("/userpref/update/:id").post(function (req, response) {
     });
 });
 
-module.exports = { router };
+module.exports = router;

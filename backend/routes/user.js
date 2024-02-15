@@ -66,4 +66,4 @@ router.route("/user/update/:id").post(function (req, response) {
     });
 });
 
-module.exports = { router };
+module.exports = router;

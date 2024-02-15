@@ -17,7 +17,7 @@ app.use(cors());
 
 //parsing JSON
 app.use(express.json());
-// app.use(require("./routes/userpref"));
+app.use(require("./routes/userpref"));
 app.use(require("./routes/routestaken"));
 app.use(require("./routes/computedroutes"));
 app.use(require("./routes/routes"));
