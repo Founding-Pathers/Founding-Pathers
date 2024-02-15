@@ -10,8 +10,8 @@ const dbo = require("../db/conn");
 // Converts the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
-// Retrieve user preference by id
-router.route("/userpref/:id").get(function (req, res, next) {
+// Retrieve user preference by useraccount id
+router.route("/userpref/").get(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { _id: ObjectId(req.params.id) };
   db_connect
