@@ -1,7 +1,7 @@
 const express = require("express");
 
-// recordRoutes instance of express router, router will be added as a middleware
-// and will take control of requests starting with path /record.
+// router will be added as a middleware
+// and will take control of requests starting with path /routehistory.
 const routesTaken = express.Router();
 
 // Connect to the database
@@ -11,10 +11,10 @@ const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
 
 // Retrieve list of all routes taken
-routesTaken.route("/routes").get(async function (req, res) {
-  let db_connect = dbo.getDb();
+routesTaken.route("/routehistory").get(async function (req, res) {
+  let db_connect = dbo.getDbLogging();
   db_connect
-    .collection("routestaken")
+    .collection("routesTaken")
     .find()
     .toArray()
     .then((data) => {
@@ -24,10 +24,10 @@ routesTaken.route("/routes").get(async function (req, res) {
 });
 
 // Retrieve list of all routes taken that were not deleted
-routesTaken.route("/routes").get(async function (req, res) {
-  let db_connect = dbo.getDb();
+routesTaken.route("/routehistory").get(async function (req, res) {
+  let db_connect = dbo.getDbLogging();
   db_connect
-    .collection("routestaken")
+    .collection("routesTaken")
     .find({ deleted: false })
     .toArray()
     .then((data) => {
@@ -37,11 +37,11 @@ routesTaken.route("/routes").get(async function (req, res) {
 });
 
 // Retrieve specific route by routestaken id
-routesTaken.route("/routes/:id").get(function (req, res) {
-  let db_connect = dbo.getDb();
+routesTaken.route("/routehistory/:id").get(function (req, res) {
+  let db_connect = dbo.getDbLogging();
   let myquery = { _id: ObjectId(req.body.id) };
   db_connect
-    .collection("routestaken")
+    .collection("routesTaken")
     .findOne(myquery, { deleted: false }, function (err, result) {
       if (err) throw err;
       res.json(result);
@@ -49,12 +49,12 @@ routesTaken.route("/routes/:id").get(function (req, res) {
 });
 
 // Retrieve all routes taken by current user id
-routesTaken.route("/routes/user/").get(function (req, res) {
+routesTaken.route("/routehistory/user/").get(function (req, res) {
   try {
-    let db_connect = dbo.getDb();
+    let db_connect = dbo.getDbLogging();
     let myquery = { account_id: ObjectId(req.params.id) };
     const records = db_connect
-      .collection("routestaken")
+      .collection("routesTaken")
       .find(myquery, { deleted: false })
       .toArray();
     res.json(records);
@@ -65,8 +65,8 @@ routesTaken.route("/routes/user/").get(function (req, res) {
 });
 
 // Create a new record
-routesTaken.route("/routes/add").post(function (req, response) {
-  let db_connect = dbo.getDb();
+routesTaken.route("/routehistory/add").post(function (req, response) {
+  let db_connect = dbo.getDbLogging();
   let myobj = {
     id: req.body.id, // account_id
     route_index: req.body.route_index,
@@ -79,7 +79,7 @@ routesTaken.route("/routes/add").post(function (req, response) {
     feedback_q5: req.body.feedback_q5,
     feedback_q6: req.body.feedback_q6,
   };
-  db_connect.collection("routestaken").insertOne(myobj, function (err, res) {
+  db_connect.collection("routesTaken").insertOne(myobj, function (err, res) {
     if (err) throw err;
     response.json(res);
   });
