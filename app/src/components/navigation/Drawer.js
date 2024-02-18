@@ -8,7 +8,10 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Location from '../../assets/Location.png';
 import Destination from '../../assets/Destination.png';
+import DottedLine from '../../assets/DottedLine.png';
+import Switch from '../../assets/Switch.png';
 import Chip from '../ui/Chip';
 import Checkbox from '../ui/Checkbox';
 import Modal from '../ui/Modal';
@@ -72,6 +75,18 @@ function SwipeableEdgeDrawer(props) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
+  // const [selectedPOIs, setSelectedPOIs] = useState([]);
+
+  // const handleChange = (chipLabel) => {
+  //   setSelectedPOIs((prevSelected) => {
+  //     if (prevSelected.includes(chipLabel)) {
+  //       return prevSelected.filter((label) => label !== chipLabel);
+  //     } else {
+  //       return [...prevSelected, chipLabel];
+  //     }
+  //   });
+  // };
+
   return (
     <Root>
       <CssBaseline />
@@ -108,9 +123,40 @@ function SwipeableEdgeDrawer(props) {
             zIndex: 999
           }}
         >
-          <Puller/>
-          <Box sx={{ textAlign: 'center', mt: 3, mb: 2 }}>
-            <img src={Destination} style={{ width: '18px', height: '18px', margin: '6px 6px' }}></img>
+          <Puller />
+          <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
+            <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
+          <TextField
+            InputProps={{
+                style: {
+                borderRadius: "50px",
+                borderColor: "#000000",
+                width: "324px",
+                height: 31,
+                }
+            }}
+            InputLabelProps={{
+                // shrink: true,
+                style: {
+                fontSize: 14,
+                fontWeight: 400,
+                lineHeight: 1
+                }
+            }}
+            id="outlined-basic"
+            label="Location"
+            variant="outlined"
+            onClick={() => setOpen(true)}
+            />
+          </Box>
+
+          <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between', ml: 3.5, mr: 0.5}}>
+            <img src={DottedLine} style={{ width: '2px', height: '18px' }}></img>
+            <img src={Switch} style={{ width: '18px', height: '18px', margin: '0px 6px' }}></img>
+          </Box>
+
+          <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
+            <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
           <TextField
             InputProps={{
                 style: {
@@ -139,11 +185,26 @@ function SwipeableEdgeDrawer(props) {
           <Typography variant="filterh1" sx={{ px: 3.5, py: 1, display: "block" }}>1. Search Filters</Typography>
           <Typography variant="filterh2" sx={{ px: 3.5, py: 1, display: "block"  }}>Points of Interest:</Typography>
           <ChipBox>
-          <Chip icon={foodIcon} iconWidth="20px" iconHeight="20px" label="Food & Beverages" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}></Chip>
-          <Chip icon={AttractionsOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Attractions" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}></Chip>
-          <Chip icon={DirectionsBusFilledOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Bus Stops" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}></Chip>
-          <Chip icon={trainIcon} iconWidth="20px" iconHeight="20px" label="MRT Stations" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}></Chip>
-          <Chip icon={carIcon} iconWidth="20px" iconHeight="20px" label="Pick-up / Drop-off" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}></Chip>
+          <Chip icon={foodIcon} iconWidth="20px" iconHeight="20px" label="Food & Beverages" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+            // isSelected={selectedChips.includes("Food & Beverages")}
+            // onClick={() => handleChipClick("Food & Beverages")}
+            ></Chip>
+          <Chip icon={AttractionsOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Attractions" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+            // isSelected={selectedChips.includes("Attractions")}
+            // onClick={() => handleChipClick("Attractions")}
+            ></Chip>
+          <Chip icon={DirectionsBusFilledOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Bus Stops" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+            // isSelected={selectedChips.includes("Bus Stops")}
+            // onClick={() => handleChipClick("Bus Stops")}
+            ></Chip>
+          <Chip icon={trainIcon} iconWidth="20px" iconHeight="20px" label="MRT Stations" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+            // isSelected={selectedChips.includes("MRTs")}
+            // onClick={() => handleChipClick("MRTs")}
+            ></Chip>
+          <Chip icon={carIcon} iconWidth="20px" iconHeight="20px" label="Pick-up / Drop-off" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+            // isSelected={selectedChips.includes("Pick Ups")}
+            // onClick={() => handleChipClick("Pick Ups")}
+            ></Chip>
           </ChipBox>
 
           <Box sx={{ display: "flex", alignItems: "center"}}>
