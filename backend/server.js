@@ -23,8 +23,8 @@ app.use(
 
 //parsing JSON
 app.use(express.json());
+app.use(cookieParser())
 app.use(bodyParser.json(), urlencodedParser);
-app.use(require("./routes/record"));
 app.use(require("./routes/account"));
 app.use(require("./routes/Middlewares/AuthMiddleware"));
 
