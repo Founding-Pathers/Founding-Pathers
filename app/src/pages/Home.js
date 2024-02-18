@@ -1,5 +1,5 @@
-import Drawer from '../components/Drawer';
-import LeftDrawer from '../components/LeftDrawer';
+import Drawer from '../components/navigation/Drawer';
+import LeftDrawer from '../components/navigation/LeftDrawer';
 
 const Home = () => {
     return (

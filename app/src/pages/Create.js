@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router";
-import ReusableButton from '../components/Button'; 
-import TextField from '../components/TextField';
-import Link from '../components/Link';
+import ReusableButton from '../components/ui/Button'; 
+import TextField from '../components/ui/TextField';
+import Link from '../components/ui/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import Logo from '../assets/Logo.png';
