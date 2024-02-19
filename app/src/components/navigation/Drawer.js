@@ -72,9 +72,8 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer(props) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute}) {
   const theme = useTheme();
-  const { window } = props;
   const [open, setOpen] = React.useState(false);
 
   const container = window !== undefined ? () => window().document.body : undefined;
@@ -110,6 +109,8 @@ function SwipeableEdgeDrawer(props) {
 
   const handleChipClickTravelMode = (chipLabel) => {
     setSelectedMode(chipLabel);
+    setOpen(false);
+    calculateRoute();
   };
 
   //Switch start and destination
@@ -129,7 +130,7 @@ function SwipeableEdgeDrawer(props) {
   // Function to handle opening the drawer and focusing on the text field
   const handleOpenDrawer = (inputRef) => {
     setOpen(true);
-    inputRef.current.focus();
+    // inputRef.current.focus();
     setTextFieldFocused(true);
   };
 
@@ -188,32 +189,32 @@ function SwipeableEdgeDrawer(props) {
           <Puller />
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
-          <TextField
-            ref={locationInputRef}
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            onBlur={handleTextFieldBlur}
-            InputProps={{
-                style: {
-                borderRadius: "50px",
-                borderColor: "#000000",
-                width: "324px",
-                height: 31,
-                }
-            }}
-            InputLabelProps={{
-                // shrink: true,
-                style: {
-                fontSize: 14,
-                fontWeight: 400,
-                lineHeight: 1
-                }
-            }}
-            id="outlined-basic"
-            label="Location"
-            variant="outlined"
-            onClick={() => handleOpenDrawer(locationInputRef)}
-            />
+              <TextField
+                inputRef={originRef}
+                // value={location}
+                // onChange={(e) => setLocation(e.target.value)}
+                onBlur={handleTextFieldBlur}
+                InputProps={{
+                    style: {
+                    borderRadius: "50px",
+                    borderColor: "#000000",
+                    width: "324px",
+                    height: 31,
+                    }
+                }}
+                InputLabelProps={{
+                    // shrink: true,
+                    style: {
+                    fontSize: 14,
+                    fontWeight: 400,
+                    lineHeight: 1
+                    }
+                }}
+                id="outlined-basic"
+                label="Location"
+                variant="outlined"
+                onClick={() => handleOpenDrawer(originRef)}
+                />
           </Box>
 
           <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
@@ -227,33 +228,33 @@ function SwipeableEdgeDrawer(props) {
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
-          <TextField
-            ref={destinationInputRef}
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            onBlur={handleTextFieldBlur}
-            InputProps={{
-                style: {
-                borderRadius: "50px",
-                borderColor: "#000000",
-                width: "324px",
-                height: 31,
-                }
-            }}
-            InputLabelProps={{
-                // shrink: true,
-                style: {
-                fontSize: 14,
-                fontWeight: 400,
-                lineHeight: 1,
-                paddingBottom: 3
-                }
-            }}
-            id="outlined-basic"
-            label="Where to?"
-            variant="outlined"
-            onClick={() => handleOpenDrawer(destinationInputRef)}
-            />
+              <TextField
+                inputRef={destinationRef}
+                // value={destination}
+                // onChange={(e) => setDestination(e.target.value)}
+                onBlur={handleTextFieldBlur}
+                InputProps={{
+                    style: {
+                    borderRadius: "50px",
+                    borderColor: "#000000",
+                    width: "324px",
+                    height: 31,
+                    }
+                }}
+                InputLabelProps={{
+                    // shrink: true,
+                    style: {
+                    fontSize: 14,
+                    fontWeight: 400,
+                    lineHeight: 1,
+                    paddingBottom: 3
+                    }
+                }}
+                id="outlined-basic"
+                label="Where to?"
+                variant="outlined"
+                onClick={() => handleOpenDrawer(destinationRef)}
+                />
           </Box>
 
           <Box sx={{
