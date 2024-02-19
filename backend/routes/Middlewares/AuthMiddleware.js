@@ -1,9 +1,9 @@
-const User = require("../../models/User");
-const { getUserById } = require("../../models/User");
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const router = express.Router();
+const dbo = require("../../db/conn");
+
+require("dotenv").config();
 
 // to check for user cookies, whether user authentication is valid using JWToken
 router.post("/", async (req, res) => {
@@ -15,7 +15,8 @@ router.post("/", async (req, res) => {
     if (err) {
       return res.json({ status: false });
     } else {
-      const user = await User.findById(data.id);
+      let db_connect = dbo.getDbLogging();
+      const user = await db_connect.collection("userAccount").find(data.id);
       if (user) return res.json({ status: true, user: user.username });
       else return res.json({ status: false });
     }
