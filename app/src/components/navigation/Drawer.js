@@ -31,7 +31,7 @@ import carIcon from '../../assets/filters/carIcon.png';
 import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const drawerBleeding = 70;
 
@@ -122,6 +122,33 @@ function SwipeableEdgeDrawer(props) {
     setDestination(temp);
   };
 
+  const locationInputRef = useRef(null);
+  const destinationInputRef = useRef(null);
+
+  const [isTextFieldFocused, setTextFieldFocused] = useState(false);
+  // Function to handle opening the drawer and focusing on the text field
+  const handleOpenDrawer = (inputRef) => {
+    setOpen(true);
+    inputRef.current.focus();
+    setTextFieldFocused(true);
+  };
+
+  // Function to handle when text fields lose focus
+  const handleTextFieldBlur = () => {
+    setTextFieldFocused(false);
+  };
+
+  // Function to handle clicking on a list item
+  const handleListClick = (key) => {
+    console.log("hello");
+    if (isTextFieldFocused === 'location') {
+      setLocation(key);
+    } else if (isTextFieldFocused === 'destination') {
+      setDestination(key);
+    }
+    setOpen(false);
+  };
+
   return (
     <Root>
       <CssBaseline />
@@ -162,8 +189,10 @@ function SwipeableEdgeDrawer(props) {
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
           <TextField
+            ref={locationInputRef}
             value={location}
             onChange={(e) => setLocation(e.target.value)}
+            onBlur={handleTextFieldBlur}
             InputProps={{
                 style: {
                 borderRadius: "50px",
@@ -183,7 +212,7 @@ function SwipeableEdgeDrawer(props) {
             id="outlined-basic"
             label="Location"
             variant="outlined"
-            onClick={() => setOpen(true)}
+            onClick={() => handleOpenDrawer(locationInputRef)}
             />
           </Box>
 
@@ -199,8 +228,10 @@ function SwipeableEdgeDrawer(props) {
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
           <TextField
+            ref={destinationInputRef}
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
+            onBlur={handleTextFieldBlur}
             InputProps={{
                 style: {
                 borderRadius: "50px",
@@ -221,16 +252,25 @@ function SwipeableEdgeDrawer(props) {
             id="outlined-basic"
             label="Where to?"
             variant="outlined"
-            onClick={() => setOpen(true)}
+            onClick={() => handleOpenDrawer(destinationInputRef)}
             />
           </Box>
 
-          <List dictionary={{'Current Location': ''}} icon={NearMeIcon}></List>
-          {/* Replace dictionary with actual values */}
-          <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}></List>
-          <Typography variant="filterh1" sx={{ px: 3.5, pt: 2, display: "block" }}>Saved Locations</Typography>
-          <List dictionary={{'Toa Payoh Public Library': '0.7km away'}} icon={Saved}></List>
+          <Box sx={{
+          display: isTextFieldFocused ? 'block' : 'none', // Conditionally display based on text field focus
+          }}>
+            <List dictionary={{'Current Location': ''}} icon={NearMeIcon}></List>
+            {/* Replace dictionary with actual values */}
+            <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}
+            onItemClick={handleListClick}></List>
+            <Typography variant="filterh1" sx={{ px: 3.5, pt: 2, display: "block" }}>Saved Locations</Typography>
+            <List dictionary={{'Toa Payoh Public Library': '0.7km away'}} icon={Saved}
+            onItemClick={handleListClick}></List>
+          </Box>
 
+          <Box sx={{
+          display: isTextFieldFocused ? 'none' : 'block', // Conditionally display based on text field focus
+          }}>
           <Typography variant="filterh1" sx={{ px: 3.5, py: 1, display: "block" }}>1. Search Filters</Typography>
           <Typography variant="filterh2" sx={{ px: 3.5, py: 1, display: "block"  }}>Points of Interest:</Typography>
           <ChipBox>
@@ -304,6 +344,7 @@ function SwipeableEdgeDrawer(props) {
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Wheelchair</Typography>
             </Box>
           </ChipBox>
+          </Box>
         </StyledBox>
       </SwipeableDrawer>
     </Root>

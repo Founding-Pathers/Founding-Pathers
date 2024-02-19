@@ -1,12 +1,12 @@
 import Drawer from '../components/navigation/Drawer';
-import LeftDrawer from '../components/navigation/LeftDrawer';
+import Map from '../components/navigation/Map';
 
 const Home = () => {
     return (
         <>
         
         <Drawer></Drawer>
-        <LeftDrawer></LeftDrawer>
+        <Map></Map>
         
         </>
     );
