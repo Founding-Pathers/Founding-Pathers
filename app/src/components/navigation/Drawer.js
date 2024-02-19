@@ -15,6 +15,7 @@ import Switch from '../../assets/Switch.png';
 import Chip from '../ui/Chip';
 import Checkbox from '../ui/Checkbox';
 import Modal from '../ui/Modal';
+import List from '../ui/List';
 import { useTheme } from '@mui/material/styles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
@@ -23,11 +24,14 @@ import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import DirectionsBusFilledOutlinedIcon from '@mui/icons-material/DirectionsBusFilledOutlined';
 import AttractionsOutlinedIcon from '@mui/icons-material/AttractionsOutlined';
 import ParkOutlinedIcon from '@mui/icons-material/ParkOutlined';
+import NearMeIcon from '@mui/icons-material/NearMe';
+import HistoryIcon from '@mui/icons-material/History';
+import Saved from '../../assets/Saved.png';
 import carIcon from '../../assets/filters/carIcon.png';
 import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
-
+import { useState } from 'react';
 
 const drawerBleeding = 70;
 
@@ -75,17 +79,48 @@ function SwipeableEdgeDrawer(props) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  // const [selectedPOIs, setSelectedPOIs] = useState([]);
+  //POIs State
+  const [selectedPOIs, setSelectedPOIs] = useState([]);
 
-  // const handleChange = (chipLabel) => {
-  //   setSelectedPOIs((prevSelected) => {
-  //     if (prevSelected.includes(chipLabel)) {
-  //       return prevSelected.filter((label) => label !== chipLabel);
-  //     } else {
-  //       return [...prevSelected, chipLabel];
-  //     }
-  //   });
-  // };
+  const handleChipClick = (chipLabel) => {
+    setSelectedPOIs((prevSelected) => {
+      if (prevSelected.includes(chipLabel)) {
+        return prevSelected.filter((label) => label !== chipLabel);
+      } else {
+        return [...prevSelected, chipLabel];
+      }
+    });
+  };
+
+  //Path Preferences State
+  const [selectedPaths, setSelectedPaths] = useState([]);
+
+  const handleChipClickPath = (chipLabel) => {
+    setSelectedPaths((prevSelected) => {
+      if (prevSelected.includes(chipLabel)) {
+        return prevSelected.filter((label) => label !== chipLabel);
+      } else {
+        return [...prevSelected, chipLabel];
+      }
+    });
+  };
+
+  //Travel Mode State
+  const [selectedMode, setSelectedMode] = useState(null);
+
+  const handleChipClickTravelMode = (chipLabel) => {
+    setSelectedMode(chipLabel);
+  };
+
+  //Switch start and destination
+  const [location, setLocation] = useState('');
+  const [destination, setDestination] = useState('');
+
+  const switchValues = () => {
+    const temp = location;
+    setLocation(destination);
+    setDestination(temp);
+  };
 
   return (
     <Root>
@@ -127,6 +162,8 @@ function SwipeableEdgeDrawer(props) {
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
           <TextField
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             InputProps={{
                 style: {
                 borderRadius: "50px",
@@ -150,14 +187,20 @@ function SwipeableEdgeDrawer(props) {
             />
           </Box>
 
-          <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between', ml: 3.5, mr: 0.5}}>
+          <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
+            '@media (min-width: 390px)': {
+              ml: 3.5,
+              mr: 0.5,
+            }}}>
             <img src={DottedLine} style={{ width: '2px', height: '18px' }}></img>
-            <img src={Switch} style={{ width: '18px', height: '18px', margin: '0px 6px' }}></img>
+            <img src={Switch} style={{ width: '18px', height: '18px', margin: '0px 6px' }} onClick={switchValues}></img>
           </Box>
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
           <TextField
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
             InputProps={{
                 style: {
                 borderRadius: "50px",
@@ -182,28 +225,34 @@ function SwipeableEdgeDrawer(props) {
             />
           </Box>
 
+          <List dictionary={{'Current Location': ''}} icon={NearMeIcon}></List>
+          {/* Replace dictionary with actual values */}
+          <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}></List>
+          <Typography variant="filterh1" sx={{ px: 3.5, pt: 2, display: "block" }}>Saved Locations</Typography>
+          <List dictionary={{'Toa Payoh Public Library': '0.7km away'}} icon={Saved}></List>
+
           <Typography variant="filterh1" sx={{ px: 3.5, py: 1, display: "block" }}>1. Search Filters</Typography>
           <Typography variant="filterh2" sx={{ px: 3.5, py: 1, display: "block"  }}>Points of Interest:</Typography>
           <ChipBox>
           <Chip icon={foodIcon} iconWidth="20px" iconHeight="20px" label="Food & Beverages" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            // isSelected={selectedChips.includes("Food & Beverages")}
-            // onClick={() => handleChipClick("Food & Beverages")}
+            isSelected={selectedPOIs.includes("Food & Beverages")}
+            onClick={() => handleChipClick("Food & Beverages")}
             ></Chip>
           <Chip icon={AttractionsOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Attractions" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            // isSelected={selectedChips.includes("Attractions")}
-            // onClick={() => handleChipClick("Attractions")}
+            isSelected={selectedPOIs.includes("Attractions")}
+            onClick={() => handleChipClick("Attractions")}
             ></Chip>
           <Chip icon={DirectionsBusFilledOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Bus Stops" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            // isSelected={selectedChips.includes("Bus Stops")}
-            // onClick={() => handleChipClick("Bus Stops")}
+            isSelected={selectedPOIs.includes("Bus Stops")}
+            onClick={() => handleChipClick("Bus Stops")}
             ></Chip>
           <Chip icon={trainIcon} iconWidth="20px" iconHeight="20px" label="MRT Stations" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            // isSelected={selectedChips.includes("MRTs")}
-            // onClick={() => handleChipClick("MRTs")}
+            isSelected={selectedPOIs.includes("MRTs")}
+            onClick={() => handleChipClick("MRTs")}
             ></Chip>
           <Chip icon={carIcon} iconWidth="20px" iconHeight="20px" label="Pick-up / Drop-off" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            // isSelected={selectedChips.includes("Pick Ups")}
-            // onClick={() => handleChipClick("Pick Ups")}
+            isSelected={selectedPOIs.includes("Pick Ups")}
+            onClick={() => handleChipClick("Pick Ups")}
             ></Chip>
           </ChipBox>
 
@@ -218,8 +267,14 @@ function SwipeableEdgeDrawer(props) {
           ></Modal>
           </Box>
           <ChipBox>
-          <Chip icon={shelterIcon} iconWidth="20px" iconHeight="20px" label="Sheltered" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}></Chip>
-          <Chip label="Nature" icon={ParkOutlinedIcon} iconWidth="20px" iconHeight="20px" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}></Chip>
+          <Chip icon={shelterIcon} iconWidth="20px" iconHeight="20px" label="Sheltered" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
+          isSelected={selectedPaths.includes("Sheltered")}
+          onClick={() => handleChipClickPath("Sheltered")}
+          ></Chip>
+          <Chip label="Nature" icon={ParkOutlinedIcon} iconWidth="20px" iconHeight="20px" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
+          isSelected={selectedPaths.includes("Nature")}
+          onClick={() => handleChipClickPath("Nature")}
+          ></Chip>
           </ChipBox>
           <Box sx={{mx: 3.5, my: 1}}>
           <Checkbox width="17px" fontSize="14px" label="Remember my preferences for future paths"></Checkbox>
@@ -228,15 +283,24 @@ function SwipeableEdgeDrawer(props) {
           <Typography variant="filterh1" sx={{ px: 3.5, py: 1.5, display: "block" }}>2. Travelling Mode</Typography>
           <ChipBox sx={{justifyContent: "space-evenly"}}>
             <Box sx={{textAlign: "center"}}>
-            <Chip icon={DirectionsWalkIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}></Chip>
+            <Chip icon={DirectionsWalkIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
+            isSelected={selectedMode === "Walk"}
+            onClick={() => handleChipClickTravelMode("Walk")}
+            ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Walking</Typography>
             </Box>
             <Box>
-            <Chip icon={DirectionsBikeIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}></Chip>
+            <Chip icon={DirectionsBikeIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
+            isSelected={selectedMode === "Cycle"}
+            onClick={() => handleChipClickTravelMode("Cycle")}
+            ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Cycling</Typography>
             </Box>
             <Box>
-            <Chip icon={AccessibleForwardIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}></Chip>
+            <Chip icon={AccessibleForwardIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
+            isSelected={selectedMode === "Wheelchair"}
+            onClick={() => handleChipClickTravelMode("Wheelchair")}
+            ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Wheelchair</Typography>
             </Box>
           </ChipBox>
