@@ -97,12 +97,7 @@ router.post("/login", async (req, res, next) => {
 router.post("/logout", (req, res) => {
   // console.log("Logging out user");
   res.clearCookie("token");
-  res.status(200).send("Logout successful. Redirecting to login page.");
-
-  // Redirect the user to the login page after a short delay
-  setTimeout(() => {
-    res.redirect("/login");
-  }, 2000); // Redirect after 2 seconds
+  res.redirect(200, "/login");
 });
 
 module.exports = router;
