@@ -3,7 +3,6 @@ import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-go
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
-import Box from '@mui/material/Box';
 import ArrowBack from '../assets/ArrowBack.png';
 import ArrowForward from '../assets/ArrowForward.png';
 
@@ -47,6 +46,18 @@ function Home() {
   useEffect(() => {
     setCurrentCardIndex(0); 
   }, [directionsResponse]);
+
+  useEffect(() => {
+    if (map && directionsResponse) {
+      const directionsRenderer = new window.google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+      directionsRenderer.setDirections(directionsResponse);
+      directionsRenderer.setRouteIndex(currentCardIndex);
+      return () => {
+        directionsRenderer.setMap(null);
+      };
+    }
+  }, [map, directionsResponse, currentCardIndex]);
 
   //will be diff once routing engine is set up
   async function calculateRoute() {
@@ -124,7 +135,7 @@ function Home() {
         <Drawer originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
         <Marker position={center} />
           {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse} />
+            <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />
           )}
         <></>
       </GoogleMap>
