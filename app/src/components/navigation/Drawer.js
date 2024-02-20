@@ -268,7 +268,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           <Box sx={{
           display: isTextFieldFocused ? 'block' : 'none', // Conditionally display based on text field focus
           }}>
-            <List dictionary={{'Current Location': ''}} icon={NearMeIcon}></List>
+            <List dictionary={{'Current Location': ''}} icon={NearMeIcon} onItemClick={handleListClick}></List>
             {/* Replace dictionary with actual values */}
             <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}
             onItemClick={handleListClick}></List>
