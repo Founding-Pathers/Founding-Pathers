@@ -20,6 +20,9 @@ const theme = createTheme({
     travelSelect: {
       main: '#FF931566',
       secondary: '#FF9900'
+    },
+    navigationGo: {
+      main: '#6ECC4D'
     }
   },
   typography: {
@@ -60,6 +63,18 @@ const theme = createTheme({
       fontWeight: 400,
       lineHeight: '16.94px',
       color: '#00000'
+    },
+    cardDesc: {
+      fontSize: '12px',
+      fontWeight: 400,
+      lineHeight: '14.52px',
+      color: '#000000'
+    },
+    cardDesc2: {
+      fontSize: '12px',
+      fontWeight: 600,
+      lineHeight: '14.52px',
+      color: '#000000'
     }
   },
 });

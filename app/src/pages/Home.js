@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
+import Card from '../components/navigation/RouteCard';
 
 const containerStyle = {
   width: '100%',
@@ -82,6 +83,7 @@ function Home() {
       >
         { /* Child components, such as markers, info windows, etc. */ }
         <LeftDrawer></LeftDrawer>
+        <Card time="8 minutes" distance="0.6km" mode="Wheelchair" filters="F&B, Sheltered"></Card>
         <Drawer originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
         <Marker position={center} />
           {directionsResponse && (
