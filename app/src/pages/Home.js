@@ -3,6 +3,9 @@ import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-go
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
+import Box from '@mui/material/Box';
+import ArrowBack from '../assets/ArrowBack.png';
+import ArrowForward from '../assets/ArrowForward.png';
 
 const containerStyle = {
   width: '100%',
@@ -24,9 +27,26 @@ function Home() {
   const [directionsResponse, setDirectionsResponse] = useState(null)
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   const originRef = useRef()
   const destinationRef = useRef()
+
+  const handleNext = () => {
+    if (currentCardIndex < directionsResponse.routes.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentCardIndex > 0) {
+      setCurrentCardIndex(currentCardIndex - 1);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentCardIndex(0); 
+  }, [directionsResponse]);
 
   //will be diff once routing engine is set up
   async function calculateRoute() {
@@ -49,8 +69,6 @@ function Home() {
     })
     console.log(results)
     setDirectionsResponse(results)
-    setDistance(results.routes[0].legs[0].distance.text)
-    setDuration(results.routes[0].legs[0].duration.text)
   }
 
   function clearRoute() {
@@ -83,7 +101,26 @@ function Home() {
       >
         { /* Child components, such as markers, info windows, etc. */ }
         <LeftDrawer></LeftDrawer>
-        <Card time="8 minutes" distance="0.6km" mode="Wheelchair" filters="F&B, Sheltered"></Card>
+        {/* <Card time="8 minutes" distance="0.6km" mode="Wheelchair" filters="F&B, Sheltered"></Card> */}
+        {/* {directionsResponse && directionsResponse.routes.map((route, index) => (
+            <>
+            <Card key={index} routeNo={index} time={route.legs[0].duration.text} distance={route.legs[0].distance.text} mode={directionsResponse.request.travelMode} filters="F&B, Sheltered"></Card>
+            <Button onClick={handlePrevious} text="p"></Button>
+            <Button onClick={handleNext} text="n"></Button>
+            </>
+        ))} */}
+        {directionsResponse && (
+        <>
+          <Card
+            time={directionsResponse.routes[currentCardIndex].legs[0].duration.text}
+            distance={directionsResponse.routes[currentCardIndex].legs[0].distance.text}
+            mode={directionsResponse.request.travelMode}
+            filters="F&B, Sheltered"
+          />
+          {currentCardIndex > 0 && <img style={{ top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
+          {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
+        </>
+        )}
         <Drawer originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
         <Marker position={center} />
           {directionsResponse && (

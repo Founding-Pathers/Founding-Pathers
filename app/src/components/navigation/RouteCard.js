@@ -7,13 +7,13 @@ import Button from '../ui/Button';
 import Typography from '@mui/material/Typography';
 import RouteIcon from '../../assets/Route.png';
 
-export default function RouteCard({ time, distance, mode, filters, index }) {
+export default function RouteCard({ time, distance, mode, filters, routeNo }) {
   return (
     <Card sx={{ width: '293px', height: '100px', top: '510px', left: '50px', borderRadius: '20px 75px 75px 20px', position: 'absolute', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
         <Box sx={{ textAlign: 'center' }}>
           <img src={RouteIcon} style={{ width:"25px", height:"25px" }}/>
-          <Typography variant="cardDesc" component="div">
-            Route {index}
+          <Typography variant="cardDesc" component="div" sx={{ ml: 1 }}>
+            Route {routeNo}
           </Typography>
         </Box>
       <CardContent>
