@@ -15,6 +15,7 @@ import Switch from '../../assets/Switch.png';
 import Chip from '../ui/Chip';
 import Checkbox from '../ui/Checkbox';
 import Modal from '../ui/Modal';
+import Button from '../ui/Button';
 import List from '../ui/List';
 import { useTheme } from '@mui/material/styles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -31,7 +32,7 @@ import carIcon from '../../assets/filters/carIcon.png';
 import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const drawerBleeding = 70;
 
@@ -72,11 +73,17 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, clearRoute}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [navigating, setNavigating] = useState(false);
+  const [showButton, setShowButton] = useState(false);
 
   const container = window !== undefined ? () => window().document.body : undefined;
+
+  useEffect(() => {
+    setShowButton(((!open) && navigating));
+  }, [open, navigating]);
 
   //POIs State
   const [selectedPOIs, setSelectedPOIs] = useState([]);
@@ -110,7 +117,9 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute}
   const handleChipClickTravelMode = (chipLabel) => {
     setSelectedMode(chipLabel);
     setOpen(false);
+    clearRoute();
     calculateRoute();
+    setNavigating(true);
   };
 
   //Switch start and destination
@@ -123,14 +132,10 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute}
     setDestination(temp);
   };
 
-  const locationInputRef = useRef(null);
-  const destinationInputRef = useRef(null);
-
   const [isTextFieldFocused, setTextFieldFocused] = useState(false);
   // Function to handle opening the drawer and focusing on the text field
   const handleOpenDrawer = (inputRef) => {
     setOpen(true);
-    // inputRef.current.focus();
     setTextFieldFocused(true);
   };
 
@@ -187,6 +192,9 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute}
           }}
         >
           <Puller />
+          <Box sx={{textAlign: 'center', mt: 3, display: showButton ? 'block' : 'none'}}>
+            <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
+          </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
               <TextField

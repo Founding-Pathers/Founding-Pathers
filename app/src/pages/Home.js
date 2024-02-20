@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
@@ -32,12 +32,21 @@ function Home() {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
     }
+
+    console.log(directionsResponse)
+    console.log(originRef.current.value)
+    console.log(destinationRef.current.value)
+
+    // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService()
     const results = await directionsService.route({
         origin: originRef.current.value,
         destination: destinationRef.current.value,
-        travelMode: google.maps.TravelMode.WALKING
+        // eslint-disable-next-line no-undef
+        travelMode: google.maps.TravelMode.WALKING,
+        provideRouteAlternatives: true
     })
+    console.log(results)
     setDirectionsResponse(results)
     setDistance(results.routes[0].legs[0].distance.text)
     setDuration(results.routes[0].legs[0].duration.text)
@@ -47,8 +56,8 @@ function Home() {
     setDirectionsResponse(null)
     setDistance('')
     setDuration('')
-    originRef.current.value = ''
-    destinationRef.current.value = ''
+    // originRef.current.value = ''
+    // destinationRef.current.value = ''
   }
 
   const onLoad = React.useCallback(function callback(map) {
@@ -73,7 +82,7 @@ function Home() {
       >
         { /* Child components, such as markers, info windows, etc. */ }
         <LeftDrawer></LeftDrawer>
-        <Drawer originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
+        <Drawer originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
         <Marker position={center} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
