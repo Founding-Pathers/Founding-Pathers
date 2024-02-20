@@ -1,30 +1,54 @@
 const express = require("express");
-const { createUser, getUserByEmail } = require("../models/User");
+const User = require("../models/User");
 const { createSecretToken } = require("../util/SecretToken");
 const bcrypt = require("bcryptjs");
+const dbo = require("../db/conn");
 
 const router = express.Router();
 
-// Route for account creation
+// Route for user registration
 router.post("/register", async (req, res, next) => {
   try {
-    email = req.body.email;
-    password = req.body.password;
+    let db_connect = dbo.getDbLogging();
+    // Extract user data from the request body
+    const { firstName, lastName, email, password } = req.body;
+    // Check if the email is already registered
+    const existingUser = await db_connect
+      .collection("userAccount")
+      .findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
 
-    const user = await createUser(email, password);
+    // Create a new user instance
+    const hashPassword = await bcrypt.hash(password, 12);
+    console.log(password);
+    console.log(hashPassword);
+    const newUser = new User({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password: hashPassword,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    // Save the user to the database
+    await db_connect.collection("userAccount").insertOne(newUser);
 
-    var user_id = user._id.toHexString();
+    // Generate token using user's ID
+    const token = createSecretToken(newUser._id);
 
-    const token = createSecretToken(user_id);
+    // Set the token as a cookie in the response
     res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 86400000,
     });
 
     // Respond with a success message or error message
     res
       .status(201)
-      .json({ message: "User created successfully", success: true, user });
+      .json({ message: "User created successfully", success: true, newUser });
     next();
   } catch (error) {
     console.error("Error in user registration:", error.message);
@@ -34,23 +58,27 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   try {
+    let db_connect = dbo.getDbLogging();
+
     const { email, password } = req.body;
 
-    const user = await getUserByEmail(email);
+    const existingUser = await db_connect
+      .collection("userAccount")
+      .findOne({ email });
 
     if (!email || !password) {
       return res.json({ message: "All fields are required" });
     }
 
-    if (!user) {
+    if (!existingUser) {
       return res.json({ message: "User does not exist" });
     }
 
-    const auth = await bcrypt.compare(password, user.password);
+    const auth = await bcrypt.compare(password, existingUser.password);
     if (!auth) {
       return res.json({ message: "Incorrect password or email" });
     }
-    const token = createSecretToken(user._id);
+    const token = createSecretToken(existingUser._id);
     res.cookie("token", token, {
       withCredentials: true,
       httpOnly: false,

@@ -1,23 +1,21 @@
 var mongoose = require("mongoose"),
-  Schema = mongoose.Schema,
-  bcrypt = require("bcryptjs"),
-  SALT_WORK_FACTOR = 10;
+  Schema = mongoose.Schema;
 
 // Schema for users of app
 const UserSchema = new Schema(
   {
     first_name: {
       type: String,
-      required: true,
+      // required: true,
     },
     last_name: {
       type: String,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
     },
     password: {
       type: String,
@@ -25,12 +23,12 @@ const UserSchema = new Schema(
     },
     deleted: {
       type: Boolean,
-      required: true,
+      // required: true,
     },
   },
   {
     timestamps: true,
-    collection: "users",
+    collection: "userAccount",
   }
 );
 const User = mongoose.model("User", UserSchema);
