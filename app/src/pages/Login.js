@@ -85,10 +85,6 @@ async function onSubmit(e){
       alert("Invalid credentials");
     }
     })
-  .catch(error => {
-    console.error("Error:", error.message);
-    alert("An error occurred. Please try again.");
-  })
 }
 
   return (
