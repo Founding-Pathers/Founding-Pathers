@@ -94,6 +94,8 @@ function Home() {
     setDirectionsResponse(null)
     setDistance('')
     setDuration('')
+    originRef.current.value = ''
+    destinationRef.current.value = ''
   }
 
   const onLoad = React.useCallback(function callback(map) {
@@ -169,6 +171,8 @@ function Home() {
 
   const handleEndRouting = () => {
     setIsRouting(false); // Set isRouting to false
+    clearRoute();
+    handleCurrentLocation();
   };
 
   return isLoaded ? (
@@ -196,7 +200,7 @@ function Home() {
           {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
         </>
         )}
-        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
+        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
         <Marker position={currentLocation} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />

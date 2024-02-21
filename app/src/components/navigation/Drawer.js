@@ -72,7 +72,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, clearRoute, duration, distance, filters, isRouting, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, filters, isRouting, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -116,7 +116,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   const handleChipClickTravelMode = (chipLabel) => {
     setSelectedMode(chipLabel);
     setOpen(false);
-    clearRoute();
     calculateRoute();
     handleSelecting();
     setNavigating(true);
@@ -212,7 +211,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <Button text="End" onClick={handleEndRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
           </Box>
 
-          <Box sx={{textAlign: 'center', mt: 3, display: (showButton && !isRouting) ? 'block' : 'none'}}>
+          <Box sx={{textAlign: 'center', mt: 3, display: (showButton && isRouting) ? 'block' : 'none'}}>
             <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
