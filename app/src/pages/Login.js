@@ -5,6 +5,7 @@ import Checkbox from '../components/ui/Checkbox';
 import Link from '../components/ui/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { useNavigate } from "react-router";
 import Logo from '../assets/Logo.png';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -41,6 +42,12 @@ const CenterItem = styled('div')({
 });
 
 const Login = () => {
+
+  const navigate = useNavigate();
+  const goHome = () => {
+    navigate('/home');
+  };
+
   return (
     <StyledContainer>
       <StyledFormContainer>
@@ -67,7 +74,7 @@ const Login = () => {
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={goHome} text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 

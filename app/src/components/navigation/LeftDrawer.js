@@ -10,6 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import UserIcon from '../../assets/User.png';
 import Menu from '../../assets/Menu.png';
 import { Typography } from '@mui/material';
+import { useNavigate } from "react-router";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
@@ -18,20 +20,29 @@ export default function TemporaryDrawer() {
     setOpen(newOpen);
   };
 
+  const navigate = useNavigate();
+  const goProfile = () => {
+    navigate('/profile')
+  }
+
+  const logout = () => {
+    navigate('/')
+  }
+
   //finish once routes to other pages are done
   const handleButtonClick = (buttonText) => {
     switch (buttonText) {
       case 'Report Obstruction':
-        // history.push('/report-obstruction');
+        // navigate('/report-obstruction');
         break;
       case 'Saved Locations':
-        // history.push('/saved-locations');
+        // navigate('/saved-locations');
         break;
       case 'Terms and Conditions':
-        // history.push('/terms-and-conditions');
+        // navigate('/terms-and-conditions');
         break;
       case 'User Guidelines':
-        // history.push('/user-guidelines');
+        // navigate('/user-guidelines');
         break;
       default:
         break;
@@ -41,7 +52,7 @@ export default function TemporaryDrawer() {
   const DrawerList = (
     <Box sx={{ width: 210 }} role="presentation" onClick={toggleDrawer(false)}>
       <Box sx={{ height: 200, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <img src={UserIcon} style={{width:"50px", height: "50px", padding: 2}}/>
+        <img src={UserIcon} onClick={goProfile} style={{width:"50px", height: "50px", padding: 2}}/>
         <Typography variant="profile" sx={{pt: 1}}>John Doe</Typography>
         <Typography variant="cardDesc" sx={{pt: 1}}>johndoe@gmail.com</Typography>
       </Box>
@@ -56,7 +67,7 @@ export default function TemporaryDrawer() {
         ))}
       </List>
       <Box sx={{backgroundColor: "#FF9900", height: "100%", display: "flex", alignContent: "flex-end"}}>
-        <Typography variant="filterLabel" sx={{mt: 30, ml: 2}}>Log Out</Typography>
+        <Typography onClick={logout} variant="filterLabel" sx={{mt: 30, ml: 2}}><LogoutIcon sx={{width:"24.4px", height: "19.92px"}}/>Log Out</Typography>
       </Box>
     </Box>
   );
