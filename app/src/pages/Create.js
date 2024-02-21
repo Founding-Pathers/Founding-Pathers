@@ -114,19 +114,19 @@ const Create = () => {
         <VerticalSpace>
           Email
           <TextField width="310px" id="email" label="" name="email" value={form.email} onChange={(e) => updateForm({ email: e.target.value })} />
-          {/* change the styling for FE */}{errors.email && <span className="error" style={{ color: 'red', backgroundColor: 'pink' }}>{errors.email}</span>}
+          {/* change the styling for FE */}{errors.email && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.email}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
           Password
           <TextField width="310px" id="outlined-password-input" type="password" label="" name="password" value={form.password} onChange={(e) => updateForm({ password: e.target.value })} />
-          {/* change the styling for FE */}{errors.password && <span className="error" style={{ color: 'red', backgroundColor: 'pink' }}>{errors.password}</span>}
+          {/* change the styling for FE */}{errors.password && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.password}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
           Confirm Password
           <TextField width="310px" id="outlined-confirmPassword-input" type="password" label="" name="confirmPassword" value={form.confirmPassword} onChange={(e) => updateForm({ confirmPassword: e.target.value })} />
-          {/* change the styling for FE */}{errors.confirmPassword && <span className="error" style={{ color: 'red', backgroundColor: 'pink' }}>{errors.confirmPassword}</span>}
+          {/* change the styling for FE */}{errors.confirmPassword && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.confirmPassword}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
