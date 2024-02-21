@@ -1,8 +1,8 @@
 import React from 'react';
-import ReusableButton from '../components/Button'; 
-import TextField from '../components/TextField';
-import Checkbox from '../components/Checkbox';
-import Link from '../components/Link';
+import ReusableButton from '../components/ui/Button'; 
+import TextField from '../components/ui/TextField';
+import Checkbox from '../components/ui/Checkbox';
+import Link from '../components/ui/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import Logo from '../assets/Logo.png';
