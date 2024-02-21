@@ -1,7 +1,7 @@
 import Logo from '../assets/Logo.png';
 import { styled } from '@mui/system';
 import { Typography } from '@mui/material';
-import Link from '../components/Link';
+import Link from '../components/ui/Link';
 
 const StyledContainer = styled('div')({
     display: 'flex',

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router";
-import ReusableButton from '../components/Button'; 
-import TextField from '../components/TextField';
-import Link from '../components/Link';
+import ReusableButton from '../components/ui/Button'; 
+import TextField from '../components/ui/TextField';
+import Link from '../components/ui/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import Logo from '../assets/Logo.png';
@@ -79,6 +79,10 @@ async function onSubmit(e){
   navigate("/")
 }
 
+  const goHome = () => {
+    navigate("/home");
+  };
+
   return (
     <StyledContainer>
       <StyledFormContainer onSubmit={onSubmit}>
@@ -107,7 +111,7 @@ async function onSubmit(e){
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={goHome} type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
