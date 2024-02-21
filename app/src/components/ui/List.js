@@ -5,7 +5,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import handleListClick from '../navigation/Drawer';
 
 export default function BasicList({ dictionary, icon: IconComponent, onItemClick }) {
   return (
@@ -13,7 +12,7 @@ export default function BasicList({ dictionary, icon: IconComponent, onItemClick
       <nav aria-label="main mailbox folders">
         <List sx={{ py: 0 }}>
           {Object.entries(dictionary).map(([key, value]) => (
-            <ListItem key={key} disablePadding onClick={() => handleListClick(key)}>
+            <ListItem key={key} disablePadding onClick={()=>onItemClick(key)}>
               <ListItemButton>
                 <ListItemIcon>
                 {typeof IconComponent === 'string' ? 

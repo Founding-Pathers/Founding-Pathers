@@ -115,6 +115,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   const handleChipClickTravelMode = (chipLabel) => {
     setSelectedMode(chipLabel);
+    setShowButton(true);
     setOpen(false);
     calculateRoute();
     handleSelecting();
@@ -145,7 +146,9 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   // Function to handle clicking on a list item
   const handleListClick = (key) => {
+    setTextFieldFocused(false);
     console.log("hello");
+    setLocation(key);
     if (isTextFieldFocused === 'location') {
       setLocation(key);
     } else if (isTextFieldFocused === 'destination') {
@@ -159,6 +162,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setOpen(true);
     setEditing(true);
     console.log(isEditing)
+  }
+
+  function endRouting() {
+    setShowButton(false);
+    handleEndRouting();
   }
 
   return (
@@ -208,18 +216,18 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
               <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{filters}</Typography>
               <Typography variant="navigatingSaveDest" sx={{display: 'block', mt: 0.5}}><img src={Saved} style={{width:"18px", height:"16px", marginRight: "5px"}}></img>Save Destination</Typography>
             </Box>
-            <Button text="End" onClick={handleEndRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
+            <Button text="End" onClick={endRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
           </Box>
 
-          <Box sx={{textAlign: 'center', mt: 3, display: (showButton && isRouting) ? 'block' : 'none'}}>
+          <Box sx={{textAlign: 'center', mt: 3, display: (showButton || isRouting) ? 'block' : 'none'}}>
             <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
               <TextField
                 inputRef={originRef}
-                // value={location}
-                // onChange={(e) => setLocation(e.target.value)}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 onBlur={handleTextFieldBlur}
                 InputProps={{
                     style: {
@@ -257,8 +265,8 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
               <TextField
                 inputRef={destinationRef}
-                // value={destination}
-                // onChange={(e) => setDestination(e.target.value)}
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
                 onBlur={handleTextFieldBlur}
                 InputProps={{
                     style: {
