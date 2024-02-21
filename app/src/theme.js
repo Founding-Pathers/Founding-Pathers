@@ -23,6 +23,9 @@ const theme = createTheme({
     },
     navigationGo: {
       main: '#6ECC4D'
+    },
+    endNavigation: {
+      main: '#EE6161'
     }
   },
   typography: {
@@ -75,6 +78,25 @@ const theme = createTheme({
       fontWeight: 600,
       lineHeight: '14.52px',
       color: '#000000'
+    },
+    navigatingTitle: {
+      fontSize: '20px',
+      fontWeight: 800,
+      lineHeight: '24.2px',
+      color: '#FF9900'
+    },
+    navigatingSubtitle: {
+      fontSize: '14px',
+      fontWeight: 800,
+      lineHeight: '16.94px',
+      color: '#FF9900'
+    },
+    navigatingSaveDest: {
+      fontSize: '10px',
+      fontWeight: 400,
+      lineHeight: '12.1px',
+      color: '#000000',
+      textDecoration: 'underline'
     }
   },
 });

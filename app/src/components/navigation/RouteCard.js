@@ -7,9 +7,9 @@ import Button from '../ui/Button';
 import Typography from '@mui/material/Typography';
 import RouteIcon from '../../assets/Route.png';
 
-export default function RouteCard({ time, distance, mode, filters, routeNo }) {
+export default function RouteCard({ time, distance, mode, filters, routeNo, onClick, display }) {
   return (
-    <Card sx={{ width: '293px', height: '100px', top: '510px', left: '50px', borderRadius: '20px 75px 75px 20px', position: 'absolute', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+    <Card sx={{ width: '293px', height: '100px', top: '510px', left: '50px', borderRadius: '20px 75px 75px 20px', position: 'absolute', display: {display}, justifyContent: 'space-evenly', alignItems: 'center' }}>
         <Box sx={{ textAlign: 'center' }}>
           <img src={RouteIcon} style={{ width:"25px", height:"25px" }}/>
           <Typography variant="cardDesc" component="div" sx={{ ml: 1 }}>
@@ -31,7 +31,7 @@ export default function RouteCard({ time, distance, mode, filters, routeNo }) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button text="GO" color="navigationGo" borderRadius="100px" width="62px" height="62px"></Button>
+        <Button onClick={onClick} text="GO" color="navigationGo" borderRadius="100px" width="62px" height="62px"></Button>
       </CardActions>
     </Card>
   );

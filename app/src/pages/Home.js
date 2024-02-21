@@ -28,6 +28,7 @@ function Home() {
   const [duration, setDuration] = useState('')
   const [currentLocation, setCurrentLocation] = useState('')
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isRouting, setIsRouting] = useState(false);
 
   const originRef = useRef()
   const destinationRef = useRef()
@@ -153,6 +154,12 @@ function Home() {
     }
   }, [map]);
 
+  function startRouting(currentCardIndex) {
+    setDistance(directionsResponse.routes[currentCardIndex].legs[0].distance.text)
+    setDuration(directionsResponse.routes[currentCardIndex].legs[0].duration.text)
+    setIsRouting(true)
+  }
+
   return isLoaded ? (
       <GoogleMap
         mapContainerStyle={containerStyle}
@@ -171,12 +178,14 @@ function Home() {
             distance={directionsResponse.routes[currentCardIndex].legs[0].distance.text}
             mode={directionsResponse.request.travelMode}
             filters="F&B, Sheltered"
+            onClick={() => startRouting(currentCardIndex)}
+            display = { isRouting ? 'none' : 'flex'}
           />
-          {currentCardIndex > 0 && <img style={{ top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
-          {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
+          {currentCardIndex > 0 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
+          {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
         </>
         )}
-        <Drawer originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
+        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} isRouting={isRouting} originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
         <Marker position={currentLocation} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />
