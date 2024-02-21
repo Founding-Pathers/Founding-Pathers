@@ -101,6 +101,10 @@ const Create = () => {
     }
   }
 
+  const goHome = () => {
+    navigate("/home");
+  };
+
   return (
     <StyledContainer>
       <StyledFormContainer onSubmit={onSubmit}>
@@ -131,7 +135,7 @@ const Create = () => {
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={goHome} type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 

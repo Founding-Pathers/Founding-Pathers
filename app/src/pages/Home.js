@@ -18,7 +18,7 @@ const center = {
 
 function Home() {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyCw-GydqxdA5aVu-LGYPlBdAAqH8r2mcm8",
+    googleMapsApiKey: process.env.REACT_APP_API_KEY,
     libraries: ['places']
   })
 
@@ -26,7 +26,10 @@ function Home() {
   const [directionsResponse, setDirectionsResponse] = useState(null)
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
+  const [currentLocation, setCurrentLocation] = useState('')
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isRouting, setIsRouting] = useState(false);
+  const [selecting, setSelecting] = useState(false);
 
   const originRef = useRef()
   const destinationRef = useRef()
@@ -64,6 +67,11 @@ function Home() {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
     }
+    if (originRef.current.value == "Current Location") {
+        console.log(currentLocation)
+        const originLatLng = `${currentLocation.lat},${currentLocation.lng}`;
+        originRef.current.value = originLatLng;
+    }
 
     console.log(directionsResponse)
     console.log(originRef.current.value)
@@ -86,20 +94,86 @@ function Home() {
     setDirectionsResponse(null)
     setDistance('')
     setDuration('')
-    // originRef.current.value = ''
-    // destinationRef.current.value = ''
+    originRef.current.value = ''
+    destinationRef.current.value = ''
   }
 
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
-
-    setMap(map)
+    setMap(map);
   }, [])
 
   const onUnmount = React.useCallback(function callback(map) {
     setMap(null)
   }, [])
+
+  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(
+      browserHasGeolocation
+        ? "Error: The Geolocation service failed."
+        : "Error: Your browser doesn't support geolocation.",
+    );
+    infoWindow.open(map);
+  }
+
+  //current location
+  async function handleCurrentLocation() {
+    // eslint-disable-next-line no-undef
+    let infoWindow = new google.maps.InfoWindow();
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+  
+             // eslint-disable-next-line no-undef
+            infoWindow.setPosition(pos);
+             // eslint-disable-next-line no-undef
+            infoWindow.setContent("Location found.");
+             // eslint-disable-next-line no-undef
+            infoWindow.open(map);
+            map.setCenter(pos);
+            setCurrentLocation(pos);
+          },
+          () => {
+             // eslint-disable-next-line no-undef
+            handleLocationError(true, infoWindow, map.getCenter());
+          },
+        );
+      } else {
+        // Browser doesn't support Geolocation
+         // eslint-disable-next-line no-undef
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
+  };
+
+  useEffect(() => {
+    if (isLoaded) {
+        handleCurrentLocation(); // Automatically ask for current location on component mount
+    }
+  }, [map]);
+
+  function startRouting(currentCardIndex) {
+    setDistance(directionsResponse.routes[currentCardIndex].legs[0].distance.text)
+    setDuration(directionsResponse.routes[currentCardIndex].legs[0].duration.text)
+    setIsRouting(true)
+    setSelecting(false)
+    console.log(isRouting)
+  }
+
+  function handleSelecting() {
+    setSelecting(true);
+  }
+
+  const handleEndRouting = () => {
+    setIsRouting(false); // Set isRouting to false
+    clearRoute();
+    handleCurrentLocation();
+  };
 
   return isLoaded ? (
       <GoogleMap
@@ -112,14 +186,6 @@ function Home() {
       >
         { /* Child components, such as markers, info windows, etc. */ }
         <LeftDrawer></LeftDrawer>
-        {/* <Card time="8 minutes" distance="0.6km" mode="Wheelchair" filters="F&B, Sheltered"></Card> */}
-        {/* {directionsResponse && directionsResponse.routes.map((route, index) => (
-            <>
-            <Card key={index} routeNo={index} time={route.legs[0].duration.text} distance={route.legs[0].distance.text} mode={directionsResponse.request.travelMode} filters="F&B, Sheltered"></Card>
-            <Button onClick={handlePrevious} text="p"></Button>
-            <Button onClick={handleNext} text="n"></Button>
-            </>
-        ))} */}
         {directionsResponse && (
         <>
           <Card
@@ -127,13 +193,15 @@ function Home() {
             distance={directionsResponse.routes[currentCardIndex].legs[0].distance.text}
             mode={directionsResponse.request.travelMode}
             filters="F&B, Sheltered"
+            onClick={() => startRouting(currentCardIndex)}
+            display = { selecting ? 'flex' : 'none'}
           />
-          {currentCardIndex > 0 && <img style={{ top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
-          {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
+          {currentCardIndex > 0 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
+          {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
         </>
         )}
-        <Drawer originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
-        <Marker position={center} />
+        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
+        <Marker position={currentLocation} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />
           )}

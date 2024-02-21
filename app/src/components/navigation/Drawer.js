@@ -28,13 +28,12 @@ import ParkOutlinedIcon from '@mui/icons-material/ParkOutlined';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import HistoryIcon from '@mui/icons-material/History';
 import Saved from '../../assets/Saved.png';
+import Route from '../../assets/Route.png';
 import carIcon from '../../assets/filters/carIcon.png';
 import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
 import { useEffect, useState } from 'react';
-
-const drawerBleeding = 70;
 
 const Root = styled('div')(({ theme }) => ({
   height: '100%',
@@ -73,7 +72,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, clearRoute}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, filters, isRouting, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -116,9 +115,10 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   const handleChipClickTravelMode = (chipLabel) => {
     setSelectedMode(chipLabel);
+    setShowButton(true);
     setOpen(false);
-    clearRoute();
     calculateRoute();
+    handleSelecting();
     setNavigating(true);
   };
 
@@ -146,7 +146,9 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   // Function to handle clicking on a list item
   const handleListClick = (key) => {
+    setTextFieldFocused(false);
     console.log("hello");
+    setLocation(key);
     if (isTextFieldFocused === 'location') {
       setLocation(key);
     } else if (isTextFieldFocused === 'destination') {
@@ -155,13 +157,25 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setOpen(false);
   };
 
+  const [isEditing, setEditing] = useState(false);
+  function editFilters() {
+    setOpen(true);
+    setEditing(true);
+    console.log(isEditing)
+  }
+
+  function endRouting() {
+    setShowButton(false);
+    handleEndRouting();
+  }
+
   return (
     <Root>
       <CssBaseline />
       <Global
         styles={{
           '.MuiDrawer-root > .MuiPaper-root': {
-            height: `calc(90% - ${drawerBleeding}px)`,
+            height: `calc(90% - 70px)`,
             overflow: 'visible',
           },
         }}
@@ -172,7 +186,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         open={open}
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
-        swipeAreaWidth={drawerBleeding}
+        swipeAreaWidth={70}
         disableSwipeToOpen={false}
         ModalProps={{
           keepMounted: true
@@ -181,7 +195,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         <StyledBox
           sx={{
             position: 'absolute',
-            top: -drawerBleeding,
+            top: (isRouting && !(isEditing)) ? -160 : -70,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
             visibility: 'visible',
@@ -192,15 +206,28 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           }}
         >
           <Puller />
-          <Box sx={{textAlign: 'center', mt: 3, display: showButton ? 'block' : 'none'}}>
+          {/* IS ROUTING */}
+          <Box sx={{display: (isRouting && !(isEditing)) ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <Button text="Edit" onClick={editFilters} width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
+            <Box sx={{textAlign: 'center'}}>
+              <Typography variant="navigatingSubtitle" sx={{display: 'block'}}>Estimated Arrival Time:</Typography>
+              <Typography variant="navigatingTitle" sx={{display: 'block', mt: 0.5}}>{duration}</Typography>
+              <Typography variant="filterLabel" sx={{display: 'block', mt: 0.5}}>{distance} away</Typography>
+              <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{filters}</Typography>
+              <Typography variant="navigatingSaveDest" sx={{display: 'block', mt: 0.5}}><img src={Saved} style={{width:"18px", height:"16px", marginRight: "5px"}}></img>Save Destination</Typography>
+            </Box>
+            <Button text="End" onClick={endRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
+          </Box>
+
+          <Box sx={{textAlign: 'center', mt: 3, display: (showButton || isRouting) ? 'block' : 'none'}}>
             <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
               <TextField
                 inputRef={originRef}
-                // value={location}
-                // onChange={(e) => setLocation(e.target.value)}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 onBlur={handleTextFieldBlur}
                 InputProps={{
                     style: {
@@ -238,8 +265,8 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
               <TextField
                 inputRef={destinationRef}
-                // value={destination}
-                // onChange={(e) => setDestination(e.target.value)}
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
                 onBlur={handleTextFieldBlur}
                 InputProps={{
                     style: {
@@ -268,7 +295,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           <Box sx={{
           display: isTextFieldFocused ? 'block' : 'none', // Conditionally display based on text field focus
           }}>
-            <List dictionary={{'Current Location': ''}} icon={NearMeIcon}></List>
+            <List dictionary={{'Current Location': ''}} icon={NearMeIcon} onItemClick={handleListClick}></List>
             {/* Replace dictionary with actual values */}
             <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}
             onItemClick={handleListClick}></List>

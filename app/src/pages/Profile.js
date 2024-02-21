@@ -9,6 +9,7 @@ import DeleteImg from '../assets/Delete.png';
 import LogoutImg from '../assets/Logout.png';
 import UpdateImg from '../assets/Updated.png';
 import Alert from '../components/ui/Alert.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -63,9 +64,14 @@ const Profile = () => {
     window.location.href = '/deleted';
   };
 
+  const goHome = () => {
+    window.location.href = '/home';
+  }
+
   return (
     <StyledContainer>
       <StyledFormContainer>
+        <ArrowBackIosIcon sx={{ mt: 2 }} onClick={goHome}/>
         <img
           src={User}
           alt="Cycle-Pathic"

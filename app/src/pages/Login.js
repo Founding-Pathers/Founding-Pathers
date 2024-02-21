@@ -5,9 +5,9 @@ import Checkbox from '../components/ui/Checkbox';
 import Link from '../components/ui/Link';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { useNavigate } from "react-router";
 import Logo from '../assets/Logo.png';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled('div')({
     display: 'flex',
