@@ -18,7 +18,7 @@ const center = {
 
 function Home() {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyATtvolXUep5QfJiJNHlp9zsVyKFzMlUAw",
+    googleMapsApiKey: process.env.REACT_APP_API_KEY,
     libraries: ['places']
   })
 
