@@ -117,7 +117,7 @@ async function onSubmit(e){
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={onSubmit} text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
