@@ -29,6 +29,7 @@ function Home() {
   const [currentLocation, setCurrentLocation] = useState('')
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isRouting, setIsRouting] = useState(false);
+  const [selecting, setSelecting] = useState(false);
 
   const originRef = useRef()
   const destinationRef = useRef()
@@ -158,7 +159,17 @@ function Home() {
     setDistance(directionsResponse.routes[currentCardIndex].legs[0].distance.text)
     setDuration(directionsResponse.routes[currentCardIndex].legs[0].duration.text)
     setIsRouting(true)
+    setSelecting(false)
+    console.log(isRouting)
   }
+
+  function handleSelecting() {
+    setSelecting(true);
+  }
+
+  const handleEndRouting = () => {
+    setIsRouting(false); // Set isRouting to false
+  };
 
   return isLoaded ? (
       <GoogleMap
@@ -179,13 +190,13 @@ function Home() {
             mode={directionsResponse.request.travelMode}
             filters="F&B, Sheltered"
             onClick={() => startRouting(currentCardIndex)}
-            display = { isRouting ? 'none' : 'flex'}
+            display = { selecting ? 'flex' : 'none'}
           />
           {currentCardIndex > 0 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
           {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
         </>
         )}
-        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} isRouting={isRouting} originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
+        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} clearRoute={clearRoute} calculateRoute={calculateRoute}></Drawer>
         <Marker position={currentLocation} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />

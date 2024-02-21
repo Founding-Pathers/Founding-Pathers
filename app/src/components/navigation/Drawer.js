@@ -72,7 +72,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, clearRoute, duration, distance, filters, isRouting}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, clearRoute, duration, distance, filters, isRouting, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -118,6 +118,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setOpen(false);
     clearRoute();
     calculateRoute();
+    handleSelecting();
     setNavigating(true);
   };
 
@@ -154,6 +155,13 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setOpen(false);
   };
 
+  const [isEditing, setEditing] = useState(false);
+  function editFilters() {
+    setOpen(true);
+    setEditing(true);
+    console.log(isEditing)
+  }
+
   return (
     <Root>
       <CssBaseline />
@@ -180,7 +188,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         <StyledBox
           sx={{
             position: 'absolute',
-            top: isRouting ? -160 : -70,
+            top: (isRouting && !(isEditing)) ? -160 : -70,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
             visibility: 'visible',
@@ -192,8 +200,8 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         >
           <Puller />
           {/* IS ROUTING */}
-          <Box sx={{display: isRouting ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
-            <Button text="Edit" onClick={ ()=> setOpen(true) } width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
+          <Box sx={{display: (isRouting && !(isEditing)) ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <Button text="Edit" onClick={editFilters} width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
             <Box sx={{textAlign: 'center'}}>
               <Typography variant="navigatingSubtitle" sx={{display: 'block'}}>Estimated Arrival Time:</Typography>
               <Typography variant="navigatingTitle" sx={{display: 'block', mt: 0.5}}>{duration}</Typography>
@@ -201,7 +209,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
               <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{filters}</Typography>
               <Typography variant="navigatingSaveDest" sx={{display: 'block', mt: 0.5}}><img src={Saved} style={{width:"18px", height:"16px", marginRight: "5px"}}></img>Save Destination</Typography>
             </Box>
-            <Button text="End" onClick={ ()=> setOpen(true) } color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
+            <Button text="End" onClick={handleEndRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
           </Box>
 
           <Box sx={{textAlign: 'center', mt: 3, display: (showButton && !isRouting) ? 'block' : 'none'}}>
