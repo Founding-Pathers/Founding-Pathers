@@ -97,6 +97,12 @@ const theme = createTheme({
       lineHeight: '12.1px',
       color: '#000000',
       textDecoration: 'underline'
+    },
+    profile: {
+      fontSize: '17px',
+      fontWeight: 600,
+      lineHeight: '17px',
+      color: '#000000'
     }
   },
 });
