@@ -47,6 +47,7 @@ const Create = () => {
     password: "",
     confirmPassword: "",
   });
+  
   const navigate = useNavigate();
   
   function updateForm(value) {
@@ -101,10 +102,6 @@ const Create = () => {
     }
   }
 
-  const goHome = () => {
-    navigate("/home");
-  };
-
   return (
     <StyledContainer>
       <StyledFormContainer onSubmit={onSubmit}>
@@ -135,7 +132,7 @@ const Create = () => {
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton onClick={goHome} type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={Create} type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 

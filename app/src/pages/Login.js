@@ -42,7 +42,11 @@ const CenterItem = styled('div')({
 });
 
 const Login = () => {
-
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    userNotExist: ''
+  });
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -59,8 +63,19 @@ const Login = () => {
   
 async function onSubmit(e){
   e.preventDefault();
+  const validationErrors = {};
 
-  await fetch("http://localhost:5000/login", {
+  if (!form.email) {
+    validationErrors.email = "Email is required";
+  }
+  if (!form.password) {
+    validationErrors.password = "Password is required";
+  }
+
+  setErrors(validationErrors); // Set the errors state
+  
+  if (Object.keys(validationErrors).length === 0) {
+    await fetch("http://localhost:5000/login", {
     method: "POST",
     headers: {
       "Content-Type" : "application/json",
@@ -79,12 +94,18 @@ async function onSubmit(e){
     console.log(data);
     if (data === "Success") {
       navigate("/home");
-    } else {
+    }
+    else if (data === "User does not exist"){
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        userNotExist: "User does not exist / Invalid credentials"
+      }));
+    }
+    else {
       navigate("/");
-      // add frontend element to return invalid credentials
-      alert("Invalid credentials");
     }
     })
+  }
 }
 
   return (
@@ -100,12 +121,16 @@ async function onSubmit(e){
         <VerticalSpace>
         Email
         <TextField width="310px" id="outlined-required" label="" name="email" value={form.email} onChange={(e) => updateForm({ email: e.target.value })}/>
+        {/* change the styling for FE */}{errors.email && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.email}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
         Password
         <TextField width="310px" id="outlined-password-input" type="password" label="" name="password" value={form.password} onChange={(e) => updateForm({ password: e.target.value })}/>
+        {/* change the styling for FE */}{errors.password && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.password}</span>}
         </VerticalSpace>
+
+        {errors.userNotExist && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px', textAlign: 'center', display: 'block' }}>{errors.userNotExist}</span>}
 
         <VerticalSpace>
         <Checkbox labelPlacement="end" label="Keep me signed in" value="isLoggedIn" />
