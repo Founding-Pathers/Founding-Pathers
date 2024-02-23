@@ -97,7 +97,7 @@ router.post("/login", async (req, res, next) => {
 router.post("/logout", (req, res) => {
   // console.log("Logging out user");
   res.clearCookie("token");
-  res.redirect(200, "/login");
+  res.redirect(200, "/logout");
 });
 
 module.exports = router;
