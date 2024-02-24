@@ -10,6 +10,19 @@ const dbo = require("../db/conn");
 // Converts the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
+// Retrieve list of all user preferences
+router.route("/userpref").get(async function (req, res) {
+  let db_connect = dbo.getDbLogging();
+  db_connect
+    .collection("userPreferences")
+    .find()
+    .toArray()
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    });
+});
+
 // Retrieve user preference by useraccount id
 router.route("/userpref/").get(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
@@ -28,7 +41,6 @@ router.route("/userpref/add").post(function (req, response, next) {
   let myobj = {
     id: req.body.id,
     wheelchair_friendly: req.body.wheelchair_friendly,
-    is_elderly: req.body.is_elderly,
   };
   db_connect
     .collection("userPreferences")
@@ -45,7 +57,6 @@ router.route("/userpref/update/:id").post(function (req, response, next) {
   let newvalues = {
     $set: {
       wheelchair_friendly: req.body.wheelchair_friendly,
-      is_elderly: req.body.is_elderly,
     },
   };
   db_connect

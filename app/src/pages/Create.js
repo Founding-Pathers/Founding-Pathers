@@ -41,11 +41,13 @@ const CenterItem = styled('div')({
 });
 
 const Create = () => {
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
+  
   const navigate = useNavigate();
   
   function updateForm(value) {
@@ -55,33 +57,50 @@ const Create = () => {
     });
   }
 
-async function onSubmit(e){
+  async function onSubmit(e) {
     e.preventDefault();
+    const validationErrors = {};
 
-  const newAccount = { ...form };
-  console.log(newAccount)
+    if (!form.email) {
+      validationErrors.email = "Email is required";
+    }
+    if (!form.password) {
+      validationErrors.password = "Password is required";
+    }
+    if (!form.confirmPassword) {
+      validationErrors.confirmPassword = "Confirm Password is required";
+    }
+    if (form.password !== form.confirmPassword) {
+      validationErrors.confirmPassword = "Passwords do not match";
+    }
 
-  await fetch("http://localhost:5000/register", {
-    method: "POST",
-    headers: {
-      "Content-Type" : "application/json",
-    },
-    body: JSON.stringify(newAccount),
-  })
-  .catch(error => {
-    window.alert(error);
-    return;
-  });
+    setErrors(validationErrors); // Set the errors state
 
-  setForm({email: "", password: "", confirmPassword: ""});
+    if (Object.keys(validationErrors).length === 0) {
+      // If there are no validation errors, proceed with form submission
+      try {
+        const response = await fetch("http://localhost:5000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
 
-  // added to navigate back to landing
-  navigate("/")
-}
+        if (!response.ok) {
+          throw new Error('Failed to register');
+        }
 
-  const goHome = () => {
-    navigate("/home");
-  };
+        setForm({ email: "", password: "", confirmPassword: "" });
+        // Handle successful registration (redirect or show success message)
+        navigate("/");
+      } catch (error) {
+        console.error('Registration error:', error);
+        // Handle registration error (show error message to user)
+        window.alert(error);
+      }
+    }
+  }
 
   return (
     <StyledContainer>
@@ -94,24 +113,26 @@ async function onSubmit(e){
         </VerticalSpace>
 
         <VerticalSpace>
-        Email
-        <TextField width="310px" id="email" label=""name="email" value={form.email} onChange={(e) => updateForm({ email: e.target.value })}
-        />
+          Email
+          <TextField width="310px" id="email" label="" name="email" value={form.email} onChange={(e) => updateForm({ email: e.target.value })} />
+          {/* change the styling for FE */}{errors.email && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.email}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
-        Password
-        <TextField width="310px" id="outlined-password-input" type="password" label="" name="password" value={form.password} onChange={(e) => updateForm({ password: e.target.value })}/>
+          Password
+          <TextField width="310px" id="outlined-password-input" type="password" label="" name="password" value={form.password} onChange={(e) => updateForm({ password: e.target.value })} />
+          {/* change the styling for FE */}{errors.password && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.password}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
-        Confirm Password
-        <TextField width="310px" id="outlined-confirmPassword-input" type="password" label="" name="confirmPassword" value={form.confirmPassword} onChange={(e) => updateForm({ confirmPassword: e.target.value })}/>
+          Confirm Password
+          <TextField width="310px" id="outlined-confirmPassword-input" type="password" label="" name="confirmPassword" value={form.confirmPassword} onChange={(e) => updateForm({ confirmPassword: e.target.value })} />
+          {/* change the styling for FE */}{errors.confirmPassword && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.confirmPassword}</span>}
         </VerticalSpace>
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton onClick={goHome} type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={Create} type="submit" text="SIGN UP" color="primary" height="40px" width="140px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 
