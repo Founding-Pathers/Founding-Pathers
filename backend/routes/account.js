@@ -22,16 +22,9 @@ router.post("/register", async (req, res, next) => {
 
     // Create a new user instance
     const hashPassword = await bcrypt.hash(password, 12);
-    console.log(password);
-    console.log(hashPassword);
-    const newUser = new User({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password: hashPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    // console.log(password);
+    // console.log(hashPassword);
+    const newUser = new User({ first_name: firstName, last_name: lastName, email, password: hashPassword, createdAt: new Date(), updatedAt: new Date() });
     // Save the user to the database
     await db_connect.collection("userAccount").insertOne(newUser);
 
@@ -71,13 +64,17 @@ router.post("/login", async (req, res, next) => {
     }
 
     if (!existingUser) {
-      return res.json({ message: "User does not exist" });
+      return res.json("User does not exist");
     }
 
     const auth = await bcrypt.compare(password, existingUser.password);
     if (!auth) {
-      return res.json({ message: "Incorrect password or email" });
+      res
+        .status(401)
+        .json("Unsuccessful login");
+      next()
     }
+    else{
     const token = createSecretToken(existingUser._id);
     res.cookie("token", token, {
       withCredentials: true,
@@ -85,9 +82,10 @@ router.post("/login", async (req, res, next) => {
     });
     // returns that user has logged in successfully
     res
-      .status(201)
-      .json({ message: "User logged in successfully", success: true });
+      .status(200)
+      .json("Success");
     next();
+  }
   } catch (error) {
     console.error(error);
   }
