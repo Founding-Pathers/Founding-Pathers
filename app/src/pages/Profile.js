@@ -111,6 +111,7 @@ const Profile = () => {
             id="outlined-required"
             label=""
             disabled={!editMode}
+            placeholder="John"
           />
         </VerticalSpace>
 
@@ -121,6 +122,7 @@ const Profile = () => {
             id="outlined-required"
             label=""
             disabled={!editMode}
+            placeholder="Doe"
           />
         </VerticalSpace>
 
@@ -131,6 +133,7 @@ const Profile = () => {
             id="outlined-required"
             label=""
             disabled={!editMode}
+            placeholder="john@gmail.com"
           />
         </VerticalSpace>
 
@@ -140,7 +143,6 @@ const Profile = () => {
             width="310px"
             id="outlined-password-input"
             type="password"
-            label=""
             disabled={!editMode}
           />
         </VerticalSpace>

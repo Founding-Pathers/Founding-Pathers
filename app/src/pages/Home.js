@@ -191,7 +191,8 @@ function Home() {
           <Card
             time={directionsResponse.routes[currentCardIndex].legs[0].duration.text}
             distance={directionsResponse.routes[currentCardIndex].legs[0].distance.text}
-            mode={directionsResponse.request.travelMode}
+            mode="WHEELCHAIR"
+            // {directionsResponse.request.travelMode}
             filters="F&B, Sheltered"
             onClick={() => startRouting(currentCardIndex)}
             display = { selecting ? 'flex' : 'none'}

@@ -337,8 +337,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           <Modal icon={InfoOutlinedIcon} size="small" modalTitle="Path Preferences"
           modalDesc={{
             'Sheltered: ': 'protected from wind, rain, or other bad weather',
-            'Nature: ': 'scenic view of plants, or those including PCN, trials, etc.',
-            'Wheelchair-friendly: ': 'smooth terrain without staircases, steep ramps'
+            'Nature: ': 'scenic view of plants, or those including PCN, trials, etc.'
           }}
           ></Modal>
           </Box>
