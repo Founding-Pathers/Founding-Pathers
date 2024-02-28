@@ -20,7 +20,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+
+      - name: Debug Directory Contents
+        run: |
+          ls -al ../../app
+          ls -al ../../backend
+        
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
