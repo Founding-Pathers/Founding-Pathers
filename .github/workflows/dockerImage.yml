@@ -38,4 +38,4 @@ jobs:
         with:
           context: backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:backend-latest
