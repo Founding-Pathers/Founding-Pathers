@@ -28,12 +28,12 @@ jobs:
 
       - name: Start application in app directory
         run: npm start
-        working-directory: directory1
+        working-directory: app
 
       - name: Install dependencies in backend directory
         run: npm install
         working-directory: backend
       - name: Start application in directory 2
         run: npm start
-        working-directory: directory2
+        working-directory: backend
 
