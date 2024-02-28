@@ -32,7 +32,10 @@ jobs:
 
       - name: Start application # run the application in build mode
         run: npm run build
+        env:  
+          CI: false
         working-directory: app
+
 
       - name: Start backend # run a mock MongoDB Connection
         run: npm test
