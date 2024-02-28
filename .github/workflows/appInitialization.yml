@@ -9,15 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      PORT: ${{ secrets.PORT }}
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
-      CI : false
-
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [18.x, 20.x]
 
     steps:
       - name: Checkout code
@@ -26,30 +20,21 @@ jobs:
       - name: Setup Node.js environment ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node-version }} # test varioous node versions
 
-      - name: Install dependencies in app directory
+      - name: Install dependencies in app directory # check if dependencies are okay
         run: npm install
         working-directory: app
 
-      - name: Install dependencies in backend directory
+      - name: Install dependencies in backend directory # check if dependencies are okay
         run: npm install
         working-directory: backend
 
-      - name: Start application
+      - name: Start application # run the application in build mode
         run: npm run build
         working-directory: app
 
-      - name: Start backend
-        run: |
-          npm start &
-          sleep 5
-          response=$(curl -s http://localhost:5000/status)
-          if [[ "$response" == *"Server is running on port: 5000"* ]]; then
-            echo "Backend server is running and responding as expected."
-          else
-            echo "Error: Backend server is not responding as expected."
-            exit 1
-          fi
+      - name: Start backend # run a mock MongoDB Connection
+        run: npm test
         working-directory: backend
 
