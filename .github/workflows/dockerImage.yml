@@ -2,10 +2,10 @@ name: Build and Push Docker Image
 
 on:
   workflow_run:
-    workflows: ["Initialization of BE & FE, and Mock Database Connection"]
+    workflows: ["BE, FE & Mock DB Connection"]
     # branches: [main]
     types:
-        - completed
+      - completed
 
 jobs:
   docker:
