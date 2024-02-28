@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      PORT: ${{ secrets.PORT }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
@@ -41,9 +46,6 @@ jobs:
 
       - name: Start backend
         run:  |
-          echo "PORT=${{ secrets.PORT }}" >> .env
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-          echo "TOKEN_KEY=${{ secrets.TOKEN_KEY }}" >> .env
           npm start
           if [ $? -eq 0 ]; then
             echo "npm start completed successfully"
