@@ -39,7 +39,7 @@ jobs:
             echo "npm start failed" >&2
             exit 1
           fi
-          working-directory: app
+        working-directory: app
 
       - name: Start backend
         run:  |
