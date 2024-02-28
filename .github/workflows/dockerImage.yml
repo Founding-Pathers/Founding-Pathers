@@ -31,11 +31,11 @@ jobs:
         with:
           context: app
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:frontend-latest
 
       - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
           context: backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/server:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:backend:latest
