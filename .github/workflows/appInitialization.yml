@@ -1,0 +1,39 @@
+name: CI
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies in app directory
+        run: npm install
+        working-directory: ../app
+
+      - name: Start application in app directory
+        run: npm start
+        working-directory: directory1
+
+      - name: Install dependencies in backend directory
+        run: npm install
+        working-directory: ../backend
+      - name: Start application in directory 2
+        run: npm start
+        working-directory: directory2
+
