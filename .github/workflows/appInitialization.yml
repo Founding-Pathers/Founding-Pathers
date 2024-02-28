@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies in app directory
         run: npm install
-        working-directory: ../app
+        working-directory: app
 
       - name: Start application in app directory
         run: npm start
@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies in backend directory
         run: npm install
-        working-directory: ../backend
+        working-directory: backend
       - name: Start application in directory 2
         run: npm start
         working-directory: directory2
