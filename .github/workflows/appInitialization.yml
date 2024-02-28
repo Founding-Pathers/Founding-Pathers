@@ -26,14 +26,29 @@ jobs:
         run: npm install
         working-directory: app
 
-      - name: Start application in app directory
-        run: npm start
-        working-directory: app
-
       - name: Install dependencies in backend directory
         run: npm install
         working-directory: backend
-      - name: Start application in directory 2
-        run: npm start
+
+      - name: Start application
+        run: |
+          npm start
+          if [ $? -eq 0 ]; then
+            echo "npm start completed successfully"
+          else
+            echo "npm start failed" >&2
+            exit 1
+          fi
+          working-directory: app
+
+      - name: Start backend
+        run:  |
+          npm start
+          if [ $? -eq 0 ]; then
+            echo "npm start completed successfully"
+          else
+            echo "npm start failed" >&2
+            exit 1
+          fi
         working-directory: backend
 
