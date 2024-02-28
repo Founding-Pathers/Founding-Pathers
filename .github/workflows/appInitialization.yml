@@ -1,4 +1,4 @@
-name: CI
+name: Initialization of BE & FE, and Mock Database Connection
 
 on: [push, pull_request]
 
