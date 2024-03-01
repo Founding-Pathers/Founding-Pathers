@@ -13,7 +13,9 @@ router.post("/register", async (req, res, next) => {
     // Extract user data from the request body
     const { firstName, lastName, email, password } = req.body;
     // Check if the email is already registered
-    const existingUser = await db_connect.collection("userAccount").findOne({ email });
+    const existingUser = await db_connect
+      .collection("userAccount")
+      .findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered" });
     }
@@ -53,7 +55,9 @@ router.post("/login", async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    const existingUser = await db_connect.collection("userAccount").findOne({ email });
+    const existingUser = await db_connect
+      .collection("userAccount")
+      .findOne({ email });
 
     if (!email || !password) {
       return res.json({ message: "All fields are required" });
@@ -85,6 +89,13 @@ router.post("/login", async (req, res, next) => {
   } catch (error) {
     console.error(error);
   }
+});
+
+// logout user
+router.post("/logout", (req, res) => {
+  // console.log("Logging out user");
+  res.clearCookie("token");
+  res.redirect(200, "/logout");
 });
 
 module.exports = router;
