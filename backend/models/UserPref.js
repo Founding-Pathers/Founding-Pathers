@@ -19,7 +19,34 @@ const UserPrefSchema = new Schema(
       type: Boolean,
       required: true,
     },
-    // insert more user preferences here
+    f_and_b: {
+      type: Boolean,
+      required: true,
+    },
+    is_sheltered: {
+      type: Boolean,
+      required: true,
+    },
+    tourist_attraction: {
+      type: Boolean,
+      required: true,
+    },
+    bus_stop: {
+      type: Boolean,
+      required: true,
+    },
+    mrt: {
+      type: Boolean,
+      required: true,
+    },
+    pickup_dropoff: {
+      type: Boolean,
+      required: true,
+    },
+    nature: {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -47,8 +74,13 @@ async function createUserPref(id) {
     const newUserPref = {
       id: id,
       wheelchair_friendly: false,
-      is_elderly: false,
-      // insert more user preferences here
+      f_and_b: false,
+      is_sheltered: false,
+      tourist_attraction: false,
+      bus_stop: false,
+      mrt: false,
+      pickup_dropoff: false,
+      nature: false,
     };
 
     await usersCollection.insertOne(newUserPref);
