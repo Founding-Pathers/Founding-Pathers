@@ -104,7 +104,7 @@ jobs:
               break
             else
               echo "Previous task definition is not yet stable. Waiting..."
-              sleep 10  # Adjust the sleep duration as needed
+              sleep 30
             fi
           done
         
