@@ -76,7 +76,7 @@ jobs:
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.render-role-container.outputs.task-definition }} # Takes last rendered
+          task-definition: ${{ steps.render-backend-container.outputs.task-definition }} # will retrieve from latest updated render
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
