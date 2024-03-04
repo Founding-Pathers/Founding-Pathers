@@ -37,7 +37,7 @@ jobs:
         run: |
           TASK_DEFINITION=$(aws ssm get-parameter --name "foundingpathers-task-revision.json" --with-decryption --query Parameter.Value --output text)
           echo "$TASK_DEFINITION" > task-definition.json
-          echo "::set-output name=task-definition-path::task-definition.json"
+          echo "ECS_TASK_DEFINITION=task-definition.json" >> $GITHUB_ENV
 
       - name: Log in to ECR
         id: ECR-login
@@ -65,7 +65,7 @@ jobs:
         id: render-frontend-container
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.fetch-task-definition.outputs.task-definition-path }}
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: frontend
           image: ${{env.ECR_REPOSITORY}}:frontend
 
@@ -73,7 +73,7 @@ jobs:
         id: render-backend-container
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.fetch-task-definition.outputs.task-definition-path }}
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: backend
           image: ${{env.ECR_REPOSITORY}}:server
 
