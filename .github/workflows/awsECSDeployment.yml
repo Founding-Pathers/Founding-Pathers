@@ -103,7 +103,10 @@ jobs:
             sleep 10
           done
         if: steps.deploy-ecs-task.outputs.stable == 'true'
-      
+        
       - name: Increase Desired Count
-        run: aws ecs update-service --cluster your-cluster-name --service your-service-name --desired-count 1
-        if: steps.poll-provisioning.outputs.TASK_STATUS == 'PROVISIONING'
+        run: |
+          if [ "${{ steps.poll-provisioning.outputs.TASK_STATUS }}" = "PROVISIONING" ]; then
+            aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
+          fi
+        
