@@ -37,7 +37,7 @@ jobs:
         run: |
           TASK_DEFINITION=$(aws ssm get-parameter --name "foundingpathers-task-revision.json" --with-decryption --query Parameter.Value --output text)
           echo "$TASK_DEFINITION" > task-definition.json
-          echo "ECS_TASK_DEFINITION=$(cat task-definition.json)" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=task-definition.json" >> $GITHUB_ENV
 
       - name: Log in to ECR
         id: ECR-login
