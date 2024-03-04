@@ -79,11 +79,31 @@ jobs:
             if [ -n "$CURRENT_TASK_ARN" ]; then
               aws ecs stop-task --cluster ${{ env.ECS_CLUSTER }} --task $CURRENT_TASK_ARN
             fi
+      
+      - name: Decrease Desired Count
+        run: aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 0
 
-      - name: Deploy to Amazon ECS service
+      - name: Deploy ECS Task Definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        id: deploy-ecs-task
         with:
-          task-definition: ${{ steps.render-backend-container.outputs.task-definition }} # will retrieve from latest updated render
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true  
+          wait-for-service-stability: false  # Set this to false to not wait for service stability
+          task-definition: task-definition.json
+          
+      - name: Poll for Provisioning
+        id: poll-provisioning
+        run: |
+          while true; do
+            TASK_STATUS=$(aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks task-id --query 'tasks[0].lastStatus' --output text)
+            if [ "$TASK_STATUS" = "PROVISIONING" ]; then
+              break
+            fi
+            sleep 10
+          done
+        if: steps.deploy-ecs-task.outputs.stable == 'true'
+      
+      - name: Increase Desired Count
+        run: aws ecs update-service --cluster your-cluster-name --service your-service-name --desired-count 1
+        if: steps.poll-provisioning.outputs.TASK_STATUS == 'PROVISIONING'
