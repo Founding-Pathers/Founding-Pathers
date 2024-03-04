@@ -48,7 +48,7 @@ jobs:
         id: pull-and-tag-built-images
         run: |
           tag=("latest")
-          images=("frontend" "server")
+          images=("frontend" "backend")
 
           for image in "${images[@]}"; do
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:${image}-${tag}
