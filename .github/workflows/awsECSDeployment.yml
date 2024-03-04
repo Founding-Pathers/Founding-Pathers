@@ -36,8 +36,8 @@ jobs:
       - name: Fetch ECS Task Definition from Parameter Store
         run: |
           TASK_DEFINITION=$(aws ssm get-parameter --name "foundingpathers-task-revision.json" --with-decryption --query Parameter.Value --output text)
-          echo "$TASK_DEFINITION" > task_definition.json
-          echo "::set-output name=task-definition-path::task_definition.json"
+          echo "$TASK_DEFINITION" > task-definition.json
+          echo "::set-output name=task-definition-path::task-definition.json"
 
       - name: Log in to ECR
         id: ECR-login
