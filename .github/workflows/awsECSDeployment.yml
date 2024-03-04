@@ -92,13 +92,9 @@ jobs:
           wait-for-service-stability: true
           task-definition: task-definition.json
       
-      - name: Wait for Deployment Status
+      - name: Increase Desired Count
         run: |
-          STATUS=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].status' --output text)
-          if [ "$STATUS" == "PRIMARY" ]; then
-            aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
-          fi
-        
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
       
 
         
