@@ -98,8 +98,13 @@ jobs:
 
       - name: Check if Task is Running
         run: |
+          TASK_ID=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --query 'taskArns[0]' --output text)
+
           while true; do
-            TASK_STATUS=$(aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks task-id --query 'tasks[0].lastStatus' --output text)
+            # Describe the task and retrieve its status
+            TASK_STATUS=$(aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks $TASK_ID --query 'tasks[0].lastStatus' --output text)
+            
+            # Check if the task is running
             if [ "$TASK_STATUS" == "RUNNING" ]; then
               echo "Task is running. Workflow successful."
               break
@@ -108,6 +113,7 @@ jobs:
               sleep 30
             fi
           done
+        
         
         
         
