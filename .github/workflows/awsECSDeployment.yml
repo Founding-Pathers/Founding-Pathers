@@ -43,6 +43,10 @@ jobs:
         id: ECR-login
         run: |
           ${{ secrets.AWS_ECR_LOGIN }}
+      
+      - name: Debug task definition path
+        run: |
+          echo "Task Definition Path: ${{ steps.fetch-task-definition.outputs.task-definition-path }}"
 
       - name: Pull and tag images from CI Pipeline
         id: pull-and-tag-built-images
