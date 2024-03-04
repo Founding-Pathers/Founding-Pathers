@@ -50,17 +50,17 @@ const UserPrefSchema = new Schema(
   },
   {
     timestamps: true,
-    collection: "userprefs",
+    collection: "userPreferences",
   }
 );
 
-const UserPref = mongoose.model("userprefs", UserPrefSchema);
+const UserPref = mongoose.model("userPreferences", UserPrefSchema);
 
 // create default user preferences for new user
 async function createUserPref(id) {
   try {
     const db = await dbo.getDb();
-    const userprefCollection = db.collection("userprefs");
+    const userprefCollection = db.collection("userPreferences");
     const existingUserPref = await userprefCollection.findOne({
       $or: [{ id: id }],
     });

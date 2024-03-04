@@ -40,13 +40,13 @@ router.route("/userpref/add").post(function (req, response, next) {
   let db_connect = dbo.getDbLogging();
   let myobj = {
     id: req.body.id,
-    wheelchair_friendly: req.body.wheelchair_friendly,
-    f_and_b: req.body.f_and_b,
-    is_sheltered: req.body.is_sheltered,
-    tourist_attraction: req.body.tourist_attraction,
-    bus_stop: req.body.bus_stop,
+    wheelchair_friendly: req.body.wheelchairfriendly,
+    f_and_b: req.body.fandb,
+    is_sheltered: req.body.issheltered,
+    tourist_attraction: req.body.touristattraction,
+    bus_stop: req.body.busstop,
     mrt: req.body.mrt,
-    pickup_dropoff: req.body.pickup_dropoff,
+    pickup_dropoff: req.body.pickupdropoff,
     nature: req.body.nature,
   };
   db_connect
