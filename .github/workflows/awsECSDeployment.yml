@@ -77,10 +77,6 @@ jobs:
         run: |
           aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 0
 
-      - name: Reset Desired Count to 1 for next task
-        run: |
-          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
-
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
@@ -88,3 +84,8 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
+
+      - name: Reset Desired Count to 1 for above task
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
+  
