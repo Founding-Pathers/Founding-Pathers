@@ -96,20 +96,25 @@ jobs:
         run: |
           aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
 
-      - name: Check if Task is Running
-        run: |
           while true; do
-            TASK_ID=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --query 'taskArns[0]' --output text)
-            TASK_STATUS=$(aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks $TASK_ID --query 'tasks[0].lastStatus' --output text)
-            
-            if [ "$TASK_STATUS" == "RUNNING" ]; then
-              echo "Task is running. Workflow successful."
-              break
-            else
-              echo "Task is not running. Waiting..."
-              sleep 30
-            fi
+            TASK_ARNS=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --output text --query 'taskArns')
+      
+            for TASK_ARN in $TASK_ARNS; do
+              TASK_ID=$(basename $TASK_ARN)
+      
+              TASK_STATUS=$(aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks $TASK_ID --query 'tasks[0].lastStatus' --output text)
+      
+              if [ "$TASK_STATUS" == "RUNNING" ]; then
+                echo "Task is running. Workflow successful."
+                exit 0
+              else
+                echo "Task is not running. Waiting..."
+              fi
           done
+
+          sleep 30
+          done
+      
         
         
         
