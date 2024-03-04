@@ -47,7 +47,6 @@ jobs:
       - name: Pull and tag images from CI Pipeline
         id: pull-and-tag-built-images
         run: |
-          tag=("latest")
           images=("frontend" "backend")
 
           for image in "${images[@]}"; do
@@ -71,7 +70,12 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: backend
-          image: ${{env.ECR_REPOSITORY}}:server
+          image: ${{env.ECR_REPOSITORY}}:backend
+
+      - name: Stop Existing ECS Task
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }}
+          --service ${{ env.ECS_SERVICE }} --desired-count 0
 
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
