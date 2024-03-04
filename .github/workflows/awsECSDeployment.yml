@@ -94,9 +94,9 @@ jobs:
       
       - name: Wait for Deployment Status
         run: |
-          STATUS=$(aws ecs describe-services --cluster *** --services *** --query 'services[0].status' --output text)
+          STATUS=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].status' --output text)
           if [ "$STATUS" == "PRIMARY" ]; then
-            aws ecs update-service --cluster *** --service *** --desired-count 1
+            aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
           fi
         
       
