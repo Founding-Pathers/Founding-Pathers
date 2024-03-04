@@ -23,12 +23,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fetch ECS Task Definition from Parameter Store
-        run: |
-          TASK_DEFINITION=$(aws ssm get-parameter --name "/foundingpathers-task-revision.json" --with-decryption --query Parameter.Value --output text)
-          echo "$TASK_DEFINITION" > task_definition.json
-          echo "::set-output name=task-definition-path::task_definition.json"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -38,6 +32,12 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Fetch ECS Task Definition from Parameter Store
+        run: |
+          TASK_DEFINITION=$(aws ssm get-parameter --name "/foundingpathers-task-revision.json" --with-decryption --query Parameter.Value --output text)
+          echo "$TASK_DEFINITION" > task_definition.json
+          echo "::set-output name=task-definition-path::task_definition.json"
 
       - name: Log in to ECR
         id: ECR-login
