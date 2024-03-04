@@ -95,6 +95,19 @@ jobs:
       - name: Increase Desired Count
         run: |
           aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
-      
+
+      - name: Check if Previous Task Definition is Stable
+        run: |
+          while true; do
+            if [ "${{ steps.deploy-ecs-task.outputs.stable }}" == 'true' ]; then
+              echo "Previous task definition is stable. Ending workflow"
+              break
+            else
+              echo "Previous task definition is not yet stable. Waiting..."
+              sleep 10  # Adjust the sleep duration as needed
+            fi
+          done
+        
+        
 
         
