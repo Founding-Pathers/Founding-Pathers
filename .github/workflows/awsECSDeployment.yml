@@ -47,6 +47,7 @@ jobs:
       - name: Pull and tag images from CI Pipeline
         id: pull-and-tag-built-images
         run: |
+          tag=("latest")
           images=("frontend" "backend")
 
           for image in "${images[@]}"; do
