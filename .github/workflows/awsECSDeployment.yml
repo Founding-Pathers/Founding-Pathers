@@ -96,17 +96,19 @@ jobs:
         run: |
           aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 1
 
-      - name: Check if Previous Task Definition is Stable
+      - name: Check if Task is Running
         run: |
           while true; do
-            if [ "${{ steps.deploy-ecs-task.outputs.stable }}" == 'true' ]; then
-              echo "Previous task definition is stable. Ending workflow"
+            TASK_STATUS=$(aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks task-id --query 'tasks[0].lastStatus' --output text)
+            if [ "$TASK_STATUS" == "RUNNING" ]; then
+              echo "Task is running. Workflow successful."
               break
             else
-              echo "Previous task definition is not yet stable. Waiting..."
+              echo "Task is not running. Waiting..."
               sleep 30
             fi
           done
+        
         
         
 
