@@ -1,0 +1,82 @@
+name: Deploy to Amazon ECS
+
+on: [push]
+  # workflow_run:
+  #   workflows: ["Build and Push Docker Image"]
+  #   branches: [main]
+  #   types:
+  #     - completed
+
+env:
+  AWS_REGION: ap-southeast-1
+  ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+  ECS_SERVICE: ${{ secrets.AWS_ECS_SERVICE_ARN }}
+  ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER_ARN }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch ECS Task Definition from Parameter Store
+        run: |
+          TASK_DEFINITION=$(aws ssm get-parameter --name "/foundingpathers-task-revision.json" --with-decryption --query Parameter.Value --output text)
+          echo "$TASK_DEFINITION" > task_definition.json
+          echo "::set-output name=task-definition-path::task_definition.json"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configuration of AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        id: ECR-login
+        run: |
+          ${{ secrets.AWS_ECR_LOGIN }}
+
+      - name: Pull and tag images from CI Pipeline
+        id: pull-and-tag-built-images
+        run: |
+          tag=("latest")
+          images=("frontend" "server")
+
+          for image in "${images[@]}"; do
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:${image}-${tag}
+            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/founding-pathers:${image}-${tag} ${{ env.ECR_REPOSITORY }}:${image}
+            docker push ${{ env.ECR_REPOSITORY }}:${image}
+            echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          done
+
+      - name: Modify Amazon ECS task definition with frontend container
+        id: render-frontend-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.fetch-task-definition.outputs.task-definition-path }}
+          container-name: frontend
+          image: ${{env.ECR_REPOSITORY}}:frontend
+
+      - name: Modify Amazon ECS task definition with backend container
+        id: render-backend-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.fetch-task-definition.outputs.task-definition-path }}
+          container-name: backend
+          image: ${{env.ECR_REPOSITORY}}:server
+
+      - name: Deploy to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-role-container.outputs.task-definition }} # Takes last rendered
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

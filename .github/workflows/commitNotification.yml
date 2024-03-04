@@ -1,6 +1,6 @@
 name: Send Telegram Notification
 
-on: [push]
+on: [pull_request]
 
 jobs:
   build:

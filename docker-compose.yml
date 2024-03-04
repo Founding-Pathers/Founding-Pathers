@@ -12,7 +12,7 @@ services:
     networks:
       - mern-app
     env_file:
-      - .env
+      - ./app/.env
     depends_on:
       - server
     
