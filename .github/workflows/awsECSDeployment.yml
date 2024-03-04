@@ -77,7 +77,7 @@ jobs:
         run: |
             CURRENT_TASK_ARN=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --desired-status RUNNING --query 'taskArns[0]' --output text)
             if [ -n "$CURRENT_TASK_ARN" ]; then
-              aws ecs stop-task ${{ env.ECS_CLUSTER }} --task $CURRENT_TASK_ARN
+              aws ecs stop-task --cluster ${{ env.ECS_CLUSTER }} --task $CURRENT_TASK_ARN
             fi
 
       - name: Deploy to Amazon ECS service
