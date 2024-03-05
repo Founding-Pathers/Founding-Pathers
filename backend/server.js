@@ -45,6 +45,20 @@ app.listen(port, async () => {
   console.log(`Server is running on port: ${port}`);
 });
 
+
+app.get('/status', async (req, res) => {
+  try {
+    // Perform database connection
+    await dbo.connectToServer();
+    // If successful, send success response
+    res.status(200).send(`Server is running on port: ${port}`);
+  } catch (err) {
+    // If error, send error response
+    console.error(err);
+    res.status(500).send('Error connecting to database');
+  }
+});
+
 app.disable("x-powered-by");
 app.get("/api/welcome", function (req, res) {
   res.send("Welcome to the Server.");
