@@ -42,30 +42,30 @@ router.route("/shortestroute").post(function (req, res) {
       // return the data
       for (let i = 0; i < data.length; i++) {
         if (
-          Math.abs(req.body.origin_lat - data[i].properties.ORIGIN_X) <
+          Math.abs(req.body.origin_lat - data[i].properties.Origin_LAT) <
             Math.abs(req.body.origin_lat - best_origin_lat) &&
-          Math.abs(req.body.origin_long - data[i].properties.ORIGIN_Y) <
+          Math.abs(req.body.origin_long - data[i].properties.Origin_LONG) <
             Math.abs(req.body.origin_long - best_origin_long)
         ) {
-          best_origin_lat = data[i].properties.ORIGIN_X;
-          best_origin_long = data[i].properties.ORIGIN_Y;
+          best_origin_lat = data[i].properties.Origin_LAT;
+          best_origin_long = data[i].properties.Origin_LONG;
         }
         if (
-          Math.abs(req.body.dest_lat - data[i].properties.DEST_X) <
+          Math.abs(req.body.dest_lat - data[i].properties.Dest_LAT) <
             Math.abs(req.body.dest_lat - best_dest_lat) &&
-          Math.abs(req.body.dest_long - data[i].properties.DEST_Y) <
+          Math.abs(req.body.dest_long - data[i].properties.Dest_LONG) <
             Math.abs(req.body.dest_long - best_dest_long)
         ) {
-          best_dest_lat = data[i].properties.DEST_X;
-          best_dest_long = data[i].properties.DEST_Y;
+          best_dest_lat = data[i].properties.Dest_LAT;
+          best_dest_long = data[i].properties.Dest_LONG;
         }
       }
       data = data.filter(
         (data) =>
-          data.properties.ORIGIN_X === best_origin_lat &&
-          data.properties.ORIGIN_Y === best_origin_long &&
-          data.properties.DEST_X === best_dest_lat &&
-          data.properties.DEST_Y === best_dest_long
+          data.properties.Origin_LAT === best_origin_lat &&
+          data.properties.Origin_LONG === best_origin_long &&
+          data.properties.Dest_LAT === best_dest_lat &&
+          data.properties.Dest_LONG === best_dest_long
       );
       // console.log(data);
       res.json(data);
