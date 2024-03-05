@@ -24,29 +24,6 @@ router.route("/shortestroutes").get(async function (req, res) {
     });
 });
 
-// Retrieve specific route by computedroutes id (admin)
-router.route("/shortestroute").get(function (req, res) {
-  let db_connect = dbo.getDbRoutes();
-  let myquery = { _id: ObjectId(req.params.id) };
-  db_connect
-    .collection("shortest_route")
-    .findOne(myquery, function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-});
-
-// Retrieve first route in computedroutes (dev)
-router.route("/firstshortestroute").get(function (req, res) {
-  let db_connect = dbo.getDbRoutes();
-  const firstDoc = db_connect
-    .collection("shortest_route")
-    .find()
-    .limit(5)
-    .toArray();
-  res.json(firstDoc);
-});
-
 // Retrieve routes according to where the user is at through lat and long
 router.route("/shortestroute").post(function (req, res) {
   let db_connect = dbo.getDbRoutes();
@@ -92,7 +69,7 @@ router.route("/shortestroute").post(function (req, res) {
           data.properties.DEST_X === best_dest_lat &&
           data.properties.DEST_Y === best_dest_long
       );
-      console.log(data);
+      // console.log(data);
       res.json(data);
     });
 });
