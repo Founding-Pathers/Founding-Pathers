@@ -50,8 +50,6 @@ router.route("/shortestroute").post(function (req, res) {
           best_origin_lat = data[i].properties.ORIGIN_X;
           best_origin_long = data[i].properties.ORIGIN_Y;
         }
-      }
-      for (let i = 0; i < data.length; i++) {
         if (
           Math.abs(req.body.dest_lat - data[i].properties.DEST_X) <
             Math.abs(req.body.dest_lat - best_dest_lat) &&
