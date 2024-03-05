@@ -43,7 +43,7 @@ const ShortestPathSchema = new Schema(
   },
   {
     timestamps: true,
-    collection: "shortest_path",
+    collection: "shortest_route",
   }
 );
 
