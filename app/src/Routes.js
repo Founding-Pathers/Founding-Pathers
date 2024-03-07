@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import Logout from './pages/Logout';
 import Deleted from './pages/Deleted';
 import Home from './pages/Home';
+import UserGuideline from './pages/UserGuideline';
 
 const Router = () => {
   return (
@@ -19,6 +20,7 @@ const Router = () => {
           <Route path='/logout' element={<Logout/>}></Route>
           <Route path='/deleted' element={<Deleted/>}></Route>
           <Route path='/home' element={<Home/>}></Route>
+          <Route path='/userguideline' element={<UserGuideline/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
