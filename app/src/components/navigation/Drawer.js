@@ -33,7 +33,10 @@ import carIcon from '../../assets/filters/carIcon.png';
 import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { GoogleMap, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
+import SearchBox from '../ui/Autocomplete';
+import { useCombobox } from 'downshift';
 
 const Root = styled('div')(({ theme }) => ({
   height: '100%',
@@ -132,16 +135,17 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setDestination(temp);
   };
 
+  useEffect(() => {
+    console.log("Location:", location);
+    console.log("Destination:", destination);
+  }, [location, destination]);
+
   const [isTextFieldFocused, setTextFieldFocused] = useState(false);
   // Function to handle opening the drawer and focusing on the text field
-  const handleOpenDrawer = (inputRef) => {
+  const handleOpenDrawer = () => {
     setOpen(true);
+    console.log(open)
     setTextFieldFocused(true);
-  };
-
-  // Function to handle when text fields lose focus
-  const handleTextFieldBlur = () => {
-    setTextFieldFocused(false);
   };
 
   // Function to handle clicking on a list item
@@ -181,6 +185,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         }}
       />
       <SwipeableDrawer
+        onClick={() => setOpen(true)}
         container={container}
         anchor="bottom"
         open={open}
@@ -224,32 +229,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
-              <TextField
-                inputRef={originRef}
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                onBlur={handleTextFieldBlur}
-                InputProps={{
-                    style: {
-                    borderRadius: "50px",
-                    borderColor: "#000000",
-                    width: "324px",
-                    height: 31,
-                    }
-                }}
-                InputLabelProps={{
-                    // shrink: true,
-                    style: {
-                    fontSize: 14,
-                    fontWeight: 400,
-                    lineHeight: 1
-                    }
-                }}
-                id="outlined-basic"
-                label="Location"
-                variant="outlined"
-                onClick={() => handleOpenDrawer(originRef)}
-                />
+            <SearchBox
+            //  value={location}
+             location={location}
+             onChange={(e) => setLocation(e.target.value)}
+            />
           </Box>
 
           <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
@@ -263,7 +247,12 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
-              <TextField
+              <SearchBox
+              // value={destination}
+              location={destination}
+              onChange={(e) => setLocation(e.target.value)}
+              />
+              {/* <TextField
                 inputRef={destinationRef}
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
@@ -289,7 +278,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 label="Where to?"
                 variant="outlined"
                 onClick={() => handleOpenDrawer(destinationRef)}
-                />
+                /> */}
           </Box>
 
           <Box sx={{

@@ -17,8 +17,9 @@ const center = {
 };
 
 function Home() {
+  console.log(process.env.REACT_APP_API_KEY)
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_API_KEY,
+    googleMapsApiKey: "AIzaSyC0yZHVhft1tT32bj9SRzL0bP2XzV1M2W4",
     libraries: ['places']
   })
 
@@ -77,7 +78,7 @@ function Home() {
     console.log(originRef.current.value)
     console.log(destinationRef.current.value)
 
-    // eslint-disable-next-line no-undef
+    //eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService()
     const results = await directionsService.route({
         origin: originRef.current.value,
@@ -87,7 +88,20 @@ function Home() {
         provideRouteAlternatives: true
     })
     console.log(results)
-    setDirectionsResponse(results)
+    // setDirectionsResponse(results)
+
+    //loop through data for polyline
+    var route = results.routes[0].overview_path
+    var coors = [];
+    for (var i=0; i<route.length; i++) {
+      coors.push(
+        // eslint-disable-next-line no-undef
+        new google.maps.LatLng(route[i].lat(), route[i].lng()));
+    }
+    drawPolyline(coors);
+
+    //geocode
+    codeAddress();
   }
 
   function clearRoute() {
@@ -174,6 +188,46 @@ function Home() {
     clearRoute();
     handleCurrentLocation();
   };
+
+  //geocoding
+  function codeAddress() {
+    // eslint-disable-next-line no-undef
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': originRef.current.value}, function(results, status) {
+      if (status == 'OK') {
+        console.log(results[0].geometry.location.lat())
+        console.log(results[0].geometry.location.lng())
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+  function drawPolyline(coors) { 
+      // initialize a Polyline object. You can set the color, width, opacity, etc. 
+      // eslint-disable-next-line no-undef
+      var Path = new google.maps.Polyline({
+      path: coors,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+      });
+
+      // set the polyline's map with your map object from above.
+      Path.setMap(map);
+
+      // Create bounds object to contain all coordinates
+      // eslint-disable-next-line no-undef
+      var bounds = new google.maps.LatLngBounds();
+      coors.forEach(function(coordinate) {
+          bounds.extend(coordinate);
+      });
+
+      // Fit the map to the bounds
+      map.fitBounds(bounds);
+  }
+  
 
   return isLoaded ? (
       <GoogleMap

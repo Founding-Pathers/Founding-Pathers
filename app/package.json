@@ -11,22 +11,30 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "downshift": "^8.4.0",
+    "leaflet": "^1.9.4",
+    "leaflet-defaulticon-compatibility": "^0.1.2",
+    "leaflet-geosearch": "^3.11.1",
+    "leaflet-routing-machine": "^3.2.12",
     "mongoose": "^8.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.21.3",
     "typeface-inter": "^3.18.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "webpack --env.ENVIRONMENT=production --config webpack.config.build.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "webpack --env.ENVIRONMENT=development --config webpack.config.dev.js"
   },
   "eslintConfig": {
     "extends": [
