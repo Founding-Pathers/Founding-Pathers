@@ -21,7 +21,7 @@ router.route("/userpref").get(async function (req, res) {
     });
 });
 
-// Retrieve user preference by useraccount id
+// Retrieve user preference by useraccount email
 router.route("/userpref/").get(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { email: req.body.email };
@@ -33,12 +33,7 @@ router.route("/userpref/").get(function (req, res, next) {
     });
 });
 
-router.route("/userpref/test").get(function (req, res, next) {
-  console.log("body: ", req.body.email);
-  res.json(req.body.email);
-});
-
-// Create a new user preference
+// Create a new user preference using email
 router.route("/userpref/add").post(async function (req, resp, next) {
   let db_connect = dbo.getDbLogging();
 
@@ -74,22 +69,18 @@ router.route("/userpref/add").post(async function (req, resp, next) {
       created_at: new Date(),
       updated_at: new Date(),
     };
-    db_connect
-      .collection("userPreferences")
-      .insertOne(myobj, function (err, res) {
-        if (err) {
-          console.error("Error adding user preference:", err);
-          return resp.status(500).json({ error: "Internal Server Error" });
-        }
-        console.log("User preference added successfully");
-        resp
-          .status(200)
-          .json({ message: "User preference added successfully" });
-      });
+    try {
+      db_connect.collection("userPreferences").insertOne(myobj);
+      console.log("User preference added successfully");
+      resp.status(200).json({ message: "User preference added successfully" });
+    } catch (error) {
+      console.error("Error adding user preference:", error.message);
+      resp.status(500).json({ error: "Internal Server Error" });
+    }
   }
 });
 
-// Update a user preference by id
+// Update a user preference by email
 router.route("/userpref/update").post(function (req, resp, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { email: req.body.email };
@@ -107,18 +98,28 @@ router.route("/userpref/update").post(function (req, resp, next) {
       updated_at: new Date(),
     },
   };
-  db_connect
-    .collection("userPreferences")
-    .updateOne(myquery, newvalues, function (err, res) {
-      if (err) {
-        console.error("Error updating user preference:", err);
-        return resp.status(500).json({ error: "Internal Server Error" });
-      }
-      console.log("1 user preference updated");
-      resp
-        .status(200)
-        .json({ message: "User preference updated successfully" });
-    });
+  try {
+    db_connect.collection("userPreferences").updateOne(myquery, newvalues);
+    console.log("1 user preference updated");
+    resp.status(200).json({ message: "User preference updated successfully" });
+  } catch (error) {
+    console.error("Error updating user preference:", error.message);
+    resp.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Delete a user preference by email
+router.route("/userpref/delete").delete(function (req, resp, next) {
+  let db_connect = dbo.getDbLogging();
+  let myquery = { email: req.body.email };
+  try {
+    db_connect.collection("userPreferences").deleteOne(myquery);
+    console.log("1 user preference deleted");
+    resp.status(200).json({ message: "User preference deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user preference:", error.message);
+    resp.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 module.exports = router;
