@@ -229,11 +229,37 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
-            <SearchBox
+            {/* <SearchBox
             //  value={location}
              location={location}
              onChange={(e) => setLocation(e.target.value)}
-            />
+            /> */}
+            <TextField
+                inputRef={originRef}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                InputProps={{
+                    style: {
+                    borderRadius: "50px",
+                    borderColor: "#000000",
+                    width: "324px",
+                    height: 31,
+                    }
+                }}
+                InputLabelProps={{
+                    // shrink: true,
+                    style: {
+                    fontSize: 14,
+                    fontWeight: 400,
+                    lineHeight: 1,
+                    paddingBottom: 3
+                    }
+                }}
+                id="outlined-basic"
+                label=""
+                variant="outlined"
+                onClick={() => handleOpenDrawer(originRef)}
+                />
           </Box>
 
           <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
@@ -247,16 +273,15 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
-              <SearchBox
+              {/* <SearchBox
               // value={destination}
               location={destination}
               onChange={(e) => setLocation(e.target.value)}
-              />
-              {/* <TextField
+              /> */}
+              <TextField
                 inputRef={destinationRef}
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                onBlur={handleTextFieldBlur}
                 InputProps={{
                     style: {
                     borderRadius: "50px",
@@ -278,7 +303,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 label="Where to?"
                 variant="outlined"
                 onClick={() => handleOpenDrawer(destinationRef)}
-                /> */}
+                />
           </Box>
 
           <Box sx={{
