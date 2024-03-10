@@ -36,8 +36,7 @@ jobs:
           CI: false
         working-directory: app
 
-
-      - name: Start backend # run a mock MongoDB Connection
+      - name: Start a Mock Database Connection # run a mock MongoDB Connection
         run: npm test
         working-directory: backend
 
