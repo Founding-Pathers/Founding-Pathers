@@ -14,7 +14,8 @@
     "mongoose": "^8.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.3",
+    "react-mui-fileuploader": "^0.5.2",
+    "react-router-dom": "^6.22.3",
     "typeface-inter": "^3.18.1",
     "web-vitals": "^2.1.4"
   },

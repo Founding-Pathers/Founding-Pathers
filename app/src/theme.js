@@ -34,7 +34,7 @@ const theme = createTheme({
     h1: {
       fontSize: '30px', 
       fontWeight: 700, 
-      color: '#F0A73A',
+      color: '#FF9900',
       textAlign: 'center'
     },
     h2: {
@@ -104,6 +104,26 @@ const theme = createTheme({
       lineHeight: '17px',
       color: '#000000'
     }
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'black',
+              borderRadius: '10px',
+            },
+            '&:hover fieldset': {
+              borderColor: 'black',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#FF9900',
+            },
+          },
+        },
+      },
+    },
   },
 });
 
