@@ -6,7 +6,6 @@ const router = express.Router();
 
 // Connect to the database
 const dbo = require("../db/conn");
-const e = require("express");
 
 // Retrieve list of all user preferences (admin)
 router.route("/userpref").get(async function (req, res) {
