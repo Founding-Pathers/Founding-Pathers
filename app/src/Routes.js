@@ -8,6 +8,7 @@ import Logout from './pages/Logout';
 import Deleted from './pages/Deleted';
 import Home from './pages/Home';
 import Validation from './pages/Validation';
+import UserGuideline from './pages/UserGuideline';
 
 const Router = () => {
   return (
@@ -21,6 +22,7 @@ const Router = () => {
           <Route path='/deleted' element={<Deleted/>}></Route>
           <Route path='/home' element={<Home/>}></Route>
           <Route path='/validation' element={<Validation/>}></Route>
+          <Route path='/userguideline' element={<UserGuideline/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
