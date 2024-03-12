@@ -50,7 +50,8 @@ const CenterItem = styled('div')({
 });
 
 const Feedback = () => {
-  const [textFieldValue, setTextFieldValue] = useState('');
+  const [textFieldValue1, setTextFieldValue1] = useState('');
+  const [textFieldValue2, setTextFieldValue2] = useState('');
   const [selectedRating, setSelectedRating] = useState(null);
   const [yesClicked1, setyesClicked1] = useState(false);
   const [noClicked1, setnoClicked1] = useState(false);
@@ -61,8 +62,12 @@ const Feedback = () => {
   const [textFieldsFilled, setTextFieldsFilled] = useState(false);
   const [page, setPage] = useState("no");
 
-  const handleTextFieldChange = (event) => {
-    setTextFieldValue(event.target.value);
+  const handleTextFieldChange1 = (event) => {
+    setTextFieldValue1(event.target.value);
+  };
+
+  const handleTextFieldChange2 = (event) => {
+    setTextFieldValue2(event.target.value);
   };
 
   const handleRatingClick = (rating) => {
@@ -114,12 +119,21 @@ const Feedback = () => {
 
   useEffect(() => {
     // Check if all text fields are filled
-    if (textFieldValue.trim() !== '') {
+    if (textFieldValue1.trim() !== '') {
       setTextFieldsFilled(true);
     } else {
       setTextFieldsFilled(false);
     }
-  }, [textFieldValue]);
+  }, [textFieldValue1]);
+
+  useEffect(() => {
+    // Check if all text fields are filled
+    if (textFieldValue2.trim() !== '') {
+      setTextFieldsFilled(true);
+    } else {
+      setTextFieldsFilled(false);
+    }
+  }, [textFieldValue2]);
 
   useEffect(() => {
     if (page === "thanks") {
@@ -191,8 +205,8 @@ const Feedback = () => {
                 multiline
                 rows={4}
                 style={{ width: '100%' }}
-                value={textFieldValue}
-                onChange={handleTextFieldChange}
+                value={textFieldValue1}
+                onChange={handleTextFieldChange1}
                 InputProps={{
                   style: {
                     borderRadius: "10px",
@@ -311,8 +325,8 @@ const Feedback = () => {
                 multiline
                 rows={4}
                 style={{ width: '325px' }}
-                value={textFieldValue}
-                onChange={handleTextFieldChange}
+                value={textFieldValue2}
+                onChange={handleTextFieldChange2}
                 InputProps={{
                   style: {
                     borderRadius: "10px",
