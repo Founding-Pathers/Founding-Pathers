@@ -37,30 +37,6 @@ const RoutesTakenSchema = new Schema(
       of: tupleSchema,
       required: true,
     },
-    feedback_q1: {
-      type: String,
-      required: true,
-    },
-    feedback_q2: {
-      type: String,
-      required: true,
-    },
-    feedback_q3: {
-      type: String,
-      required: true,
-    },
-    feedback_q4: {
-      type: Boolean,
-      required: true,
-    },
-    feedback_q5: {
-      type: Boolean,
-      required: true,
-    },
-    feedback_q6: {
-      type: Boolean,
-      required: true,
-    },
     deleted: {
       type: Boolean,
       required: true,
