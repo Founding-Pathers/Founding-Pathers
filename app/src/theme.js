@@ -112,6 +112,18 @@ const theme = createTheme({
       fontWeight: 600,
       lineHeight: '17px',
       color: '#000000'
+    },
+    header1: {
+      marginLeft: '30px',
+      fontSize: '30px', 
+      fontWeight: 800, 
+      color: '#F0A73A'
+    },
+    header2: {
+      marginLeft: '32px',
+      fontSize: '20px', 
+      fontWeight: 500, 
+      color: '#F0A73A'
     }
   },
   components: {

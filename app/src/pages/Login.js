@@ -42,6 +42,9 @@ const CenterItem = styled('div')({
 });
 
 const Login = () => {
+  const namePort = process.env.REACT_APP_NAMEPORT;
+  const protocol = process.env.REACT_APP_PROTOCOL;
+  
   const [errors, setErrors] = useState({
     email: '',
     password: '',
@@ -75,7 +78,11 @@ async function onSubmit(e){
   setErrors(validationErrors); // Set the errors state
   
   if (Object.keys(validationErrors).length === 0) {
-    await fetch("http://localhost:5000/login", {
+
+    console.log(namePort)
+    console.log(protocol)
+
+    await fetch(`${protocol}://${namePort}/login`, {
     method: "POST",
     headers: {
       "Content-Type" : "application/json",
@@ -138,7 +145,7 @@ async function onSubmit(e){
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton onClick={onSubmit} text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton onClick={Login} text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 

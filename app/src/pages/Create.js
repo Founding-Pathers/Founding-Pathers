@@ -77,9 +77,13 @@ const Create = () => {
     setErrors(validationErrors); // Set the errors state
 
     if (Object.keys(validationErrors).length === 0) {
+
+      const namePort = process.env.REACT_APP_NAMEPORT;
+      const protocol = process.env.REACT_APP_PROTOCOL;
+      
       // If there are no validation errors, proceed with form submission
       try {
-        const response = await fetch("http://localhost:5000/register", {
+        const response = await fetch(`${protocol}://${namePort}/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

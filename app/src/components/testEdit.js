@@ -10,11 +10,14 @@ export default function Edit() {
  });
  const params = useParams();
  const navigate = useNavigate();
+
+ const namePort = process.env.NAME;
+ const protocol = process.env.PROTOCOL;
  
  useEffect(() => {
    async function fetchData() {
      const id = params.id.toString();
-     const response = await fetch(`http://localhost:5000/record/${params.id.toString()}`);
+     const response = await fetch(`${protocol}://${namePort}/record/${params.id.toString()}`);
  
      if (!response.ok) {
        const message = `An error has occurred: ${response.statusText}`;
@@ -53,7 +56,7 @@ export default function Edit() {
    };
  
    // This will send a post request to update the data in the database.
-   await fetch(`http://localhost:5000/update/${params.id}`, {
+   await fetch(`${protocol}://${namePort}/update/${params.id}`, {
      method: "POST",
      body: JSON.stringify(editedPerson),
      headers: {
