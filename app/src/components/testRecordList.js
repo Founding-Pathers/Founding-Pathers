@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const namePort = process.env.NAME;
+const protocol = process.env.PROTOCOL;
+
 const Record = (props) => (
   <tr>
     <td>{props.record.name}</td>
@@ -25,7 +28,7 @@ export default function RecordList() {
  // This method fetches the records from the database.
   useEffect(() => {
     async function getRecords() {
-      const response = await fetch(`http://localhost:5000/record/`);
+      const response = await fetch(`${protocol}://${namePort}/record/`);
   
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -44,7 +47,7 @@ export default function RecordList() {
 
  // This method will delete a record
   async function deleteRecord(id) {
-    await fetch(`http://localhost:5000/${id}`, {
+    await fetch(`${protocol}://${namePort}/${id}`, {
       method: "DELETE"
     })
     .then((res) => res.json())
