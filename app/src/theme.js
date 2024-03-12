@@ -26,6 +26,15 @@ const theme = createTheme({
     },
     endNavigation: {
       main: '#EE6161'
+    },
+    black: {
+      main: '#000000'
+    },
+    white: {
+      main: '#FFFFFF'
+    },
+    darkGrey: {
+      main: '#A0A0A0', 
     }
   },
   typography: {
