@@ -122,7 +122,7 @@ async function onSubmit(e){
         <img src={Logo} alt="Cycle-Pathic" style={{ width: '75px', height: 'auto', marginLeft: 'auto', marginRight: 'auto', marginBottom: '24px' }} />
 
         <VerticalSpace>
-        <Typography variant="h1">Log In</Typography>
+        <Typography variant="h1">UR-Active</Typography>
         </VerticalSpace>
 
         <VerticalSpace>
