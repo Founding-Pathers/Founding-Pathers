@@ -26,7 +26,13 @@ const theme = createTheme({
     },
     endNavigation: {
       main: '#EE6161'
-    }
+    },
+    editButton: {
+      main: '#606060'
+    },
+    editButtonClicked: {
+      main: '#F0A73A'
+    },
   },
   typography: {
     fontFamily: 'Inter',
@@ -115,7 +121,13 @@ const theme = createTheme({
       fontSize: '20px', 
       fontWeight: 500, 
       color: '#F0A73A'
-    }
+    },
+    header3: {
+      marginLeft: '10px',
+      fontSize: '30px', 
+      fontWeight: 800, 
+      color: '#F0A73A'
+    },
   },
 });
 

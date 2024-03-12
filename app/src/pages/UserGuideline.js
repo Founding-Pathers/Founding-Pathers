@@ -4,11 +4,11 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { styled } from '@mui/system';
 import { Typography } from '@mui/material';
-import ug1 from '../assets/UserGuideline1.png';
-import ug2 from '../assets/UserGuideline2.png';
-import ug3 from '../assets/UserGuideline3.png';
-import ug4 from '../assets/UserGuideline4.png';
-import ug5 from '../assets/UserGuideline5.png';
+import ug1 from '../assets/UserGuideline1.svg';
+import ug2 from '../assets/UserGuideline2.svg';
+import ug3 from '../assets/UserGuideline3.svg';
+import ug4 from '../assets/UserGuideline4.svg';
+import ug5 from '../assets/UserGuideline5.svg';
 
 
 const StyledContainer = styled('div')({

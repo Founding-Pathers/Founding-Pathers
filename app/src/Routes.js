@@ -8,6 +8,8 @@ import Logout from './pages/Logout';
 import Deleted from './pages/Deleted';
 import Home from './pages/Home';
 import UserGuideline from './pages/UserGuideline';
+import SavedLocationsMain from './pages/SavedLocationsMain';
+import AddSavedLocations from './pages/AddSavedLocations';
 
 const Router = () => {
   return (
@@ -21,6 +23,8 @@ const Router = () => {
           <Route path='/deleted' element={<Deleted/>}></Route>
           <Route path='/home' element={<Home/>}></Route>
           <Route path='/userguideline' element={<UserGuideline/>}></Route>
+          <Route path='/savedlocations' element={<SavedLocationsMain/>}></Route>
+          <Route path='/addsavedlocations' element={<AddSavedLocations/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
