@@ -68,40 +68,41 @@ function Home() {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
     }
-    if (originRef.current.value == "Current Location") {
-        console.log(currentLocation)
-        const originLatLng = `${currentLocation.lat},${currentLocation.lng}`;
-        originRef.current.value = originLatLng;
-    }
 
-    console.log(directionsResponse)
-    console.log(originRef.current.value)
-    console.log(destinationRef.current.value)
+    fetchRoute()
+    .then(data => {
+      console.log(data); // Handle the fetched data here
+
+       //loop through data for polyline
+        var route = data[0].geometry.coordinates[0]
+        var coors = [];
+        for (var i=0; i<route.length; i++) {
+          console.log(route[i][1], route[i][0]);
+          coors.push(
+            // eslint-disable-next-line no-undef
+            new google.maps.LatLng(route[i][1], route[i][0]));
+        }
+        console.log(coors)
+        setIsRouting(true);
+        drawPolyline(coors);
+
+    })
+    .catch(error => {
+      console.error('Error:', error); // Handle errors here
+    });
 
     //eslint-disable-next-line no-undef
-    const directionsService = new google.maps.DirectionsService()
-    const results = await directionsService.route({
-        origin: originRef.current.value,
-        destination: destinationRef.current.value,
-        // eslint-disable-next-line no-undef
-        travelMode: google.maps.TravelMode.WALKING,
-        provideRouteAlternatives: true
-    })
-    console.log(results)
+    // const directionsService = new google.maps.DirectionsService()
+    // const results = await directionsService.route({
+    //     origin: originRef.current.value,
+    //     destination: destinationRef.current.value,
+    //     // eslint-disable-next-line no-undef
+    //     travelMode: google.maps.TravelMode.WALKING,
+    //     provideRouteAlternatives: true
+    // })
+    // console.log(results)
     // setDirectionsResponse(results)
 
-    //loop through data for polyline
-    var route = results.routes[0].overview_path
-    var coors = [];
-    for (var i=0; i<route.length; i++) {
-      coors.push(
-        // eslint-disable-next-line no-undef
-        new google.maps.LatLng(route[i].lat(), route[i].lng()));
-    }
-    drawPolyline(coors);
-
-    //geocode
-    codeAddress();
   }
 
   function clearRoute() {
@@ -190,17 +191,72 @@ function Home() {
   };
 
   //geocoding
-  function codeAddress() {
-    // eslint-disable-next-line no-undef
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': originRef.current.value}, function(results, status) {
-      if (status == 'OK') {
-        console.log(results[0].geometry.location.lat())
-        console.log(results[0].geometry.location.lng())
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
+  function codeAddress(address) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line no-undef
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': address }, function(results, status) {
+        if (status == 'OK') {
+          var lat = results[0].geometry.location.lat();
+          var long = results[0].geometry.location.lng();
+          console.log(lat, long);
+          resolve({ 'lat': lat, 'long': long });
+        } else {
+          reject(new Error('Geocode was not successful for the following reason: ' + status));
+        }
+      });
     });
+  }
+
+  // Function to fetch the route
+  async function fetchRoute() {
+    try {
+      var origin_lat, origin_long, dest_lat, dest_long;
+  
+      if (originRef.current.value == "Current Location") {
+        console.log(currentLocation)
+        // const originLatLng = `${currentLocation.lat},${currentLocation.lng}`;
+        // originRef.current.value = originLatLng;
+        origin_lat = currentLocation.lat;
+        origin_long = currentLocation.lng;
+      }
+      else {
+        // Call codeAddress for origin and destination
+        const o_results = await codeAddress(originRef.current.value);
+        origin_lat = o_results.lat;
+        origin_long = o_results.long;
+      }
+
+      
+      
+      const d_results = await codeAddress(destinationRef.current.value);
+      dest_lat = d_results.lat;
+      dest_long = d_results.long;
+  
+      console.log(origin_lat, origin_long);
+      console.log(dest_lat, dest_long);
+
+      // Fetch the route using the obtained coordinates
+      const response = await fetch(`http://localhost:5000/shortestroute`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          origin_lat: origin_lat,
+          origin_long: origin_long,
+          dest_lat: dest_lat,
+          dest_long: dest_long
+        })
+      });
+  
+      // Parse the response
+      const data = await response.json();
+      return data;
+  
+    } catch (error) {
+      throw new Error('Error fetching route: ' + error);
+    }
   }
 
   function drawPolyline(coors) { 
@@ -255,6 +311,7 @@ function Home() {
         </>
         )}
         <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
+        <Marker style={{display: isRouting ? 'none' : 'block'}} position={originRef}/>
         <Marker position={currentLocation} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />

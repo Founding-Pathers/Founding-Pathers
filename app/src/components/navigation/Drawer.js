@@ -34,9 +34,9 @@ import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
 import { useEffect, useState, useMemo } from 'react';
-import { GoogleMap, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
-import SearchBox from '../ui/Autocomplete';
-import { useCombobox } from 'downshift';
+// import { GoogleMap, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
+// import SearchBox from '../ui/Autocomplete';
+// import { useCombobox } from 'downshift';
 
 const Root = styled('div')(({ theme }) => ({
   height: '100%',
