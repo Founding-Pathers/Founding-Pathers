@@ -1,266 +1,162 @@
-import React, { useState } from 'react';
-import ReusableButton from '../components/ui/Button';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import React, { useState, useEffect } from 'react';
+import Button from '../components/ui/Button';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { styled } from '@mui/system';
 import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 import ug1 from '../assets/UserGuideline1.png';
 import ug2 from '../assets/UserGuideline2.png';
 import ug3 from '../assets/UserGuideline3.png';
 import ug4 from '../assets/UserGuideline4.png';
 import ug5 from '../assets/UserGuideline5.png';
 
-
 const StyledContainer = styled('div')({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-  });
-  
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  minHeight: '100vh',
+  padding: '30px'
+});
+
 const StyledFormContainer = styled('div')({
-    padding: '16px',
-    display: 'flex',
-    flexDirection: 'column',
-  });
+  display: 'flex',
+  flexDirection: 'column',
+  paddingTop: '64px'
+});
 
 const VerticalSpace = styled('div')({
-    margin: '8px 0',
-  });
-  
+  margin: '8px 0'
+});
+
+const LeftItem = styled('div')({
+  textAlign: 'start',
+  alignItems: 'end',
+  width: '100%'
+});
+
 const RightItem = styled('div')({
-    textAlign: 'end',
-    alignItems: 'end',
-    width: '100%',
-  });
-  
+  textAlign: 'end',
+  alignItems: 'end',
+  width: '100%'
+});
+
 const CenterItem = styled('div')({
-    textAlign: 'center',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'center',
-    display: 'flex',
-  });
+  textAlign: 'center',
+  alignItems: 'center',
+  width: '100%',
+  paddingTop: '25px',
+  justifyContent: 'center',
+  display: 'flex'
+});
 
+const FrozenBar = styled('div')({
+  width: '100%',
+  height: '100px',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  backgroundColor: 'white',
+  zIndex: 1000,
+  display: 'flex',
+  alignItems: 'flex-end',
+  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s ease'
+});
 
-  function Gallery() {  
+const UserGuidelines = () => {
+  const [page, setPage] = useState("introduction");
+  const [scrolled, setScrolled] = useState(false);
 
-    const [UG0Visible, setUG0Visible] = useState(true);
-    const handleButton1Click = () => {setUG1Visible(!UG1Visible); setUG0Visible(!UG0Visible)}; // Toggle visibility state
-    const [UG1Visible, setUG1Visible] = useState(false);
-    const handleButton2Click = () => {setUG2Visible(!UG2Visible); setUG1Visible(!UG1Visible)};
-    const [UG2Visible, setUG2Visible] = useState(false);
-    const handleButton3Click = () => {setUG3Visible(!UG3Visible); setUG2Visible(!UG2Visible)};
-    const [UG3Visible, setUG3Visible] = useState(false);
-    const handleButton4Click = () => {setUG4Visible(!UG4Visible); setUG3Visible(!UG3Visible)};
-    const [UG4Visible, setUG4Visible] = useState(false);
-    const handleButton5Click = () => {setUG5Visible(!UG5Visible); setUG4Visible(!UG4Visible)};
-    const [UG5Visible, setUG5Visible] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
 
-    const goHome = () => {
-        window.location.href = '/home';
-      }
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
-    return (
-      <>
-      <StyledContainer>
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+  }, []);
+
+  const handleGuidelinePage = (page) => () => setPage(page);
+
+  const guidelines = [
+    { page: "introduction", buttonText: "Get Started", image: null, text: "Introduction", description: `Welcome to UR-Active, your personalised navigation companion, designed specifically for the best navigating experience using Singapore’s most comprehensive network system. Using this Walking Cycling Network (WCN) allows UR-Active to ensure you reach your destination efficiently with routes carefully crafted by city planners. Prepare to explore Singapore like never before with routes that offer personalised experience.` },
+    { page: "guideline1", buttonText: "Next", image: ug1, text: "Entering your destination", description: null },
+    { page: "guideline2", buttonText: "Next", image: ug2, text: "Selecting your search filters", description: null },
+    { page: "guideline3", buttonText: "Next", image: ug3, text: "Selecting your travelling mode", description: null },
+    { page: "guideline4", buttonText: "Next", image: ug4, text: "Selecting your route", description: null },
+    { page: "guideline5", buttonText: "Done", image: ug5, text: "Managing your navigation", description: null }
+  ];
+
+  return (
+    <StyledContainer>
       <StyledFormContainer>
+        <FrozenBar scrolled={scrolled}>
+          <Link to="/home"><ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+          {scrolled && (
+            <Typography
+              variant="body1"
+              sx={{
+                paddingBottom: '10px',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                color: '#FF9900',
+                fontSize: '20px',
+                fontWeight: '600',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              User Guidelines
+            </Typography>
+          )}
+        </FrozenBar>
 
-      <ArrowBackIosIcon sx={{ mt:'15px', mb:'30px', ml:'17px' }} onClick={goHome}/>
+        <VerticalSpace>
+          <CenterItem>
+            <LeftItem>
+              <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
+              <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">User Guidelines</Typography>
+            </LeftItem>
+          </CenterItem>
+        </VerticalSpace>
 
-      <VerticalSpace>
-        <Typography variant="header1">User Guideline</Typography>
-      </VerticalSpace>
+        {guidelines.map(({ page: guidelinePage, buttonText, image, text, description }, index) => (
+          <React.Fragment key={index}>
+            {page === guidelinePage && (
+              <React.Fragment>
+                <LeftItem style={{ paddingTop: '25px' }}>
+                  <VerticalSpace>
+                    <Typography variant="body1" sx={{ color: '#FF9900', fontSize: '20px', fontWeight: '600' }}>{text}</Typography>
+                    <Typography sx={{ textAlign: 'start', marginTop: '10px' }}>{description}</Typography>
+                  </VerticalSpace>
+                </LeftItem>
 
-      <div>
-      {/* Introduction */}
+                {image && <img src={image} alt={`User Guideline ${index + 1}`} style={{ width: '330px', height: 'auto', marginTop: '15px' }} />}
 
-      {UG0Visible && (
-            <>
-      <VerticalSpace style={{marginTop: '20px' }}>
-        <Typography variant="header2">Introduction</Typography>
-      </VerticalSpace>
-
-      <p style={{ fontSize: '16px', marginTop: '30px', lineHeight: '24.2px', fontWeight: 600, color: '#000000', marginLeft: '30px', marginRight: '30px'}}>
-      Welcome to UR-Active, your personalized navigation companion, designed specifically for the best navigating experience using Singapore’s most comprehensive network system. 
-      Using this Walking Cycling Network (WCN) allows UR-Active to ensure you reach your destination efficiently with routes carefully crafted by city planners. 
-      Prepare to explore Singapore like never before with routes that offer personalized experience.
-      </p>    
-
-      <VerticalSpace style={{ marginBottom: '33px', marginTop: '228px' }}>
-        <RightItem>
-        <ReusableButton onClick={handleButton1Click}
-          text="Get Started"
-          height="40px"
-          width="200px"
-          icon={<ArrowForwardIcon style={{ color: 'white' }} />}
-          >
-        </ReusableButton>
-        </RightItem>
-      </VerticalSpace>
-            </>
-        )}  
-      </div>
-
-
-      <div>
-      {/* Getting Started with Direction 1.1 */}
-
-        {UG1Visible && (
-            <>
-      <VerticalSpace style={{marginTop: '20px' }}>
-        <Typography variant="header2">Get Started with Directions</Typography>
-      </VerticalSpace>
-
-      <CenterItem>
-      <img 
-        src={ug1} alt="User Guideline 1" style={{ width: '355px', height: 'auto', marginBottom: '40px', marginTop: '20px' }}>
-      </img>
-      </CenterItem>
-
-      <VerticalSpace style={{ marginBottom: '33px', marginTop: '39px' }}>
-        <RightItem>
-        <ReusableButton onClick={handleButton2Click}
-          text="Next"
-          height="40px"
-          width="120px"
-          icon={<ArrowForwardIcon style={{ color: 'white' }} />}
-          >
-        </ReusableButton>
-        </RightItem>
-      </VerticalSpace>
-            </>
-        )}
-      </div>
-
-
-      <div>
-      {/* Getting Started with Direction 1.2 */}
-
-        {UG2Visible && (
-            <>
-      <VerticalSpace style={{marginTop: '20px' }}>
-        <Typography variant="header2">Get Started with Directions</Typography>
-      </VerticalSpace>
-
-      <CenterItem>
-      <img 
-        src={ug2} alt="User Guideline 2" style={{ width: '356px', height: 'auto', marginBottom: '40px', marginTop: '20px'}}>
-      </img>
-      </CenterItem>
-
-      <VerticalSpace style={{ marginBottom: '33px', marginTop: '39px' }}>
-        <RightItem>
-        <ReusableButton onClick={handleButton3Click}
-          text="Next"
-          height="40px"
-          width="120px"
-          icon={<ArrowForwardIcon style={{ color: 'white' }} />}
-          >
-        </ReusableButton>
-        </RightItem>
-      </VerticalSpace>
-            </>
-        )}
-      </div>
-
-
-      <div>
-      {/* Getting Started with Direction 1.3 */}
-
-        {UG3Visible && (
-            <>
-      <VerticalSpace style={{marginTop: '20px' }}>
-        <Typography variant="header2">Get Started with Directions</Typography>
-      </VerticalSpace>
-
-      <CenterItem>
-      <img 
-        src={ug3} alt="User Guideline 3" style={{ width: '355px', height: 'auto', marginBottom: '40px', marginTop: '20px' }}>
-      </img>
-      </CenterItem>
-
-      <VerticalSpace style={{ marginBottom: '33px', marginTop: '39px' }}>
-        <RightItem>
-        <ReusableButton onClick={handleButton4Click}
-          text="Next"
-          height="40px"
-          width="120px"
-          icon={<ArrowForwardIcon style={{ color: 'white' }} />}
-          >
-        </ReusableButton>
-        </RightItem>
-      </VerticalSpace>
-            </>
-        )}
-      </div>
-
-
-      <div>
-      {/* Selecting Route 1.4 */}
-
-        {UG4Visible && (
-            <>
-      <VerticalSpace style={{marginTop: '20px' }}>
-        <Typography variant="header2">Selecting Route</Typography>
-      </VerticalSpace>
-
-      <CenterItem>
-      <img 
-        src={ug4} alt="User Guideline 4" style={{ width: '356px', height: 'auto', marginBottom: '40px', marginTop: '80px' }}>
-      </img>
-      </CenterItem>
-
-      <VerticalSpace style={{ marginBottom: '35px', marginTop: '85px' }}>
-        <RightItem>
-        <ReusableButton onClick={handleButton5Click}
-          text="Next"
-          height="40px"
-          width="120px"
-          icon={<ArrowForwardIcon style={{ color: 'white' }} />}
-          >
-        </ReusableButton>
-        </RightItem>
-      </VerticalSpace>
-            </>
-        )}
-      </div>
-
-
-      <div>
-      {/* During Navigation 1.5 */}
-
-        {UG5Visible && (
-            <>
-      <VerticalSpace style={{marginTop: '20px' }}>
-        <Typography variant="header2">During Navigation</Typography>
-      </VerticalSpace>
-
-      <CenterItem>
-      <img 
-        src={ug5} alt="User Guideline 5" style={{ width: '356px', height: 'auto', marginBottom: '115px', marginTop: '80px' }}>
-      </img>
-      </CenterItem>
-
-      <VerticalSpace style={{ marginBottom: '35px', marginTop: '85px' }}>
-        <RightItem>
-        <ReusableButton onClick={goHome}
-          text="Done"
-          height="40px"
-          width="120px"
-          icon={<ArrowForwardIcon style={{ color: 'white' }} />}
-          >
-        </ReusableButton>
-        </RightItem>
-      </VerticalSpace>
-            </>
-        )}
-      </div>
-
+                <VerticalSpace style={{ display: 'flex', position: 'absolute', bottom: '22px', left: '30px', right: '30px', justifyContent: 'space-between' }}>
+                  <LeftItem>
+                    {page !== "introduction" && <Button text="BACK" onClick={handleGuidelinePage(guidelines[index - 1]?.page)} color="primary" height="40px" width="120px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />}
+                  </LeftItem>
+                  <RightItem>
+                    {page !== "guideline5" && <Button onClick={handleGuidelinePage(guidelines[index + 1]?.page)} text={buttonText} height="40px" width={buttonText === "Get Started" ? "200px" : "120px"} icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+                    {page === "guideline5" && <Button component={Link} to="/home" text="Done" height="40px" width="120px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+                  </RightItem>
+                </VerticalSpace>
+              </React.Fragment>
+            )}
+          </React.Fragment>
+        ))}
       </StyledFormContainer>
-      </StyledContainer>
-      </>
-    );
-  }
-  
-  export default Gallery;
+    </StyledContainer>
+  );
+};
+
+export default UserGuidelines;

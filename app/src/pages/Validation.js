@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -47,12 +48,45 @@ const CenterItem = styled('div')({
   display: 'flex'
 });
 
+const FrozenBar = styled('div')({
+  width: '100%',
+  height: '100px',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  backgroundColor: 'white',
+  zIndex: 1000,
+  display: 'flex',
+  alignItems: 'flex-end',
+  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s ease',
+});
+
 const Validation = () => {
   const [textFieldValue, setTextFieldValue] = useState('');
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
   const [page, setPage] = useState("destination1");
   const inputRef = useRef(null);
+
+  // <- for frozen bar
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  // for frozen bar ->
 
   const handleTextFieldChange = (event) => {
     setTextFieldValue(event.target.value);
@@ -225,23 +259,42 @@ const Validation = () => {
   } else if (page === "validating") {
     return (
       <StyledContainer style={{ padding: '30px' }}>
-        <StyledFormContainer>
+
+        <FrozenBar scrolled={scrolled}>
+          <Link to="/home"><ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+          {scrolled && (
+            <Typography
+              variant="body1"
+              sx={{
+                paddingBottom: '10px',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                color: '#FF9900',
+                fontSize: '20px',
+                fontWeight: '600',
+                whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
+              }}
+            >
+              Terms and Conditions
+            </Typography>
+          )}
+        </FrozenBar>
+
+        <StyledFormContainer style={{ paddingTop: '64px' }}>
 
           <VerticalSpace>
             <CenterItem>
               <LeftItem>
                 <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
+                <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Issue Reporting Form</Typography>
               </LeftItem>
-              <RightItem>
-                <Button text="Exit" component={Link} to="/home" color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px" />
-              </RightItem>
             </CenterItem>
-            <Typography sx={{ textAlign: 'start' }} variant="h1" color="#000000">Validation Form</Typography>
           </VerticalSpace>
 
           <CenterItem>
             <VerticalSpace>
-              <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What problem(s) did you face with the selected path(s)?</Typography>
+              <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What issue(s) did you face with the selected point(s) on the route?</Typography>
               <TextField
                 multiline
                 rows={8}
