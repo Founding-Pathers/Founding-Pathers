@@ -25,24 +25,23 @@ export default function TemporaryDrawer() {
     navigate('/profile')
   }
 
-  const logout = () => {
-    navigate('/')
-  }
-
   //finish once routes to other pages are done
   const handleButtonClick = (buttonText) => {
     switch (buttonText) {
-      case 'Report Obstruction':
-        // navigate('/report-obstruction');
-        break;
-      case 'Saved Locations':
-        // navigate('/saved-locations');
+      case 'Feedback Form':
+        navigate('/feedback');
         break;
       case 'Terms and Conditions':
-        // navigate('/terms-and-conditions');
+        navigate('/terms');
+        break;
+      case 'Privacy Policy':
+        navigate('/privacy');
         break;
       case 'User Guidelines':
-        // navigate('/user-guidelines');
+        navigate('/guidelines');
+        break;
+      case 'Log Out':
+        navigate('/logout');
         break;
       default:
         break;
@@ -50,24 +49,24 @@ export default function TemporaryDrawer() {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 210 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box sx={{ width: 210, height: '100%' }} role="presentation" onClick={toggleDrawer(false)}>
       <Box sx={{ height: 200, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         <img src={UserIcon} onClick={goProfile} style={{width:"50px", height: "50px", padding: 2}}/>
         <Typography variant="profile" sx={{pt: 1}}>John Doe</Typography>
         <Typography variant="cardDesc" sx={{pt: 1}}>johndoe@gmail.com</Typography>
       </Box>
       <Divider />
-      <List sx={{backgroundColor: "#FF9900"}}>
-        {['Report Obstruction', 'Saved Locations', 'Terms and Conditions', 'User Guidelines'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => handleButtonClick(text)}>
-              <ListItemText sx={{fontSize: 16}} primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Box sx={{backgroundColor: "#FF9900", height: "100%", display: "flex", alignContent: "flex-end"}}>
-        <Typography onClick={logout} variant="filterLabel" sx={{mt: 30, ml: 2}}><LogoutIcon sx={{width:"24.4px", height: "19.92px"}}/>Log Out</Typography>
+      <Box sx={{backgroundColor: "#FF9900", height: "100%", display: "flex", alignItems: "flex-start"}}>
+        <List style={{ width: '100%' }}>
+          {['Feedback Form', 'Terms and Conditions', 'Privacy Policy', 'User Guidelines', 'Log Out'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton onClick={() => handleButtonClick(text)}>
+                {text === 'Log Out' && <LogoutIcon sx={{height: "20px", mr: 1}} />}
+                <ListItemText sx={{fontSize: 16}} primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
       </Box>
     </Box>
   );

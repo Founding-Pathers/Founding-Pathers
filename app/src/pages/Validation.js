@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -47,12 +48,45 @@ const CenterItem = styled('div')({
   display: 'flex'
 });
 
+const FrozenBar = styled('div')({
+  width: '100%',
+  height: '100px',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  backgroundColor: 'white',
+  zIndex: 1000,
+  display: 'flex',
+  alignItems: 'flex-end',
+  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s ease',
+});
+
 const Validation = () => {
   const [textFieldValue, setTextFieldValue] = useState('');
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
-  const [validating, setValidating] = useState("before");
+  const [page, setPage] = useState("destination1");
   const inputRef = useRef(null);
+
+  // <- for frozen bar
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  // for frozen bar ->
 
   const handleTextFieldChange = (event) => {
     setTextFieldValue(event.target.value);
@@ -138,19 +172,66 @@ const Validation = () => {
     };
   }, [thumbnails]);
 
+  const handleDestinationValidation = () => {
+    setPage("destination2");
+  };
+  
   const handleInstructionsValidation = () => {
-    setValidating("before");
+    setPage("instructions");
   };
   
   const handleStartValidation = () => {
-    setValidating("during");
+    setPage("validating");
   };
 
   const handleEndValidation = () => {
-    setValidating("after");
+    setPage("thanks");
   };
 
-  if (validating === "before") {
+  if (page === "destination1") {
+    return (
+      <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <StyledFormContainer style={{ maxWidth: '280px' }}>
+
+        <VerticalSpace>
+          
+        <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Typography variant="h1"><span style={{ color: 'black' }}>You have reached<br></br>your</span> destination!</Typography>
+          <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>Do report issues along your route, such as road closures, if any</Typography>
+        </CenterItem>
+
+        <CenterItem style={{ display: 'grid', gap: '10px' }}>
+          <Button text="Issue to report" onClick={handleInstructionsValidation} fontSize="18px" color="primary" height="40px" width="220px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <Button text="Nothing to report" onClick={handleDestinationValidation} fontSize="18px" color="darkGrey" height="40px" width="220px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+        </CenterItem>
+
+        </VerticalSpace>
+
+        </StyledFormContainer>
+      </StyledContainer>
+    );
+  } else if (page === "destination2") {
+      return (
+        <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <StyledFormContainer style={{ maxWidth: '280px' }}>
+  
+          <VerticalSpace>
+            
+          <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant="h1" style={{ color: 'black' }}>Thank you for <span style={{ color: '#FF9900' }}>navigating</span> with us!</Typography>
+            <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!</Typography>
+          </CenterItem>
+  
+          <CenterItem style={{ display: 'grid', gap: '10px' }}>
+            <Button text="Feedback Form" component={Link} to="/feedback" fontSize="18px" color="primary" height="40px" width="200px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          </CenterItem>
+  
+          </VerticalSpace>
+  
+          </StyledFormContainer>
+        </StyledContainer>
+      );
+  } else if (page === "instructions") {
     return (
       <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <StyledFormContainer style={{ maxWidth: '270px' }}>
@@ -158,7 +239,7 @@ const Validation = () => {
         <VerticalSpace>
           
         <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h1" sx={{ color: 'black' }}>Report an issue</Typography>
+          <Typography variant="h1" sx={{ color: '#000000' }}>Report an issue</Typography>
           <br></br>
           <span style={{ fontWeight: 'bold', color: '#FF9900' }}>1. Tap on the point(s)</span> on the route where you encountered the issue 
           <br></br>
@@ -175,28 +256,45 @@ const Validation = () => {
         </StyledFormContainer>
       </StyledContainer>
     );
-  } else if (validating === "during") {
+  } else if (page === "validating") {
     return (
       <StyledContainer style={{ padding: '30px' }}>
-        <StyledFormContainer>
+
+        <FrozenBar scrolled={scrolled}>
+          <Link to="/home"><ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+          {scrolled && (
+            <Typography
+              variant="body1"
+              sx={{
+                paddingBottom: '10px',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                color: '#FF9900',
+                fontSize: '20px',
+                fontWeight: '600',
+                whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
+              }}
+            >
+              Terms and Conditions
+            </Typography>
+          )}
+        </FrozenBar>
+
+        <StyledFormContainer style={{ paddingTop: '64px' }}>
 
           <VerticalSpace>
             <CenterItem>
               <LeftItem>
                 <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
+                <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Issue Reporting Form</Typography>
               </LeftItem>
-              <Link to="/home">
-                <RightItem>
-                  <Button text="Exit" component={Link} to="/home" color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px" />
-                </RightItem>
-              </Link>
             </CenterItem>
-            <Typography sx={{ textAlign: 'start' }} variant="h1" color="black">Validation Form</Typography>
           </VerticalSpace>
 
           <CenterItem>
             <VerticalSpace>
-              <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What problem(s) did you face with the selected path(s)?</Typography>
+              <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What issue(s) did you face with the selected point(s) on the route?</Typography>
               <TextField
                 multiline
                 rows={8}
@@ -279,17 +377,16 @@ const Validation = () => {
 
       </StyledContainer>
     );
-  } else if (validating === "after") {
+  } else if (page === "thanks") {
     return (
       <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <StyledFormContainer style={{ maxWidth: '270px' }}>
+        <StyledFormContainer style={{ maxWidth: '280px' }}>
 
         <VerticalSpace>
           
         <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h1"><span style={{ color: 'black' }}>Thank you for your</span> input!</Typography>
-          <br></br>
-          Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!
+          <Typography variant="h1"><span style={{ color: 'black' }}>Thank you for<br></br>your</span> input!</Typography>
+          <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!</Typography>
         </CenterItem>
 
         <CenterItem>
