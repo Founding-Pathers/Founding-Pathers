@@ -34,6 +34,9 @@ export default function TemporaryDrawer() {
       case 'Terms and Conditions':
         navigate('/terms');
         break;
+      case 'Privacy Policy':
+        navigate('/privacy');
+        break;
       case 'User Guidelines':
         navigate('/guidelines');
         break;
@@ -55,7 +58,7 @@ export default function TemporaryDrawer() {
       <Divider />
       <Box sx={{backgroundColor: "#FF9900", height: "100%", display: "flex", alignItems: "flex-start"}}>
         <List style={{ width: '100%' }}>
-          {['Feedback Form', 'Terms and Conditions', 'User Guidelines', 'Log Out'].map((text, index) => (
+          {['Feedback Form', 'Terms and Conditions', 'Privacy Policy', 'User Guidelines', 'Log Out'].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton onClick={() => handleButtonClick(text)}>
                 {text === 'Log Out' && <LogoutIcon sx={{height: "20px", mr: 1}} />}

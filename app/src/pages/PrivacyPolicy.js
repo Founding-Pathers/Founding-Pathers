@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, styled } from '@mui/material';
+import { Typography, List, ListItem, ListItemText, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
@@ -106,13 +106,127 @@ const PrivacyPolicy = () => {
           <CenterItem>
             <VerticalSpace>
             <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>
-                [to be replaced] UR-Active (the "Service") is provided by Founding Pathers (the “Company”) to our users in accordance to these Terms and Conditions ("Terms"). By using the Service, you agree to be bound by these Terms. Please read them carefully.
+              Founding Pathers (the “Company”) will handle, in accordance with the following policy, the personal information including the private information obtained from our users when they use UR-Active (the “Service”).
             </Typography>
-            </VerticalSpace>
-          </CenterItem>
 
-    </StyledFormContainer>
+          <List sx={{ listStyle: "decimal", paddingLeft: '20px' }}>
 
+            <ListItem sx={{ display: "list-item", flexDirection: "column", paddingBottom: 0 }}>
+              <ListItemText primary="Information We Collect" sx={{ marginBottom: 0 }} />
+              <List sx={{ listStyle: "lower-alpha", paddingLeft: '20px', paddingTop: 0 }}>
+
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="Information Provided by Users"/>
+                  <List sx={{ listStyle: "lower-roman", paddingLeft: '20px', paddingTop: 0 }}>
+                    <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                      <ListItemText primary="Email Address: When users create an account, they are required to provide their email address for account creation and communication purposes."/>
+                    </ListItem>
+                    <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                      <ListItemText primary="Password: Users will also create a password for their account to secure their personal information and access to the Service."/>
+                    </ListItem>
+                  </List>
+                </ListItem>
+
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="Information Collected by UR-Active" sx={{ marginBottom: 0 }}/>
+                  <List sx={{ listStyle: "lower-roman", paddingLeft: '20px', paddingTop: 0 }}>
+                    <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                      <ListItemText primary="Routes Taken: UR-Active will collect data on the routes taken by users for Validation purposes."/>
+                    </ListItem>
+                    <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                      <ListItemText primary="Validation Form: Users may submit validation forms which may include routes taken and comments."/>
+                    </ListItem>
+                    <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                      <ListItemText primary="Feedback Form: Users may submit feedback forms which may include personal preferences and opinions."/>
+                    </ListItem>
+                    <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                      <ListItemText primary="Path Preferences: UR-Active may collect information on users' preferences for the type of paths they want."/>
+                    </ListItem>
+                  </List>
+                </ListItem>
+
+              </List>
+            </ListItem>
+
+            <ListItem sx={{ display: "list-item", flexDirection: "column", paddingBottom: 0 }}>
+              <ListItemText primary="Use of Information:" sx={{ marginBottom: 0 }} />
+              <List sx={{ listStyle: "lower-alpha", paddingLeft: '20px', paddingTop: 0 }}>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="To provide and maintain the Service;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="To personalize user experience and improve the functionality of the Service;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="To communicate with users, including responding to inquiries and providing support;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="To analyze preferences to enhance the Service’s features and services;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="To comply with legal obligations."/>
+                </ListItem>
+              </List>
+            </ListItem>
+
+            <ListItem sx={{ display: "list-item", flexDirection: "column", paddingBottom: 0 }}>
+              <ListItemText primary="Sharing of Information:" sx={{ marginBottom: 0 }} />
+              <List sx={{ listStyle: "lower-alpha", paddingLeft: '20px', paddingTop: 0 }}>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="With service providers who assist us in operating the Service and providing services to users;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="With affiliated companies or third parties for purposes consistent with this Privacy Policy;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="In response to a subpoena, court order, or other legal process;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="To protect our rights, property, or safety, or the rights, property, or safety of others;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="With the consent of the user."/>
+                </ListItem>
+              </List>
+            </ListItem>
+
+            <ListItem sx={{ display: "list-item", flexDirection: "column" }}>
+              <ListItemText primary="Security: We are committed to protecting the security of users' personal information. We implement appropriate technical and organizational measures to safeguard the information collected through the Service."/>
+            </ListItem>
+
+            <ListItem sx={{ display: "list-item", flexDirection: "column", paddingBottom: 0 }}>
+              <ListItemText primary="User Rights:" sx={{ marginBottom: 0 }} />
+              <List sx={{ listStyle: "lower-alpha", paddingLeft: '20px', paddingTop: 0 }}>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="The right to access, update, or delete their personal information or account;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="The right to object to the processing of their personal information;"/>
+                </ListItem>
+                <ListItem sx={{ display: "list-item", paddingTop: 0, paddingBottom: 0 }}>
+                  <ListItemText primary="The right to withdraw consent for the collection and processing of personal information."/>
+                </ListItem>
+              </List>
+            </ListItem>
+
+          </List>
+
+          <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>
+            This Privacy Policy is subject to change without notice. Any changes will be effective immediately upon posting the updated Privacy Policy on the Service. It is your responsibility to review this Privacy Policy periodically for any changes. Your continued use of the Service following the posting of any changes to this Privacy Policy constitutes acceptance of those changes.
+          </Typography>
+
+          <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>
+            If you have any questions or concerns regarding this Privacy Policy, please contact us at +65 81111111.
+          </Typography>
+
+          <Typography sx={{ textAlign: 'end', marginBottom: '10px', marginTop: '20px' }}>
+            Last Updated: 14/3/24
+          </Typography>
+          
+          </VerticalSpace>
+        </CenterItem>
+
+      </StyledFormContainer>
     </StyledContainer>
   );
 }
