@@ -1,5 +1,3 @@
-const dbo = require("../db/conn");
-
 var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
@@ -19,7 +17,7 @@ const tupleSchema = new mongoose.Schema({
 const RoutesTakenSchema = new Schema(
   {
     account_id: {
-      type: Number,
+      type: String,
       ref: "User",
       required: true,
     },
@@ -50,4 +48,4 @@ const RoutesTakenSchema = new Schema(
 
 const RoutesTaken = mongoose.model("routestaken", RoutesTakenSchema);
 
-module.exports = { createUserPref, RoutesTaken };
+module.exports = RoutesTaken;
