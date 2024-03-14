@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -11,6 +12,7 @@ import Rating4Img from '../assets/Rating4.png';
 import Rating5Img from '../assets/Rating5.png';
 import CyclingImg from '../assets/CyclingOrange.png';
 import ReusableButton from '../components/ui/Button';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -49,6 +51,20 @@ const CenterItem = styled('div')({
   display: 'flex'
 });
 
+const FrozenBar = styled('div')({
+  width: '100%',
+  height: '100px',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  backgroundColor: 'white',
+  zIndex: 1000,
+  display: 'flex',
+  alignItems: 'flex-end',
+  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s ease',
+});
+
 const Feedback = () => {
   const [textFieldValue1, setTextFieldValue1] = useState('');
   const [textFieldValue2, setTextFieldValue2] = useState('');
@@ -59,8 +75,10 @@ const Feedback = () => {
   const [noClicked2, setnoClicked2] = useState(false);
   const [yesClicked3, setyesClicked3] = useState(false);
   const [noClicked3, setnoClicked3] = useState(false);
-  const [textFieldsFilled, setTextFieldsFilled] = useState(false);
+  const [textFieldsFilled1, setTextFieldsFilled1] = useState(false);
+  const [textFieldsFilled2, setTextFieldsFilled2] = useState(false);
   const [page, setPage] = useState("no");
+  const [scrolled, setScrolled] = useState(false);
 
   const handleTextFieldChange1 = (event) => {
     setTextFieldValue1(event.target.value);
@@ -120,18 +138,18 @@ const Feedback = () => {
   useEffect(() => {
     // Check if all text fields are filled
     if (textFieldValue1.trim() !== '') {
-      setTextFieldsFilled(true);
+      setTextFieldsFilled1(true);
     } else {
-      setTextFieldsFilled(false);
+      setTextFieldsFilled1(false);
     }
   }, [textFieldValue1]);
 
   useEffect(() => {
     // Check if all text fields are filled
     if (textFieldValue2.trim() !== '') {
-      setTextFieldsFilled(true);
+      setTextFieldsFilled2(true);
     } else {
-      setTextFieldsFilled(false);
+      setTextFieldsFilled2(false);
     }
   }, [textFieldValue2]);
 
@@ -149,13 +167,35 @@ const Feedback = () => {
   if (page === "no") {
     return (
       <StyledContainer style={{ padding: '30px' }}>
-        <StyledFormContainer>
+
+        <FrozenBar scrolled={scrolled}>
+          <Link to="/home"><ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+          {scrolled && (
+            <Typography
+              variant="body1"
+              sx={{
+                paddingBottom: '10px',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                color: '#FF9900',
+                fontSize: '20px',
+                fontWeight: '600',
+                whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
+              }}
+            >
+              Terms and Conditions
+            </Typography>
+          )}
+        </FrozenBar>
+
+        <StyledFormContainer style={{ paddingTop: '64px' }}>
 
           <VerticalSpace>
             <CenterItem>
               <LeftItem>
                 <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
-                <Typography sx={{ textAlign: 'start' }} variant="h1" color="#000000">Feedback Form</Typography>
+                <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Feedback Form</Typography>
               </LeftItem>
             </CenterItem>
           </VerticalSpace>
@@ -243,9 +283,9 @@ const Feedback = () => {
             </VerticalSpace>
           </CenterItem>
 
-          <RightItem style={{ marginTop: '75px' }} >
-            {yesClicked1 && textFieldsFilled && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
-            {noClicked1 && textFieldsFilled && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+          <RightItem style={{ marginTop: '27px' }} >
+            {yesClicked1 && textFieldsFilled1 && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+            {noClicked1 && textFieldsFilled1 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
           </RightItem>
 
         </StyledFormContainer>
@@ -255,13 +295,35 @@ const Feedback = () => {
   } else if (page === "yes") {
     return (
       <StyledContainer style={{ padding: '30px' }}>
-        <StyledFormContainer>
+
+        <FrozenBar scrolled={scrolled}>
+          <Link to="/home"><ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+          {scrolled && (
+            <Typography
+              variant="body1"
+              sx={{
+                paddingBottom: '10px',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                color: '#FF9900',
+                fontSize: '20px',
+                fontWeight: '600',
+                whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
+              }}
+            >
+              Terms and Conditions
+            </Typography>
+          )}
+        </FrozenBar>
+
+        <StyledFormContainer style={{ paddingTop: '64px' }}>
 
           <VerticalSpace>
             <CenterItem>
               <LeftItem>
                 <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
-                <Typography sx={{ textAlign: 'start' }} variant="h1" color="#000000">Feedback Form</Typography>
+                <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Feedback Form</Typography>
               </LeftItem>
             </CenterItem>
           </VerticalSpace>
@@ -337,8 +399,8 @@ const Feedback = () => {
             </VerticalSpace>
           </CenterItem>
 
-          <RightItem style={{ marginTop: '107px' }} >
-            {(yesClicked3 || noClicked3) && textFieldsFilled && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+          <RightItem style={{ marginTop: '61px' }} >
+            {(yesClicked2 || noClicked2) && (yesClicked3 || noClicked3) && textFieldsFilled2 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
           </RightItem>
 
         </StyledFormContainer>

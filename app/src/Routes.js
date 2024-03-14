@@ -10,6 +10,8 @@ import Home from './pages/Home';
 import Validation from './pages/Validation';
 import Feedback from './pages/Feedback';
 import UserGuideline from './pages/UserGuideline';
+import TermsAndConditions from './pages/TermsAndConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 const Router = () => {
   return (
@@ -24,7 +26,9 @@ const Router = () => {
           <Route path='/home' element={<Home/>}></Route>
           <Route path='/validation' element={<Validation/>}></Route>
           <Route path='/feedback' element={<Feedback/>}></Route>
-          <Route path='/userguideline' element={<UserGuideline/>}></Route>
+          <Route path='/guidelines' element={<UserGuideline/>}></Route>
+          <Route path='/terms' element={<TermsAndConditions/>}></Route>
+          <Route path='/privacy' element={<PrivacyPolicy/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
