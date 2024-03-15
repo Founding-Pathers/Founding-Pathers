@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import App from '../App';
+import { BrowserRouter } from 'react-router-dom';
+import Create from '../pages/Create'
 import fetchMock from 'jest-fetch-mock';
 import { act } from 'react-test-renderer';
 
@@ -11,10 +12,14 @@ jest.mock('react-router', () => ({
     useNavigate: () => mockNavigate,
 }));
 
-describe('Application frontend login', () => {
+describe('Application frontend register', () => {
 
-test('renders the landing page', () => {
-    render(<App />);
+    test('renders the /create page', () => {
+        render(
+        <BrowserRouter>
+            <Create />
+        </BrowserRouter>
+        );
 
     expect(screen.getByTestId('email-form'))
     .toBeInTheDocument();
@@ -30,28 +35,45 @@ test('renders the landing page', () => {
     expect(errorMessage)
     .toBeNull();
 });
-
-test('submitting an empty form', async () => {
-    render(<App />)
-
-    const submitButtonElement = screen.getByTestId('ArrowForwardIcon')
-    fireEvent.click(submitButtonElement)
-
-    await screen.findByText('Email is required')
-    await screen.findByText('Password is required')
 });
+
+    test('submitting an empty form', async () => {
+        render(
+            <BrowserRouter>
+                <Create />
+            </BrowserRouter>
+            );
+
+        const submitButtonElement = screen.getByTestId('ArrowForwardIcon')
+        fireEvent.click(submitButtonElement)
+
+        await screen.findByText('Email is required')
+        await screen.findByText('Password is required')
+        await screen.findByText('Confirm Password is required')
+    });
 
 test('submitting a filled form', async () => {
 
-    fetchMock.mockResponseOnce(JSON.stringify("Success"));
+    fetchMock.mockResponseOnce(JSON.stringify(
+        { 
+        message: "User created successfully", 
+        success: true })
+    );
 
-    render(<App />);
+    render(
+        <BrowserRouter>
+            <Create />
+        </BrowserRouter>
+        );
 
     const emailField = screen.getByTestId('email-form').querySelector('input[type="text"]');
     fireEvent.change(emailField, { target: { value: 'test@example.com' } });
 
     const passwordField = screen.getByTestId('password-form').querySelector('input[type="password"]');
     fireEvent.change(passwordField, { target: { value: 'test123' } });
+
+    const confirmPasswordField = screen.getByTestId('confirm-password-form').querySelector('input[type="password"]');
+    fireEvent.change(confirmPasswordField, { target: { value: 'test123' } });
 
     const formSubmit = screen.getByRole('button');
     await act(async () => {
@@ -60,7 +82,6 @@ test('submitting a filled form', async () => {
 
     expect(fetchMock).toHaveBeenCalled();
 
-    expect(mockNavigate).toHaveBeenCalledWith("/home");
+    expect(mockNavigate).toHaveBeenCalledWith("/");
 
     });
-});
