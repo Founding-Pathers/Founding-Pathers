@@ -35,7 +35,7 @@ describe('Application frontend register', () => {
     expect(errorMessage)
     .toBeNull();
 });
-});
+
 
     test('submitting an empty form', async () => {
         render(
@@ -85,3 +85,4 @@ test('submitting a filled form', async () => {
     expect(mockNavigate).toHaveBeenCalledWith("/");
 
     });
+});

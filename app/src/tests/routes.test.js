@@ -9,7 +9,11 @@ describe('Router', () => {
     '/logout',
     '/deleted',
     '/home',
-    '/userguideline'
+    '/validation',
+    'feedback',
+    '/guidelines',
+    '/terms',
+    '/privacy'
   ];
 
   routes.forEach(route => {
