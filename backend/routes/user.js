@@ -38,8 +38,9 @@ router.route("/user/add").post(function (req, response) {
   let db_connect = dbo.getDbLogging();
   let myobj = {
     id: req.body.id,
-    wheelchair_friendly: req.body.wheelchair_friendly,
-    is_elderly: req.body.is_elderly,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
   };
   db_connect.collection("userAccount").insertOne(myobj, function (err, res) {
     if (err) throw err;

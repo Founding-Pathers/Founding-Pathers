@@ -26,6 +26,15 @@ const theme = createTheme({
     },
     endNavigation: {
       main: '#EE6161'
+    },
+    black: {
+      main: '#000000'
+    },
+    white: {
+      main: '#FFFFFF'
+    },
+    darkGrey: {
+      main: '#A0A0A0', 
     }
   },
   typography: {
@@ -34,7 +43,7 @@ const theme = createTheme({
     h1: {
       fontSize: '30px', 
       fontWeight: 700, 
-      color: '#F0A73A',
+      color: '#FF9900',
       textAlign: 'center'
     },
     h2: {
@@ -116,6 +125,25 @@ const theme = createTheme({
       fontWeight: 500, 
       color: '#F0A73A'
     }
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'black',
+            },
+            '&:hover fieldset': {
+              borderColor: 'black',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#FF9900',
+            },
+          },
+        },
+      },
+    },
   },
 });
 

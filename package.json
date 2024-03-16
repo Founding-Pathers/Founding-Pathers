@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "mui-file-dropzone": "^4.0.2",
+    "react-dropzone": "^14.2.3"
+  }
+}
