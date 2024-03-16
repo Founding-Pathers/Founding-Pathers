@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
-import ArrowBack from '../assets/ArrowBack.png';
-import ArrowForward from '../assets/ArrowForward.png';
+import locationIcon from '../assets/Location.png';
 
 const containerStyle = {
   width: '100%',
@@ -28,42 +27,14 @@ function Home() {
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
   const [currentLocation, setCurrentLocation] = useState('')
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isRouting, setIsRouting] = useState(false);
   const [selecting, setSelecting] = useState(false);
+  //POIs State
+  const [selectedPOIs, setSelectedPOIs] = useState([]);
 
   const originRef = useRef()
   const destinationRef = useRef()
 
-  const handleNext = () => {
-    if (currentCardIndex < directionsResponse.routes.length - 1) {
-      setCurrentCardIndex(currentCardIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentCardIndex > 0) {
-      setCurrentCardIndex(currentCardIndex - 1);
-    }
-  };
-
-  useEffect(() => {
-    setCurrentCardIndex(0); 
-  }, [directionsResponse]);
-
-  useEffect(() => {
-    if (map && directionsResponse) {
-      const directionsRenderer = new window.google.maps.DirectionsRenderer();
-      directionsRenderer.setMap(map);
-      directionsRenderer.setDirections(directionsResponse);
-      directionsRenderer.setRouteIndex(currentCardIndex);
-      return () => {
-        directionsRenderer.setMap(null);
-      };
-    }
-  }, [map, directionsResponse, currentCardIndex]);
-
-  //will be diff once routing engine is set up
   async function calculateRoute() {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
@@ -83,25 +54,12 @@ function Home() {
             new google.maps.LatLng(route[i][1], route[i][0]));
         }
         console.log(coors)
-        setIsRouting(true);
         drawPolyline(coors);
 
     })
     .catch(error => {
       console.error('Error:', error); // Handle errors here
     });
-
-    //eslint-disable-next-line no-undef
-    // const directionsService = new google.maps.DirectionsService()
-    // const results = await directionsService.route({
-    //     origin: originRef.current.value,
-    //     destination: destinationRef.current.value,
-    //     // eslint-disable-next-line no-undef
-    //     travelMode: google.maps.TravelMode.WALKING,
-    //     provideRouteAlternatives: true
-    // })
-    // console.log(results)
-    // setDirectionsResponse(results)
 
   }
 
@@ -172,9 +130,9 @@ function Home() {
     }
   }, [map]);
 
-  function startRouting(currentCardIndex) {
-    setDistance(directionsResponse.routes[currentCardIndex].legs[0].distance.text)
-    setDuration(directionsResponse.routes[currentCardIndex].legs[0].duration.text)
+  function startRouting() {
+    setDistance(directionsResponse[0].properties.TRAVELLING)
+    setDuration(directionsResponse[0].properties.TimeTaken)
     setIsRouting(true)
     setSelecting(false)
     console.log(isRouting)
@@ -188,6 +146,7 @@ function Home() {
     setIsRouting(false); // Set isRouting to false
     clearRoute();
     handleCurrentLocation();
+    window.location.reload();
   };
 
   //geocoding
@@ -226,8 +185,6 @@ function Home() {
         origin_lat = o_results.lat;
         origin_long = o_results.long;
       }
-
-      
       
       const d_results = await codeAddress(destinationRef.current.value);
       dest_lat = d_results.lat;
@@ -252,6 +209,32 @@ function Home() {
   
       // Parse the response
       const data = await response.json();
+      setDirectionsResponse(data);
+
+      // Markers
+      const iconSize = {
+        width: 35,  
+        height: 35, 
+      };
+      // Create a new icon object with the specified size
+      const icon = {
+        url: locationIcon,
+        // eslint-disable-next-line no-undef
+        scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+      };
+      // eslint-disable-next-line no-undef
+      new google.maps.Marker({
+        position: { lat: origin_lat, lng: origin_long },
+        map,
+        icon: icon
+      });
+
+      // eslint-disable-next-line no-undef
+      new google.maps.Marker({
+        position: { lat: dest_lat, lng: dest_long },
+        map
+      });
+      
       return data;
   
     } catch (error) {
@@ -299,23 +282,16 @@ function Home() {
         {directionsResponse && (
         <>
           <Card
-            time={directionsResponse.routes[currentCardIndex].legs[0].duration.text}
-            distance={directionsResponse.routes[currentCardIndex].legs[0].distance.text}
-            mode={directionsResponse.request.travelMode}
-            filters="F&B, Sheltered"
-            onClick={() => startRouting(currentCardIndex)}
+            time={(directionsResponse[0].properties.TimeTaken).toFixed(0) + " minutes"}
+            distance={((directionsResponse[0].properties.TRAVELLING)/1000).toFixed(1) + " km"}
+            mode={(directionsResponse[0].properties.TRAVEL_MOD).split("_")[0]}
+            filters={selectedPOIs.join(", ")}
+            onClick={() => startRouting()}
             display = { selecting ? 'flex' : 'none'}
           />
-          {currentCardIndex > 0 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left: "2px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowBack} onClick={handlePrevious} />}
-          {currentCardIndex < directionsResponse.routes.length - 1 && <img style={{ display: isRouting ? 'none' : 'block', top:"535px", left:"345px", width: "50px", height: "50px", position: 'absolute'}} src={ArrowForward} onClick={handleNext} />}
         </>
         )}
-        <Drawer filters="F&B, Sheltered" duration={duration} distance={distance} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
-        <Marker style={{display: isRouting ? 'none' : 'block'}} position={originRef}/>
-        <Marker position={currentLocation} />
-          {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse.routes[currentCardIndex]} />
-          )}
+        <Drawer duration={duration} distance={distance} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
         <></>
       </GoogleMap>
   ) : <></>

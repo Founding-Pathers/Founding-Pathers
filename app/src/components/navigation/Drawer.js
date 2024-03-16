@@ -33,10 +33,7 @@ import carIcon from '../../assets/filters/carIcon.png';
 import foodIcon from '../../assets/filters/foodIcon.png';
 import shelterIcon from '../../assets/filters/shelterIcon.png';
 import trainIcon from '../../assets/filters/trainIcon.png';
-import { useEffect, useState, useMemo } from 'react';
-// import { GoogleMap, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
-// import SearchBox from '../ui/Autocomplete';
-// import { useCombobox } from 'downshift';
+import { useEffect, useState } from 'react';
 
 const Root = styled('div')(({ theme }) => ({
   height: '100%',
@@ -75,7 +72,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, filters, isRouting, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, selectedPOIs, setSelectedPOIs, isRouting, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -87,8 +84,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setShowButton(((!open) && navigating));
   }, [open, navigating]);
 
-  //POIs State
-  const [selectedPOIs, setSelectedPOIs] = useState([]);
 
   const handleChipClick = (chipLabel) => {
     setSelectedPOIs((prevSelected) => {
@@ -141,10 +136,35 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   }, [location, destination]);
 
   const [isTextFieldFocused, setTextFieldFocused] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutsideTextField = (event) => {
+      if (
+        originRef.current &&
+        originRef.current.contains(event.target)
+      ) {
+        setTextFieldFocused(true);
+      } else if (
+        destinationRef.current &&
+        destinationRef.current.contains(event.target)
+      ) {
+        setTextFieldFocused(true);
+      } else {
+        setTextFieldFocused(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideTextField);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideTextField);
+    };
+  }, []);
+
   // Function to handle opening the drawer and focusing on the text field
   const handleOpenDrawer = () => {
     setOpen(true);
-    console.log(open)
+    console.log(open);
     setTextFieldFocused(true);
   };
 
@@ -185,7 +205,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         }}
       />
       <SwipeableDrawer
-        onClick={() => setOpen(true)}
         container={container}
         anchor="bottom"
         open={open}
@@ -212,13 +231,13 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
         >
           <Puller />
           {/* IS ROUTING */}
-          <Box sx={{display: (isRouting && !(isEditing)) ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
+          <Box sx={{display: (isRouting && !isEditing) ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
             <Button text="Edit" onClick={editFilters} width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
             <Box sx={{textAlign: 'center'}}>
               <Typography variant="navigatingSubtitle" sx={{display: 'block'}}>Estimated Arrival Time:</Typography>
-              <Typography variant="navigatingTitle" sx={{display: 'block', mt: 0.5}}>{duration}</Typography>
-              <Typography variant="filterLabel" sx={{display: 'block', mt: 0.5}}>{distance} away</Typography>
-              <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{filters}</Typography>
+              <Typography variant="navigatingTitle" sx={{display: 'block', mt: 0.5}}>{(duration/1).toFixed(0)} minutes</Typography>
+              <Typography variant="filterLabel" sx={{display: 'block', mt: 0.5}}>{(distance/1000).toFixed(1)} km away</Typography>
+              <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{selectedPOIs}</Typography>
               <Typography variant="navigatingSaveDest" sx={{display: 'block', mt: 0.5}}><img src={Saved} style={{width:"18px", height:"16px", marginRight: "5px"}}></img>Save Destination</Typography>
             </Box>
             <Button text="End" onClick={endRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
