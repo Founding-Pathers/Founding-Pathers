@@ -14,7 +14,7 @@ const ObjectId = require("mongodb").ObjectId;
 router.route("/shortestroutes").get(async function (req, res) {
   let db_connect = dbo.getDbRoutes();
   db_connect
-    .collection("shortest_route")
+    .collection("shortest_path")
     .find()
     .limit(10)
     .toArray()
@@ -28,7 +28,7 @@ router.route("/shortestroutes").get(async function (req, res) {
 router.route("/shortestroute").post(function (req, res) {
   let db_connect = dbo.getDbRoutes();
   db_connect
-    .collection("shortest_route")
+    .collection("shortest_path")
     .find()
     .toArray()
     .then((data) => {
