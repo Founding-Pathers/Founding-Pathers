@@ -32,10 +32,9 @@
   },
   "scripts": {
     "start": "env-cmd -f .env react-scripts start",
-    "build": "webpack --env.ENVIRONMENT=production --config webpack.config.build.js",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "dev": "webpack --env.ENVIRONMENT=development --config webpack.config.dev.js"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
