@@ -16,9 +16,8 @@ const center = {
 };
 
 function Home() {
-  console.log(process.env.REACT_APP_API_KEY)
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyC0yZHVhft1tT32bj9SRzL0bP2XzV1M2W4",
+    googleMapsApiKey: process.env.REACT_APP_API_KEY,
     libraries: ['places']
   })
 
