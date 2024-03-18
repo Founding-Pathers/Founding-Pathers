@@ -10,20 +10,6 @@ const dbo = require("../db/conn");
 // Converts the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
-// Retrieve list of all computedroutes (admin)
-router.route("/shortestroutes").get(async function (req, res) {
-  let db_connect = dbo.getDbRoutes();
-  db_connect
-    .collection("shortest_route")
-    .find()
-    .limit(10)
-    .toArray()
-    .then((data) => {
-      console.log(data);
-      res.json(data);
-    });
-});
-
 // Retrieve routes according to where the walking user is at through lat and long
 router.route("/shortest").post(async function (req, res) {
   try {
