@@ -1,3 +1,11 @@
+variable "organization" {
+    type = string
+}
+
+variable "workspace_name" {
+    type = string
+}
+
 variable "zone_id" {
     type = string
 }
