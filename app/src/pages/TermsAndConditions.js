@@ -105,7 +105,7 @@ const TermsAndConditions = () => {
 
           <CenterItem>
             <VerticalSpace>
-            <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>
+            <Typography data-testid="tnc-content" sx={{ textAlign: 'start', marginBottom: '10px' }}>
                 UR-Active (the "Service") is provided by Founding Pathers (the “Company”) to our users in accordance to these Terms and Conditions ("Terms"). By using the Service, you agree to be bound by these Terms. Please read them carefully.
             </Typography>
 

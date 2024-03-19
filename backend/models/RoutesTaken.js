@@ -1,5 +1,3 @@
-const dbo = require("../db/conn");
-
 var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
