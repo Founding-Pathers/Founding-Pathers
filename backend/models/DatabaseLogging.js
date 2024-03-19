@@ -1,5 +1,3 @@
-const dbo = require("../db/conn");
-
 var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
@@ -7,7 +5,7 @@ var mongoose = require("mongoose"),
 const DatabaseLoggingSchema = new Schema(
   {
     _id: {
-      type: Number,
+      type: String,
       required: true,
     },
     file_name: {

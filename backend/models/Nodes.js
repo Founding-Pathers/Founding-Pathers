@@ -1,12 +1,10 @@
-const dbo = require("../db/conn");
-
 var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
 // Schema for user preferences
 const RoutesSchema = new Schema({
   _id: {
-    type: Number,
+    type: String,
     required: true,
   },
   start_node_index: {

@@ -104,7 +104,7 @@ const Profile = () => {
             />
         </CenterItem>
 
-        <VerticalSpace>
+        <VerticalSpace data-testid="fname-form">
           First Name
           <TextField
             width="310px"
@@ -114,7 +114,7 @@ const Profile = () => {
           />
         </VerticalSpace>
 
-        <VerticalSpace>
+        <VerticalSpace data-testid="lname-form">
           Last Name
           <TextField
             width="310px"
@@ -124,7 +124,7 @@ const Profile = () => {
           />
         </VerticalSpace>
 
-        <VerticalSpace>
+        <VerticalSpace data-testid="email-form">
           Email
           <TextField
             width="310px"
@@ -134,7 +134,7 @@ const Profile = () => {
           />
         </VerticalSpace>
 
-        <VerticalSpace>
+        <VerticalSpace data-testid="pwd-form">
           Password
           <TextField
             width="310px"
@@ -162,7 +162,7 @@ const Profile = () => {
         </RightItem>
 
         <VerticalSpace><VerticalSpace>
-          <CenterItem>
+          <CenterItem data-testid="update-edit-form">
             <ReusableButton
               text={editMode ? 'UPDATE' : 'EDIT'}
               color="primary"
