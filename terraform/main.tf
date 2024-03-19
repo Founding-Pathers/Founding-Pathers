@@ -1,12 +1,3 @@
-terraform {
-  cloud {
-    organization = var.organization
-    workspaces {
-      name = var.workspace_name
-    }
-  }
-}
-
 resource "aws_vpc" "FoundingPathersVPC" {
     cidr_block = var.cidr_block
     tags = {
