@@ -58,7 +58,6 @@ const Login = () => {
   const navigate = useNavigate()
 
   function updateForm(value) {
-    console.log(value)
     return setForm((prev) => {
       return { ...prev, ...value };
     });
@@ -78,9 +77,6 @@ async function onSubmit(e){
   setErrors(validationErrors); // Set the errors state
   
   if (Object.keys(validationErrors).length === 0) {
-
-    console.log(namePort)
-    console.log(protocol)
 
     await fetch(`${protocol}://${namePort}/login`, {
     method: "POST",
@@ -125,13 +121,13 @@ async function onSubmit(e){
         <Typography variant="h1">UR-Active</Typography>
         </VerticalSpace>
 
-        <VerticalSpace>
+        <VerticalSpace data-testid="email-form">
         Email
         <TextField width="310px" id="outlined-required" label="" name="email" value={form.email} onChange={(e) => updateForm({ email: e.target.value })}/>
         {/* change the styling for FE */}{errors.email && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.email}</span>}
         </VerticalSpace>
 
-        <VerticalSpace>
+        <VerticalSpace data-testid="password-form">
         Password
         <TextField width="310px" id="outlined-password-input" type="password" label="" name="password" value={form.password} onChange={(e) => updateForm({ password: e.target.value })}/>
         {/* change the styling for FE */}{errors.password && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px' }}>{errors.password}</span>}
@@ -145,7 +141,7 @@ async function onSubmit(e){
 
         <VerticalSpace>
           <RightItem>
-          <ReusableButton onClick={Login} text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+          <ReusableButton data-testid="submit-form" onClick={onSubmit} text="LOG IN" color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
           </RightItem>
         </VerticalSpace>
 

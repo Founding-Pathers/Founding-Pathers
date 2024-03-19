@@ -141,7 +141,7 @@ const UserGuidelines = () => {
 
                 {image && <img src={image} alt={`User Guideline ${index + 1}`} style={{ width: '330px', height: 'auto', marginTop: '15px' }} />}
 
-                <VerticalSpace style={{ display: 'flex', position: 'absolute', bottom: '22px', left: '30px', right: '30px', justifyContent: 'space-between' }}>
+                <VerticalSpace data-testid="userguideline-content" style={{ display: 'flex', position: 'absolute', bottom: '22px', left: '30px', right: '30px', justifyContent: 'space-between' }}>
                   <LeftItem>
                     {page !== "introduction" && <Button text="BACK" onClick={handleGuidelinePage(guidelines[index - 1]?.page)} color="primary" height="40px" width="120px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />}
                   </LeftItem>

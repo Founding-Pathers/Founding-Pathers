@@ -1,0 +1,20 @@
+name: Run App Jest tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run Jest tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: app
+
+    - name: Run Jest tests
+      run: npm test
+      working-directory: app
