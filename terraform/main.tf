@@ -1,3 +1,12 @@
+terraform {
+  cloud {
+    organization = "founding-pathers-fyp"
+    workspaces {
+      name = "fyp-workspace"
+    }
+  }
+}
+
 resource "aws_vpc" "FoundingPathersVPC" {
     cidr_block = var.cidr_block
     tags = {
