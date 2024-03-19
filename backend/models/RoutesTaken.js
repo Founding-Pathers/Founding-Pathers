@@ -9,21 +9,19 @@ const tupleSchema = new mongoose.Schema({
   },
   issue_desc: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 
 // Schema for user preferences
 const RoutesTakenSchema = new Schema(
   {
-    account_id: {
+    email: {
       type: String,
-      ref: "User",
       required: true,
     },
     route_index: {
-      type: Number,
-      ref: "ComputedRoutes",
+      type: String,
       required: true,
     },
     user_validated: {

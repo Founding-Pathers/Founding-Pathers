@@ -26,14 +26,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(require("./routes/userpref"));
 app.use(require("./routes/routestaken"));
-app.use(require("./routes/computedroutes"));
 app.use(require("./routes/routes"));
 app.use(require("./routes/nodes"));
 app.use(require("./routes/user"));
 app.use(require("./routes/databaselogging"));
 app.use(bodyParser.json(), urlencodedParser);
 app.use(require("./routes/account"));
-app.use(require("./routes/shortestpath"));
 app.use(require("./routes/Middlewares/AuthMiddleware"));
 
 // starting of Server
@@ -45,8 +43,7 @@ app.listen(port, async () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-
-app.get('/status', async (req, res) => {
+app.get("/status", async (req, res) => {
   try {
     // Perform database connection
     await dbo.connectToServer();
@@ -55,7 +52,7 @@ app.get('/status', async (req, res) => {
   } catch (err) {
     // If error, send error response
     console.error(err);
-    res.status(500).send('Error connecting to database');
+    res.status(500).send("Error connecting to database");
   }
 });
 
