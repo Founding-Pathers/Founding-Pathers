@@ -11,21 +11,19 @@ const tupleSchema = new mongoose.Schema({
   },
   issue_desc: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 
 // Schema for user preferences
 const RoutesTakenSchema = new Schema(
   {
-    account_id: {
-      type: Number,
-      ref: "User",
+    email: {
+      type: String,
       required: true,
     },
     route_index: {
-      type: Number,
-      ref: "ComputedRoutes",
+      type: String,
       required: true,
     },
     user_validated: {
@@ -50,4 +48,4 @@ const RoutesTakenSchema = new Schema(
 
 const RoutesTaken = mongoose.model("routestaken", RoutesTakenSchema);
 
-module.exports = { createUserPref, RoutesTaken };
+module.exports = RoutesTaken;
