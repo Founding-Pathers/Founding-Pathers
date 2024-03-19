@@ -72,7 +72,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, selectedPOIs, setSelectedPOIs, isRouting, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, selectedMode, setSelectedMode, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -84,7 +84,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setShowButton(((!open) && navigating));
   }, [open, navigating]);
 
-
+  //POIs
   const handleChipClick = (chipLabel) => {
     setSelectedPOIs((prevSelected) => {
       if (prevSelected.includes(chipLabel)) {
@@ -96,28 +96,24 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   };
 
   //Path Preferences State
-  const [selectedPaths, setSelectedPaths] = useState([]);
-
   const handleChipClickPath = (chipLabel) => {
-    setSelectedPaths((prevSelected) => {
-      if (prevSelected.includes(chipLabel)) {
-        return prevSelected.filter((label) => label !== chipLabel);
-      } else {
-        return [...prevSelected, chipLabel];
-      }
-    });
+    setSelectedPaths(chipLabel);
   };
 
-  //Travel Mode State
-  const [selectedMode, setSelectedMode] = useState(null);
+  useEffect(() => {
+    console.log("Selected mode changed:", selectedMode);
+  }, [selectedMode]);
 
+  //Travel Mode State
   const handleChipClickTravelMode = (chipLabel) => {
     setSelectedMode(chipLabel);
     setShowButton(true);
     setOpen(false);
-    calculateRoute();
     handleSelecting();
     setNavigating(true);
+    if (calculateRoute && selectedMode !== null) {
+      calculateRoute();
+    }
   };
 
   //Switch start and destination
@@ -378,11 +374,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
           <ChipBox>
           <Chip icon={shelterIcon} iconWidth="20px" iconHeight="20px" label="Sheltered" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
-          isSelected={selectedPaths.includes("Sheltered")}
+          isSelected={selectedPaths == "Sheltered"}
           onClick={() => handleChipClickPath("Sheltered")}
           ></Chip>
           <Chip label="Nature" icon={ParkOutlinedIcon} iconWidth="20px" iconHeight="20px" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
-          isSelected={selectedPaths.includes("Nature")}
+          isSelected={selectedPaths == "Nature"}
           onClick={() => handleChipClickPath("Nature")}
           ></Chip>
           </ChipBox>

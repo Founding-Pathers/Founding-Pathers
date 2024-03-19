@@ -28,8 +28,13 @@ function Home() {
   const [currentLocation, setCurrentLocation] = useState('')
   const [isRouting, setIsRouting] = useState(false);
   const [selecting, setSelecting] = useState(false);
+
   //POIs State
   const [selectedPOIs, setSelectedPOIs] = useState([]);
+  //Path Preferences
+  const [selectedPaths, setSelectedPaths] = useState(null);
+  //Travel Mode
+  const [selectedMode, setSelectedMode] = useState(null);
 
   const originRef = useRef()
   const destinationRef = useRef()
@@ -38,6 +43,10 @@ function Home() {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
     }
+
+    console.log(selectedMode);
+    console.log(selectedPOIs);
+    console.log(selectedPaths);
 
     fetchRoute()
     .then(data => {
@@ -290,7 +299,7 @@ function Home() {
           />
         </>
         )}
-        <Drawer duration={duration} distance={distance} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
+        <Drawer duration={duration} distance={distance} selectedMode={selectedMode} setSelectedMode={setSelectedMode} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
         <></>
       </GoogleMap>
   ) : <></>
