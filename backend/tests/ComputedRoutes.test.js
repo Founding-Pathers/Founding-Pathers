@@ -53,7 +53,7 @@ describe('computed route', () => {
 });
 
 const testComputedRoute = {
-    _id: 1,
+    _id: "1",
     start_node_index: 10291,
     end_node_index: 19201,
     travel_mode: 2,
@@ -62,7 +62,7 @@ const testComputedRoute = {
 }
 
 const testComputedRouteWithoutStart = {
-    _id: 2,
+    _id: "2",
     end_node_index: 19201,
     travel_mode: 2,
     is_sheltered: true,
@@ -70,7 +70,7 @@ const testComputedRouteWithoutStart = {
 }
 
 const testComputedRouteWithoutEnd = {
-    _id: 3,
+    _id: "3",
     end_node_index: 19201,
     travel_mode: 2,
     is_sheltered: true,
@@ -78,7 +78,7 @@ const testComputedRouteWithoutEnd = {
 }
 
 const testComputedRouteWithoutTravelMode = {
-    _id: 4,
+    _id: "4",
     start_node_index: 10291,
     end_node_index: 19201,
     is_sheltered: true,
@@ -86,7 +86,7 @@ const testComputedRouteWithoutTravelMode = {
 }
 
 const testComputedRouteWithoutShelterOption = {
-    _id: 5,
+    _id: "5",
     start_node_index: 10291,
     end_node_index: 19201,
     travel_mode: 2,

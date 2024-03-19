@@ -5,7 +5,7 @@ var mongoose = require("mongoose"),
 const DatabaseLoggingSchema = new Schema(
   {
     _id: {
-      type: Number,
+      type: String,
       required: true,
     },
     file_name: {

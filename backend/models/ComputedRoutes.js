@@ -5,7 +5,7 @@ var mongoose = require("mongoose"),
 const ComputedRoutesSchema = new Schema(
   {
     _id: {
-      type: Number,
+      type: String,
       required: true,
     },
     start_node_index: {

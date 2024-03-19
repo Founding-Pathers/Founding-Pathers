@@ -22,7 +22,7 @@ describe('log', () => {
 });
 
 const testLog = {
-    _id: 12345,
+    _id: "12345",
     file_name: "test.csv",
     createdAt: 'createdAt'
 }
