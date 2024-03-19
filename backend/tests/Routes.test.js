@@ -32,7 +32,23 @@ describe('routes', () => {
 
 const newRouteInfo = {
     _id : "93102",
-    start_node_index: 90123,
-    end_node_index: 12309,
-    distance: 1000
+    type: "test",
+    properties:
+    {
+        type: {
+            ROUTE_ID: "123",
+            ORIGIN_ID: "1234",
+            DEST_ID: "12345",
+            ORIGIN_X: 123916,
+            ORIGIN_Y: 123061,
+            DEST_X: 198926,
+            DEST_Y: 291823,
+            TimeTaken: 10,
+            BEST_PATH_: 1201,
+        }
+    },
+    geometry: {
+        type: "Point",
+        coordinates: [123123, 123123],
+    },
 }

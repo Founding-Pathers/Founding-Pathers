@@ -5,7 +5,7 @@ var mongoose = require("mongoose"),
 const RoutesSchema = new Schema(
   {
     _id: {
-      type: Number,
+      type: String,
       required: true,
     },
     type: {

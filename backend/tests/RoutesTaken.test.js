@@ -21,7 +21,7 @@ describe('routes taken', () => {
 
     it('cannot be taken by the user without account_id ', async () => {
         await expect(async () => {
-            await routesTakenModel.create(newRoutesTakenWithoutAccountId)
+            await routesTakenModel.create(newRoutesTakenWithoutEmail)
             })
             .rejects
             .toThrow(mongoose.Error.ValidationError);
@@ -39,8 +39,8 @@ describe('routes taken', () => {
 });
 
 const newRoutesTaken = {
-    account_id : "stqz92715sa",
-    route_index: 90123,
+    email : "test@example.com",
+    route_index: "90123",
     user_validated: true,
     edges_validation: new Map([
         ["entity1", 
@@ -53,8 +53,8 @@ const newRoutesTaken = {
     deleted: false
 }
 
-const newRoutesTakenWithoutAccountId = {
-    route_index: 90123,
+const newRoutesTakenWithoutEmail = {
+    route_index: "90123",
     user_validated: true,
     edges_validation:
         {
