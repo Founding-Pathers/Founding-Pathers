@@ -1,7 +1,3 @@
-variable "route_53_zone" {
-    type = string
-}
-
 variable "zone_id" {
     type = string
 }
@@ -83,5 +79,10 @@ variable "asg_sg_id" {
 
 variable "asg_iam_role" {
     description = "ASG IAM Role"
+    type = string
+}
+
+variable "asg_user_data" {
+    description = "ASG User Data"
     type = string
 }

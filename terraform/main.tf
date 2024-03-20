@@ -67,7 +67,7 @@ data "aws_ami" "linux" {
     most_recent = true
     filter {
     name   = "name"
-    values = ["al2023-ami-ecs-hvm-2023.0.20240221-kernel-6.1-x86_64"]
+    values = ["al2023-ami-ecs-hvm-2023.0.20240312-kernel-6.1-x86_64"]
     }
 
     filter {
@@ -84,13 +84,13 @@ data "aws_ami" "linux" {
 }
 
 resource "aws_launch_template" "ecs_asg_template" {
-    name_prefix = "ecs_asg_template"
     image_id = data.aws_ami.linux.id
     instance_type = "c3.xlarge"
     disable_api_stop = false
     disable_api_termination = false
     key_name = var.asg_key_name
     vpc_security_group_ids = var.asg_sg_id
+    user_data = var.asg_user_data
 
     iam_instance_profile {
       arn = var.asg_iam_role
@@ -99,13 +99,19 @@ resource "aws_launch_template" "ecs_asg_template" {
 
 resource "aws_autoscaling_group" "ecs_asg" {
     availability_zones = var.availability_zones
+    capacity_rebalance = false
     name = var.asg_name
+    default_instance_warmup = 0
+    enabled_metrics = []
     max_size = 1
     min_size = 1
-    health_check_grace_period = 300
+    health_check_grace_period = 0
     health_check_type = "EC2"
     desired_capacity = 1
     force_delete = true
+    max_instance_lifetime = 0
+    suspended_processes = []
+    termination_policies = []
 
     launch_template {
         id = aws_launch_template.ecs_asg_template.id
@@ -116,12 +122,27 @@ resource "aws_autoscaling_group" "ecs_asg" {
         value               = true
         propagate_at_launch = true
     }
+    tag {
+        key                 = "Name"
+        propagate_at_launch = true
+        value               = "ECS Instance - UR-Active-Cluster"
+    }
 }
 resource "aws_ecs_capacity_provider" "ecs_service_provider" {
     name = var.capacity_provider
 
     auto_scaling_group_provider {
         auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
+        managed_draining = "ENABLED"
+        managed_termination_protection = "DISABLED"
+
+        managed_scaling {
+          instance_warmup_period = 300
+          maximum_scaling_step_size = 10000
+          minimum_scaling_step_size = 1
+          status = "ENABLED"
+          target_capacity = 100
+        }
     }
 }
 
@@ -142,6 +163,23 @@ resource "aws_ecs_service" "fyp-run" {
         weight = 1
     }
 
+    alarms {
+        alarm_names = [ ]
+        enable = false
+        rollback = false
+    }
+
+    capacity_provider_strategy {
+        base = 0
+        capacity_provider = aws_ecs_capacity_provider.ecs_service_provider.name
+        weight = 1
+    }
+
+    ordered_placement_strategy {
+        field = "instanceId"
+        type = "spread"
+    }
+
     deployment_circuit_breaker {
         enable = true
         rollback = true
@@ -157,9 +195,6 @@ resource "aws_ecs_service" "fyp-run" {
     }
 }
 
-resource "aws_route53_zone" "main_zone" {
-    name = var.route_53_zone
-}
 
 resource "aws_route53_record" "record_A" {
     zone_id = var.zone_id
