@@ -1,10 +1,10 @@
 terraform {
-  cloud {
-    organization = "founding-pathers-fyp"
-    workspaces {
-      name = "fyp-workspace"
-    }
-  }
+    cloud {
+        organization = "founding-pathers-fyp"
+            workspaces {
+                name = "fyp-workspace"
+            }
+        }
 }
 
 resource "aws_vpc" "FoundingPathersVPC" {
@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "founding_pathers" {
     task_role_arn = var.ecs_iam_arn
     network_mode = "bridge"
     volume {
-      name = "mongo-data"
+        name = "mongo-data"
     }
     cpu = var.ecs_cpu
     memory = var.ecs_memory
@@ -93,7 +93,7 @@ resource "aws_launch_template" "ecs_asg_template" {
     user_data = var.asg_user_data
 
     iam_instance_profile {
-      arn = var.asg_iam_role
+        arn = var.asg_iam_role
     }
 }
 
@@ -137,11 +137,11 @@ resource "aws_ecs_capacity_provider" "ecs_service_provider" {
         managed_termination_protection = "DISABLED"
 
         managed_scaling {
-          instance_warmup_period = 300
-          maximum_scaling_step_size = 10000
-          minimum_scaling_step_size = 1
-          status = "ENABLED"
-          target_capacity = 100
+            instance_warmup_period = 300
+            maximum_scaling_step_size = 10000
+            minimum_scaling_step_size = 1
+            status = "ENABLED"
+            target_capacity = 100
         }
     }
 }
