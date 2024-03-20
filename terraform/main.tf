@@ -17,31 +17,13 @@ resource "aws_vpc" "FoundingPathersVPC" {
     }
 }
 
-resource "aws_s3_bucket" "lb_logs" {
-    bucket = "founding-pathers-alb-logs"
-
-}
-
 resource "aws_alb" "app_load_balancer" {
     name = "founding-pathers-ALB"
     internal = false
     load_balancer_type = "application"
     security_groups = var.alb_security_group_values
-
     enable_deletion_protection = true
-
-    access_logs {
-        bucket = aws_s3_bucket.lb_logs.id
-        prefix = "ur-active-lb"
-        enabled = true
-    }
-    subnet_mapping {
-        subnet_id = var.subnet1
-    }
-    subnet_mapping {
-        subnet_id = var.subnet2
-    }
-
+    subnets = var.subnet_values
 }
 
 resource "aws_ecs_cluster" "ur_active_cluster" {
@@ -57,28 +39,95 @@ resource "aws_ecs_cluster" "ur_active_cluster" {
             logging = "DEFAULT"
         }
     }
-    service_connect_defaults {
-        namespace = var.ecs_namespace
-    }
 }
 
 data "aws_ssm_parameter" "ecs_task_definition" {
     name = "/foundingpathers-task-revision-terraform.json"
 }
 
-data "aws_iam_policy" "ecs_task_execution" {
-  arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
 resource "aws_ecs_task_definition" "founding_pathers" {
     family = "foundingpathers-task"
     container_definitions = data.aws_ssm_parameter.ecs_task_definition.value
+    execution_role_arn = var.ecs_iam_arn
+    task_role_arn = var.ecs_iam_arn
+    network_mode = "bridge"
+    volume {
+      name = "mongo-data"
+    }
+    cpu = var.ecs_cpu
+    memory = var.ecs_memory
+    requires_compatibilities = [ "EC2" ]
+    runtime_platform {
+        cpu_architecture = "X86_64"
+        operating_system_family = "LINUX"
+    }
+}
+
+data "aws_ami" "linux" {
+    most_recent = true
+    filter {
+    name   = "name"
+    values = ["al2023-ami-ecs-hvm-2023.0.20240221-kernel-6.1-x86_64"]
+    }
+
+    filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+    }
+
+    filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+    }
+
+    owners = ["591542846629"] # Canonical
+}
+
+resource "aws_launch_template" "ecs_asg_template" {
+    name_prefix = "ecs_asg_template"
+    image_id = data.aws_ami.linux.id
+    instance_type = "c3.xlarge"
+    disable_api_stop = false
+    disable_api_termination = false
+    key_name = var.asg_key_name
+    vpc_security_group_ids = var.asg_sg_id
+
+    iam_instance_profile {
+      arn = var.asg_iam_role
+    }
+}
+
+resource "aws_autoscaling_group" "ecs_asg" {
+    availability_zones = var.availability_zones
+    name = var.asg_name
+    max_size = 1
+    min_size = 1
+    health_check_grace_period = 300
+    health_check_type = "EC2"
+    desired_capacity = 1
+    force_delete = true
+
+    launch_template {
+        id = aws_launch_template.ecs_asg_template.id
+        version = "$Latest"
+    }
+    tag {
+        key                 = "AmazonECSManaged"
+        value               = true
+        propagate_at_launch = true
+    }
+}
+resource "aws_ecs_capacity_provider" "ecs_service_provider" {
+    name = var.capacity_provider
+
+    auto_scaling_group_provider {
+        auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
+    }
 }
 
 resource "aws_ecs_service" "fyp-run" {
     name = "fyp-run"
     cluster = aws_ecs_cluster.ur_active_cluster.arn
-    iam_role = data.aws_iam_policy.ecs_task_execution.arn
     enable_ecs_managed_tags = true
     health_check_grace_period_seconds = 0
     task_definition = aws_ecs_task_definition.founding_pathers.arn
@@ -86,16 +135,10 @@ resource "aws_ecs_service" "fyp-run" {
     propagate_tags = "NONE"
     tags = {}
     tags_all = {}
-    
-    alarms {
-        alarm_names = []
-        enable = false
-        rollback = false
-    }
 
     capacity_provider_strategy {
         base = 1
-        capacity_provider = var.capacity_provider
+        capacity_provider = aws_ecs_capacity_provider.ecs_service_provider.name
         weight = 1
     }
 
@@ -112,10 +155,10 @@ resource "aws_ecs_service" "fyp-run" {
         field = "attribute:ecs.availability-zone"
         type  = "spread"
     }
-    ordered_placement_strategy {
-        field = "instanceId"
-        type  = "spread"
-    }
+}
+
+resource "aws_route53_zone" "main_zone" {
+    name = var.route_53_zone
 }
 
 resource "aws_route53_record" "record_A" {
@@ -126,11 +169,12 @@ resource "aws_route53_record" "record_A" {
     alias {
         evaluate_target_health = true
         name                   = var.a_records
-        zone_id                = var.alias_zone_id
+        zone_id                = aws_alb.app_load_balancer.zone_id
         }
 }
 
 resource "aws_route53_record" "record_NS" {
+    allow_overwrite = true
     zone_id = var.zone_id
     name = "ur-active.tech"
     type = "NS"

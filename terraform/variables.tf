@@ -1,14 +1,15 @@
-variable "zone_id" {
+variable "route_53_zone" {
     type = string
 }
 
-variable "alias_zone_id" {
+variable "zone_id" {
     type = string
 }
 
 variable "a_records" {
     type = string
 }
+
 variable "ns_values" {
     type = list(string)
 }
@@ -30,16 +31,6 @@ variable "subnet_values" {
     type = list(string)
 }
 
-variable "subnet1" {
-    description = "Subnet 1"
-    type = string
-}
-
-variable "subnet2" {
-    description = "Subnet 2"
-    type = string
-}
-
 variable "alb_security_group_values" {
     description = "security group values"
     type = list(string)
@@ -50,12 +41,47 @@ variable "cidr_block" {
     type = string
 }
 
-variable "ecs_namespace" {
-    description = "ECS namespace"
+variable "capacity_provider" {
+    description = "ECS Capacity Provider"
     type = string
 }
 
-variable "capacity_provider" {
-    description = "ECS Capacity Provider"
+variable "asg_name" {
+    description = "Auto-scaling Group"
+    type = string
+}
+
+variable "availability_zones" {
+    description = "AZ for ASG"
+    type = list(string)
+}
+
+variable "ecs_iam_arn" {
+    description = "IAM ARN for ECS"
+    type = string
+}
+
+variable "ecs_cpu" {
+    description = "ECS CPU"
+    type = number
+}
+
+variable "ecs_memory" {
+    description = "ECS Memory"
+    type = number
+}
+
+variable "asg_key_name" {
+    description = "ASG Key Name"
+    type = string
+}
+
+variable "asg_sg_id" {
+    description = "Security Group for ASG"
+    type = list(string)
+}
+
+variable "asg_iam_role" {
+    description = "ASG IAM Role"
     type = string
 }
