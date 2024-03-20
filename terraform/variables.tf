@@ -1,3 +1,6 @@
+variable "route_53_name" {
+    type = string
+}
 variable "zone_id" {
     type = string
 }
@@ -84,5 +87,35 @@ variable "asg_iam_role" {
 
 variable "asg_user_data" {
     description = "ASG User Data"
+    type = string
+}
+
+variable "ecs_service_name" {
+    description = "ECS Service Name"
+    type = string
+}
+
+variable "task_definition_file" {
+    description = "File path to task definition"
+    type = string
+}
+
+variable "ecs_family" {
+    description = "ECS Family Name"
+    type = string
+}
+
+variable "alb_name" {
+    description = "App Load Balancer Name"
+    type = string
+}
+
+variable "ecs_cluster_name" {
+    description = "Cluster Name for ECS"
+    type = string
+}
+
+variable "vpc_name" {
+    description = "VPC Name"
     type = string
 }

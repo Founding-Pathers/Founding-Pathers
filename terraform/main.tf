@@ -10,15 +10,15 @@ terraform {
 resource "aws_vpc" "FoundingPathersVPC" {
     cidr_block = var.cidr_block
     tags = {
-        "Name" = "FoundingPathersVPC"
+        "Name" = var.vpc_name
     }
     tags_all = {
-        "Name" = "FoundingPathersVPC"
+        "Name" = var.vpc_name
     }
 }
 
 resource "aws_alb" "app_load_balancer" {
-    name = "founding-pathers-ALB"
+    name = var.alb_name
     internal = false
     load_balancer_type = "application"
     security_groups = var.alb_security_group_values
@@ -27,7 +27,7 @@ resource "aws_alb" "app_load_balancer" {
 }
 
 resource "aws_ecs_cluster" "ur_active_cluster" {
-    name = "UR-Active-Cluster"
+    name = var.ecs_cluster_name
     
     setting {
         name = "containerInsights"
@@ -42,11 +42,11 @@ resource "aws_ecs_cluster" "ur_active_cluster" {
 }
 
 data "aws_ssm_parameter" "ecs_task_definition" {
-    name = "/foundingpathers-task-revision-terraform.json"
+    name = var.task_definition_file
 }
 
 resource "aws_ecs_task_definition" "founding_pathers" {
-    family = "foundingpathers-task"
+    family = var.ecs_family
     container_definitions = data.aws_ssm_parameter.ecs_task_definition.value
     execution_role_arn = var.ecs_iam_arn
     task_role_arn = var.ecs_iam_arn
@@ -122,11 +122,6 @@ resource "aws_autoscaling_group" "ecs_asg" {
         value               = true
         propagate_at_launch = true
     }
-    tag {
-        key                 = "Name"
-        propagate_at_launch = true
-        value               = "ECS Instance - UR-Active-Cluster"
-    }
 }
 resource "aws_ecs_capacity_provider" "ecs_service_provider" {
     name = var.capacity_provider
@@ -147,7 +142,7 @@ resource "aws_ecs_capacity_provider" "ecs_service_provider" {
 }
 
 resource "aws_ecs_service" "fyp-run" {
-    name = "fyp-run"
+    name = var.ecs_service_name
     cluster = aws_ecs_cluster.ur_active_cluster.arn
     enable_ecs_managed_tags = true
     health_check_grace_period_seconds = 0
@@ -198,7 +193,7 @@ resource "aws_ecs_service" "fyp-run" {
 
 resource "aws_route53_record" "record_A" {
     zone_id = var.zone_id
-    name = "ur-active.tech"
+    name = var.route_53_name
     type = "A"
 
     alias {
@@ -211,7 +206,7 @@ resource "aws_route53_record" "record_A" {
 resource "aws_route53_record" "record_NS" {
     allow_overwrite = true
     zone_id = var.zone_id
-    name = "ur-active.tech"
+    name = var.route_53_name
     type = "NS"
     ttl = "172800"
 
@@ -220,7 +215,7 @@ resource "aws_route53_record" "record_NS" {
 
 resource "aws_route53_record" "record_SOA" {
     zone_id = var.zone_id
-    name = "ur-active.tech"
+    name = var.route_53_name
     type = "SOA"
     ttl = "900"
 
