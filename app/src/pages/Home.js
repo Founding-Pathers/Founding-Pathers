@@ -53,7 +53,7 @@ function Home() {
       console.log(data); // Handle the fetched data here
 
        //loop through data for polyline
-        var route = data[0].geometry.coordinates[0]
+        var route = data.route[0].geometry.coordinates[0]
         var coors = [];
         for (var i=0; i<route.length; i++) {
           console.log(route[i][1], route[i][0]);
@@ -62,7 +62,147 @@ function Home() {
             new google.maps.LatLng(route[i][1], route[i][0]));
         }
         console.log(coors)
+        
+        //DRAW ROUTE
         drawPolyline(coors);
+
+        //RENDER MARKERS
+        var poiArr = [
+          {
+              "_id": "65f9adad8419e9b6fab9024b",
+              "type": "Feature",
+              "properties": {
+                  "fid": 27810,
+                  "type": "FNB",
+                  "layer": "FNB",
+                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
+                  "x": 28308.7516000851,
+                  "y": 30005.6057998621,
+                  "LONG": 103.85146338974295,
+                  "LAT": 1.295310888843089,
+                  "COORD": "(1.2876345481, 103.836092838)"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                      103.836092837969,
+                      1.28763454808621
+                  ]
+              }
+          },
+          {
+              "_id": "65f9adad8419e9b6fab90252",
+              "type": "Feature",
+              "properties": {
+                  "fid": 27901,
+                  "type": "FNB",
+                  "layer": "FNB",
+                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
+                  "x": 28308.7516000851,
+                  "y": 30005.6057998621,
+                  "LONG": 103.836092838,
+                  "LAT": 1.2876345481,
+                  "COORD": "(1.2876345481, 103.836092838)"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                      103.836092837969,
+                      1.28763454808621
+                  ]
+              }
+          },
+          {
+              "_id": "65f9adad8419e9b6fab90253",
+              "type": "Feature",
+              "properties": {
+                  "fid": 27902,
+                  "type": "FNB",
+                  "layer": "FNB",
+                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
+                  "x": 28308.7516000851,
+                  "y": 30005.6057998621,
+                  "LONG": 103.836092838,
+                  "LAT": 1.2876345481,
+                  "COORD": "(1.2876345481, 103.836092838)"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                      103.836092837969,
+                      1.28763454808621
+                  ]
+              }
+          },
+          {
+              "_id": "65f9adad8419e9b6fab90250",
+              "type": "Feature",
+              "properties": {
+                  "fid": 27899,
+                  "type": "FNB",
+                  "layer": "FNB",
+                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
+                  "x": 28308.7516000851,
+                  "y": 30005.6057998621,
+                  "LONG": 103.836092838,
+                  "LAT": 1.2876345481,
+                  "COORD": "(1.2876345481, 103.836092838)"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                      103.836092837930,
+                      1.28763454808621
+                  ]
+              }
+          },
+          {
+              "_id": "65f9adad8419e9b6fab90251",
+              "type": "Feature",
+              "properties": {
+                  "fid": 27900,
+                  "type": "FNB",
+                  "layer": "FNB",
+                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
+                  "x": 28308.7516000851,
+                  "y": 30005.6057998621,
+                  "LONG": 103.836092850,
+                  "LAT": 1.2876345481,
+                  "COORD": "(1.2876345481, 103.836092838)"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                      103.836092837980,
+                      1.28763454808621
+                  ]
+              }
+          },
+          {
+              "_id": "65f9adad8419e9b6fab90254",
+              "type": "Feature",
+              "properties": {
+                  "fid": 27903,
+                  "type": "FNB",
+                  "layer": "FNB",
+                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
+                  "x": 28308.7516000851,
+                  "y": 30005.6057998621,
+                  "LONG": 103.836092838,
+                  "LAT": 1.2876345481,
+                  "COORD": "(1.2876345481, 103.836092838)"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                      103.836092837980,
+                      1.28763454808621
+                  ]
+              }
+          }
+        ];
+
+        renderMarkers(poiArr, map);
 
     })
     .catch(error => {
@@ -202,7 +342,7 @@ function Home() {
       console.log(dest_lat, dest_long);
 
       // Fetch the route using the obtained coordinates
-      const response = await fetch(`http://localhost:5000/shortestroute`, {
+      const response = await fetch(`http://localhost:5000/shortest`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -274,6 +414,35 @@ function Home() {
       // Fit the map to the bounds
       map.fitBounds(bounds);
   }
+
+  async function renderMarkers(poiArr, map) {
+    var markers = [];
+
+    for (var poiObj of poiArr) {
+      // eslint-disable-next-line no-undef
+        var infowindow = new google.maps.InfoWindow(); 
+        console.log(poiObj);
+
+        // eslint-disable-next-line no-undef
+        var marker = new google.maps.Marker({
+          // eslint-disable-next-line no-undef
+            position: new google.maps.LatLng(poiObj.properties.LAT, poiObj.properties.LONG),
+            map: map
+        });
+
+        makeInfoWindowEvent(map, infowindow, "test" + poiObj._id, marker);
+
+        markers.push({ marker: marker, infowindow: infowindow });
+    }
+}
+
+  function makeInfoWindowEvent(map, infowindow, contentString, marker) {
+    // eslint-disable-next-line no-undef
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(contentString);
+      infowindow.open(map, marker);
+    });
+  }
   
 
   return isLoaded ? (
@@ -290,9 +459,9 @@ function Home() {
         {directionsResponse && (
         <>
           <Card
-            time={(directionsResponse[0].properties.TimeTaken).toFixed(0) + " minutes"}
-            distance={((directionsResponse[0].properties.TRAVELLING)/1000).toFixed(1) + " km"}
-            mode={(directionsResponse[0].properties.TRAVEL_MOD).split("_")[0]}
+            time={(directionsResponse.route[0].properties.TimeTaken).toFixed(0) + " minutes"}
+            distance={((directionsResponse.route[0].properties.TRAVELLING)/1000).toFixed(1) + " km"}
+            mode={(directionsResponse.route[0].properties.TRAVEL_MOD).split("_")[0]}
             filters={selectedPOIs.join(", ")}
             onClick={() => startRouting()}
             display = { selecting ? 'flex' : 'none'}
