@@ -50,10 +50,12 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 
 - ![Codacy](https://img.shields.io/badge/Codacy-222F29.svg?style=for-the-badge&logo=Codacy&logoColor=white)
 - ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
+- Jest Testing
 
 #### Continuous Deployment
 - ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
 - Amazon Web Services
+- Terraform Cloud
 
 ## Getting Started
 
