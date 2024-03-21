@@ -4,6 +4,11 @@ import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
 import locationIcon from '../assets/Location.png';
+import BusStops from '@mui/icons-material/DirectionsBusFilledOutlined';
+import Attractions from '@mui/icons-material/AttractionsOutlined';
+import PickUp from '../assets/filters/carIcon.png';
+import FNB from '../assets/filters/foodIcon.png';
+import MRTs from '../assets/filters/trainIcon.png';
 
 const containerStyle = {
   width: '100%',
@@ -279,8 +284,8 @@ function Home() {
   }, [map]);
 
   function startRouting() {
-    setDistance(directionsResponse[0].properties.TRAVELLING)
-    setDuration(directionsResponse[0].properties.TimeTaken)
+    setDistance(directionsResponse.route[0].properties.TRAVELLING)
+    setDuration(directionsResponse.route[0].properties.TimeTaken)
     setIsRouting(true)
     setSelecting(false)
     console.log(isRouting)
@@ -419,15 +424,58 @@ function Home() {
     var markers = [];
 
     for (var poiObj of poiArr) {
+
+      var icon;
+      const iconSize = {
+        width: 30,  
+        height: 30, 
+      };
+      var type = poiObj.properties.type;
+      if (type == "FNB") {
+        icon = {
+          url: FNB,
+          // eslint-disable-next-line no-undef
+          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+        };
+      }
+      else if (type == "Attractions") {
+        icon = {
+          url: Attractions,
+          // eslint-disable-next-line no-undef
+          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+        };
+      }
+      else if (type == "Bus Stops") {
+        icon = {
+          url: BusStops,
+          // eslint-disable-next-line no-undef
+          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+        };
+      }
+      else if (type == "MRTs") {
+        icon = {
+          url: MRTs,
+          // eslint-disable-next-line no-undef
+          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+        };
+      }
+      else {
+        icon = {
+          url: PickUp,
+          // eslint-disable-next-line no-undef
+          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+        };
+      }
+
       // eslint-disable-next-line no-undef
-        var infowindow = new google.maps.InfoWindow(); 
-        console.log(poiObj);
+        var infowindow = new google.maps.InfoWindow();
 
         // eslint-disable-next-line no-undef
         var marker = new google.maps.Marker({
           // eslint-disable-next-line no-undef
             position: new google.maps.LatLng(poiObj.properties.LAT, poiObj.properties.LONG),
-            map: map
+            map: map,
+            icon: icon
         });
 
         makeInfoWindowEvent(map, infowindow, "test" + poiObj._id, marker);
