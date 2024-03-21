@@ -61,30 +61,45 @@ router.route("/poi").get(async (req, res) => {
 
   let poi = [];
   let poi_dist = req.body.distance;
+  let poi_type = req.body.type;
   let route_coords = route[0].geometry.coordinates;
+  route_coords = route_coords[0];
 
   for (let i = 0; i < route_coords.length; i++) {
-    let poi_near = await db_connect
-      .collection("poi_info")
-      .find({
-        geometry: {
-          $near: {
-            $geometry: {
-              type: "Point",
-              coordinates: [route_coords[i][0][0], route_coords[i][1][1]],
+    for (let j = 0; j < poi_type.length; j++) {
+      let poi_near = await db_connect
+        .collection("poi_info")
+        .find({
+          geometry: {
+            $near: {
+              $geometry: {
+                type: "Point",
+                coordinates: [route_coords[i][0], route_coords[i][1]],
+              },
+              $maxDistance: poi_dist,
             },
-            $maxDistance: poi_dist,
           },
-        },
-        "properties.type": req.body.type,
-      })
-      .toArray();
-    poi.push(poi_near);
+          "properties.type": poi_type[j],
+        })
+        .toArray();
+      for (let j = 0; j < poi_near.length; j++) {
+        poi.push(poi_near[j]);
+      }
+    }
   }
-  console.log(poi);
 
-  let unique_pois = [...new Set(poi)];
-  res.json(unique_pois[0]);
+  let unique_poi_ids = [...new Set(poi.map((item) => item.properties.fid))];
+
+  // Get unique POIs
+  let unique_pois = [];
+  for (let i = 0; i < unique_poi_ids.length; i++) {
+    let unique_poi = poi.find(
+      (element) => element.properties.fid === unique_poi_ids[i]
+    );
+    unique_pois.push(unique_poi);
+  }
+
+  res.json(unique_pois);
 });
 
 module.exports = router;
