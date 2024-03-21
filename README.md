@@ -47,7 +47,6 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
 - Docker
 
 #### Continuous Integration
-
 - ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
 - Jest Testing
 
@@ -113,6 +112,7 @@ Our project entails developing an open-source, proof-of-concept, and mobile-frie
     ```sh
     npm start
     ```
+8. For environment variable files, create a .env file in the app directory for the frontend, and another in the root directory for the backend.
 
 ## Usage
 
