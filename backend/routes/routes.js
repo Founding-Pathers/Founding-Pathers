@@ -8,7 +8,7 @@ const router = express.Router();
 const dbo = require("../db/conn");
 
 // Retrieve variable routes according to where the user is at through lat and long
-router.route("/route").get(async function (req, res) {
+router.route("/route").post(async function (req, res) {
   try {
     let db_connect = dbo.getDbRoutes();
     let route_op = req.body.route_op;
