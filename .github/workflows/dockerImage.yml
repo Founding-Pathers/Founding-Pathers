@@ -2,7 +2,7 @@ name: Build and Push Docker Image
 
 on:
   workflow_run:
-    workflows: ["Run Schema Jest tests", "Run App Jest tests"]
+    workflows: ["Run App Jest tests"]
     branches: [main]
     types:
       - completed
