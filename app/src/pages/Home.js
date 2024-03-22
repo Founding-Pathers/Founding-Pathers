@@ -345,9 +345,31 @@ function Home() {
   
       console.log(origin_lat, origin_long);
       console.log(dest_lat, dest_long);
+      
+      console.log(selectedMode);
+      console.log(selectedPaths);
+      console.log(selectedPOIs);
+
+      var route_op;
+      if (selectedMode != "walk") {
+        if (selectedPaths == null) {
+          route_op = "shortest";
+        }
+        else {
+          route_op = selectedPaths;
+        }
+      }
+      else {
+        if (selectedPaths == null) {
+          route_op = selectedMode + "_shortest";
+        }
+        else {
+          route_op = selectedMode + "_" + selectedPaths;
+        }
+      }
 
       // Fetch the route using the obtained coordinates
-      const response = await fetch(`http://localhost:5000/shortest`, {
+      const response = await fetch(`http://localhost:5000/route`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -356,7 +378,9 @@ function Home() {
           origin_lat: origin_lat,
           origin_long: origin_long,
           dest_lat: dest_lat,
-          dest_long: dest_long
+          dest_long: dest_long,
+          route_op: route_op,
+          type: selectedPOIs
         })
       });
   
