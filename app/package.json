@@ -37,7 +37,7 @@
     "resetMocks": false
   },
   "scripts": {
-    "start": "env-cmd -f .env react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --maxWorkers 2 --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject"
