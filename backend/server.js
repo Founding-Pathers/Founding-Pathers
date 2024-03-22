@@ -32,6 +32,7 @@ app.use(require("./routes/user"));
 app.use(require("./routes/databaselogging"));
 app.use(bodyParser.json(), urlencodedParser);
 app.use(require("./routes/account"));
+app.use(require("./routes/poi"));
 app.use(require("./routes/Middlewares/AuthMiddleware"));
 
 // starting of Server
