@@ -38,22 +38,21 @@ function Home() {
   const [selectedPOIs, setSelectedPOIs] = useState([]);
   //Path Preferences
   const [selectedPaths, setSelectedPaths] = useState(null);
-  //Travel Mode
-  const [selectedMode, setSelectedMode] = useState(null);
+  
+  //current markers + polylines on map
+  const [markers, setMarkers] = useState([]);
+  const [ODMarkers, setODMarkers] = useState([]);
+  const [path, setPath] = useState(null);
 
   const originRef = useRef()
   const destinationRef = useRef()
 
-  async function calculateRoute() {
+  async function calculateRoute(travelMode) {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
     }
 
-    console.log(selectedMode);
-    console.log(selectedPOIs);
-    console.log(selectedPaths);
-
-    fetchRoute()
+    fetchRoute(travelMode)
     .then(data => {
       console.log(data); // Handle the fetched data here
 
@@ -161,12 +160,38 @@ function Home() {
     setSelecting(true);
   }
 
+  const handleRemoveMarks = () => {
+    removeMarkers();
+    removePolylines();
+  }
+
   const handleEndRouting = () => {
     setIsRouting(false); // Set isRouting to false
     clearRoute();
     handleCurrentLocation();
     window.location.reload();
   };
+
+  function removeMarkers() {
+    if (markers.length != 0) {
+      markers.forEach(markerObj => {
+        markerObj.marker.setMap(null); 
+      });
+      setMarkers([]);
+    }
+    if (ODMarkers.length!=0) {
+      ODMarkers.forEach(markerObj => {
+        markerObj.marker.setMap(null); 
+      });
+      setODMarkers([]);
+    }
+  }
+  
+  function removePolylines() {
+    if (path) {
+      path.setMap(null); 
+    }
+  }
 
   //geocoding
   function codeAddress(address) {
@@ -187,14 +212,12 @@ function Home() {
   }
 
   // Function to fetch the route
-  async function fetchRoute() {
+  async function fetchRoute(travelMode) {
     try {
       var origin_lat, origin_long, dest_lat, dest_long;
   
       if (originRef.current.value == "Current Location") {
         console.log(currentLocation)
-        // const originLatLng = `${currentLocation.lat},${currentLocation.lng}`;
-        // originRef.current.value = originLatLng;
         origin_lat = currentLocation.lat;
         origin_long = currentLocation.lng;
       }
@@ -212,12 +235,12 @@ function Home() {
       console.log(origin_lat, origin_long);
       console.log(dest_lat, dest_long);
       
-      console.log(selectedMode);
+      console.log(travelMode);
       console.log(selectedPaths);
       console.log(selectedPOIs);
 
       var route_op;
-      if (selectedMode != "walk") {
+      if (travelMode == "walk") {
         if (selectedPaths == null) {
           route_op = "shortest";
         }
@@ -227,10 +250,10 @@ function Home() {
       }
       else {
         if (selectedPaths == null) {
-          route_op = selectedMode + "_shortest";
+          route_op = travelMode + "_shortest";
         }
         else {
-          route_op = selectedMode + "_" + selectedPaths;
+          route_op = travelMode + "_" + selectedPaths;
         }
       }
 
@@ -255,6 +278,7 @@ function Home() {
       const data = await response.json();
       setDirectionsResponse(data);
 
+      const newODMarkers = [];
       // Markers
       const iconSize = {
         width: 35,  
@@ -267,17 +291,21 @@ function Home() {
         scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
       };
       // eslint-disable-next-line no-undef
-      new google.maps.Marker({
+      const originMarker = new google.maps.Marker({
         position: { lat: origin_lat, lng: origin_long },
         map,
         icon: icon
       });
+      newODMarkers.push({ marker: originMarker });
 
       // eslint-disable-next-line no-undef
-      new google.maps.Marker({
+      const destMarker = new google.maps.Marker({
         position: { lat: dest_lat, lng: dest_long },
         map
       });
+      newODMarkers.push({ marker: destMarker });
+
+      setODMarkers(newODMarkers);
       
       return data;
   
@@ -299,6 +327,7 @@ function Home() {
 
       // set the polyline's map with your map object from above.
       Path.setMap(map);
+      setPath(Path);
 
       // Create bounds object to contain all coordinates
       // eslint-disable-next-line no-undef
@@ -311,68 +340,70 @@ function Home() {
       map.fitBounds(bounds);
   }
 
-  async function renderMarkers(poiArr, map) {
-    var markers = [];
+async function renderMarkers(poiArr, map) {
+  // Clear previous markers
+  markers.forEach(markerObj => {
+      markerObj.marker.setMap(null);
+  });
+  setMarkers([]);
 
-    for (var poiObj of poiArr) {
+  var newMarkers = [];
 
+  for (var poiObj of poiArr) {
       var icon;
       const iconSize = {
-        width: 30,  
-        height: 30, 
+          width: 30,  
+          height: 30, 
       };
       var type = poiObj.properties.type;
       if (type == "FNB") {
-        icon = {
-          url: FNB,
-          // eslint-disable-next-line no-undef
-          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
-        };
-      }
-      else if (type == "TOURISM") {
-        icon = {
-          url: Attractions,
-          // eslint-disable-next-line no-undef
-          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
-        };
-      }
-      else if (type == "BUSSTOP") {
-        icon = {
-          url: BusStops,
-          // eslint-disable-next-line no-undef
-          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
-        };
-      }
-      else if (type == "MRT") {
-        icon = {
-          url: MRTs,
-          // eslint-disable-next-line no-undef
-          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
-        };
-      }
-      else {
-        icon = {
-          url: PickUp,
-          // eslint-disable-next-line no-undef
-          scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
-        };
+          icon = {
+              url: FNB,
+              // eslint-disable-next-line no-undef
+              scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+          };
+      } else if (type == "TOURISM") {
+          icon = {
+              url: Attractions,
+              // eslint-disable-next-line no-undef
+              scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+          };
+      } else if (type == "BUSSTOP") {
+          icon = {
+              url: BusStops,
+              // eslint-disable-next-line no-undef
+              scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+          };
+      } else if (type == "MRT") {
+          icon = {
+              url: MRTs,
+              // eslint-disable-next-line no-undef
+              scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+          };
+      } else {
+          icon = {
+              url: PickUp,
+              // eslint-disable-next-line no-undef
+              scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
+          };
       }
 
       // eslint-disable-next-line no-undef
-        var infowindow = new google.maps.InfoWindow();
-
+      var infowindow = new google.maps.InfoWindow();
+      // eslint-disable-next-line no-undef
+      var marker = new google.maps.Marker({
         // eslint-disable-next-line no-undef
-        var marker = new google.maps.Marker({
-          // eslint-disable-next-line no-undef
-            position: new google.maps.LatLng(poiObj.properties.LAT, poiObj.properties.LONG),
-            map: map,
-            icon: icon
-        });
+          position: new google.maps.LatLng(poiObj.properties.LAT, poiObj.properties.LONG),
+          map: map,
+          icon: icon
+      });
 
-        makeInfoWindowEvent(map, infowindow, poiObj._id, marker);
+      makeInfoWindowEvent(map, infowindow, poiObj._id, marker);
 
-        markers.push({ marker: marker, infowindow: infowindow });
-    }
+      newMarkers.push({ marker: marker, infowindow: infowindow });
+  }
+
+  setMarkers(newMarkers);
 }
 
   function makeInfoWindowEvent(map, infowindow, contentString, marker) {
@@ -407,7 +438,7 @@ function Home() {
           />
         </>
         )}
-        <Drawer duration={duration} distance={distance} selectedMode={selectedMode} setSelectedMode={setSelectedMode} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
+        <Drawer duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
         <></>
       </GoogleMap>
   ) : <></>
