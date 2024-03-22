@@ -4,8 +4,8 @@ import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
 import locationIcon from '../assets/Location.png';
-import BusStops from '@mui/icons-material/DirectionsBusFilledOutlined';
-import Attractions from '@mui/icons-material/AttractionsOutlined';
+import BusStops from '../assets/filters/bus.png';
+import Attractions from '../assets/filters/attractions.png';
 import PickUp from '../assets/filters/carIcon.png';
 import FNB from '../assets/filters/foodIcon.png';
 import MRTs from '../assets/filters/trainIcon.png';
@@ -235,49 +235,20 @@ function Home() {
       }
 
       // Fetch the route using the obtained coordinates
-      // const response = await fetch(`http://localhost:5000/route`, {
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     origin_lat: origin_lat,
-      //     origin_long: origin_long,
-      //     dest_lat: dest_lat,
-      //     dest_long: dest_long,
-      //     route_op: route_op,
-      //     type: selectedPOIs,
-      //     distance: 200
-      //   })
-      // });
-
-      // const params = {
-      //   origin_lat: origin_lat,
-      //   origin_long: origin_long,
-      //   dest_lat: dest_lat,
-      //   dest_long: dest_long,
-      //   route_op: route_op,
-      //   type: selectedPOIs,
-      //   distance: 200
-      // };
-
-      const params= {
-          origin_lat: 1.285090645,
-          origin_long: 103.83033814,
-          dest_lat: 1.301494781,
-          dest_long: 103.852831604,
-          route_op: "shortest",
-          type: ["BUSSTOP", "FNB", "MRT", "PICKUP", "TOURISM"],
+      const response = await fetch(`http://localhost:5000/route`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          origin_lat: origin_lat,
+          origin_long: origin_long,
+          dest_lat: dest_lat,
+          dest_long: dest_long,
+          route_op: route_op,
+          type: selectedPOIs,
           distance: 200
-      }
-      
-      const queryParams = encodeURIComponent(JSON.stringify(params));
-      
-      const response = await fetch(`http://localhost:5000/route?params=${queryParams}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json'
-          }
+        })
       });
   
       // Parse the response
@@ -398,7 +369,7 @@ function Home() {
             icon: icon
         });
 
-        makeInfoWindowEvent(map, infowindow, "test" + poiObj._id, marker);
+        makeInfoWindowEvent(map, infowindow, poiObj._id, marker);
 
         markers.push({ marker: marker, infowindow: infowindow });
     }
