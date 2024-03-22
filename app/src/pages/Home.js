@@ -72,141 +72,7 @@ function Home() {
         drawPolyline(coors);
 
         //RENDER MARKERS
-        var poiArr = [
-          {
-              "_id": "65f9adad8419e9b6fab9024b",
-              "type": "Feature",
-              "properties": {
-                  "fid": 27810,
-                  "type": "FNB",
-                  "layer": "FNB",
-                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
-                  "x": 28308.7516000851,
-                  "y": 30005.6057998621,
-                  "LONG": 103.85146338974295,
-                  "LAT": 1.295310888843089,
-                  "COORD": "(1.2876345481, 103.836092838)"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                      103.836092837969,
-                      1.28763454808621
-                  ]
-              }
-          },
-          {
-              "_id": "65f9adad8419e9b6fab90252",
-              "type": "Feature",
-              "properties": {
-                  "fid": 27901,
-                  "type": "FNB",
-                  "layer": "FNB",
-                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
-                  "x": 28308.7516000851,
-                  "y": 30005.6057998621,
-                  "LONG": 103.836092838,
-                  "LAT": 1.2876345481,
-                  "COORD": "(1.2876345481, 103.836092838)"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                      103.836092837969,
-                      1.28763454808621
-                  ]
-              }
-          },
-          {
-              "_id": "65f9adad8419e9b6fab90253",
-              "type": "Feature",
-              "properties": {
-                  "fid": 27902,
-                  "type": "FNB",
-                  "layer": "FNB",
-                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
-                  "x": 28308.7516000851,
-                  "y": 30005.6057998621,
-                  "LONG": 103.836092838,
-                  "LAT": 1.2876345481,
-                  "COORD": "(1.2876345481, 103.836092838)"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                      103.836092837969,
-                      1.28763454808621
-                  ]
-              }
-          },
-          {
-              "_id": "65f9adad8419e9b6fab90250",
-              "type": "Feature",
-              "properties": {
-                  "fid": 27899,
-                  "type": "FNB",
-                  "layer": "FNB",
-                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
-                  "x": 28308.7516000851,
-                  "y": 30005.6057998621,
-                  "LONG": 103.836092838,
-                  "LAT": 1.2876345481,
-                  "COORD": "(1.2876345481, 103.836092838)"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                      103.836092837930,
-                      1.28763454808621
-                  ]
-              }
-          },
-          {
-              "_id": "65f9adad8419e9b6fab90251",
-              "type": "Feature",
-              "properties": {
-                  "fid": 27900,
-                  "type": "FNB",
-                  "layer": "FNB",
-                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
-                  "x": 28308.7516000851,
-                  "y": 30005.6057998621,
-                  "LONG": 103.836092850,
-                  "LAT": 1.2876345481,
-                  "COORD": "(1.2876345481, 103.836092838)"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                      103.836092837980,
-                      1.28763454808621
-                  ]
-              }
-          },
-          {
-              "_id": "65f9adad8419e9b6fab90254",
-              "type": "Feature",
-              "properties": {
-                  "fid": 27903,
-                  "type": "FNB",
-                  "layer": "FNB",
-                  "path": "C:/Users/Jaymie/OneDrive - Singapore Management University/fyp/SG_POI.gpkg|layername=FNB",
-                  "x": 28308.7516000851,
-                  "y": 30005.6057998621,
-                  "LONG": 103.836092838,
-                  "LAT": 1.2876345481,
-                  "COORD": "(1.2876345481, 103.836092838)"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                      103.836092837980,
-                      1.28763454808621
-                  ]
-              }
-          }
-        ];
-
+        var poiArr = data.pois;
         renderMarkers(poiArr, map);
 
     })
@@ -345,19 +211,73 @@ function Home() {
   
       console.log(origin_lat, origin_long);
       console.log(dest_lat, dest_long);
+      
+      console.log(selectedMode);
+      console.log(selectedPaths);
+      console.log(selectedPOIs);
+
+      var route_op;
+      if (selectedMode != "walk") {
+        if (selectedPaths == null) {
+          route_op = "shortest";
+        }
+        else {
+          route_op = selectedPaths;
+        }
+      }
+      else {
+        if (selectedPaths == null) {
+          route_op = selectedMode + "_shortest";
+        }
+        else {
+          route_op = selectedMode + "_" + selectedPaths;
+        }
+      }
 
       // Fetch the route using the obtained coordinates
-      const response = await fetch(`http://localhost:5000/shortest`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          origin_lat: origin_lat,
-          origin_long: origin_long,
-          dest_lat: dest_lat,
-          dest_long: dest_long
-        })
+      // const response = await fetch(`http://localhost:5000/route`, {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     origin_lat: origin_lat,
+      //     origin_long: origin_long,
+      //     dest_lat: dest_lat,
+      //     dest_long: dest_long,
+      //     route_op: route_op,
+      //     type: selectedPOIs,
+      //     distance: 200
+      //   })
+      // });
+
+      // const params = {
+      //   origin_lat: origin_lat,
+      //   origin_long: origin_long,
+      //   dest_lat: dest_lat,
+      //   dest_long: dest_long,
+      //   route_op: route_op,
+      //   type: selectedPOIs,
+      //   distance: 200
+      // };
+
+      const params= {
+          origin_lat: 1.285090645,
+          origin_long: 103.83033814,
+          dest_lat: 1.301494781,
+          dest_long: 103.852831604,
+          route_op: "shortest",
+          type: ["BUSSTOP", "FNB", "MRT", "PICKUP", "TOURISM"],
+          distance: 200
+      }
+      
+      const queryParams = encodeURIComponent(JSON.stringify(params));
+      
+      const response = await fetch(`http://localhost:5000/route?params=${queryParams}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json'
+          }
       });
   
       // Parse the response
@@ -438,21 +358,21 @@ function Home() {
           scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
         };
       }
-      else if (type == "Attractions") {
+      else if (type == "TOURISM") {
         icon = {
           url: Attractions,
           // eslint-disable-next-line no-undef
           scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
         };
       }
-      else if (type == "Bus Stops") {
+      else if (type == "BUSSTOP") {
         icon = {
           url: BusStops,
           // eslint-disable-next-line no-undef
           scaledSize: new google.maps.Size(iconSize.width, iconSize.height),
         };
       }
-      else if (type == "MRTs") {
+      else if (type == "MRT") {
         icon = {
           url: MRTs,
           // eslint-disable-next-line no-undef
