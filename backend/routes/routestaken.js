@@ -49,7 +49,7 @@ routesTaken.route("/routehistory/:id").get(function (req, res) {
 });
 
 // Retrieve all routes taken by current user id
-routesTaken.route("/routehistory/user/").get(function (req, res) {
+routesTaken.route("/routehistory/user").get(function (req, res) {
   try {
     let db_connect = dbo.getDbLogging();
     let myquery = { account_id: ObjectId(req.params.id) };
@@ -72,12 +72,6 @@ routesTaken.route("/routehistory/add").post(function (req, response) {
     route_index: req.body.route_index,
     user_validated: req.body.user_validated,
     edges_validation: req.body.edges_validation,
-    feedback_q1: req.body.feedback_q1,
-    feedback_q2: req.body.feedback_q2,
-    feedback_q3: req.body.feedback_q3,
-    feedback_q4: req.body.feedback_q4,
-    feedback_q5: req.body.feedback_q5,
-    feedback_q6: req.body.feedback_q6,
   };
   db_connect.collection("routesTaken").insertOne(myobj, function (err, res) {
     if (err) throw err;

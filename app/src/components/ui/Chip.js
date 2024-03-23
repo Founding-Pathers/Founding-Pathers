@@ -22,6 +22,8 @@ export default function ClickableChips({
       onClick={onClick}
       color={isSelected ? 'primary' : 'default'}
       sx={{
+        mr: 0.5,
+        my: 0.5,
         borderRadius: borderRadius,
         width: width, 
         height: height,

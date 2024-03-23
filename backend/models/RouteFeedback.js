@@ -9,6 +9,10 @@ const RouteFBSchema = new Schema(
       ref: "RoutesTaken",
       required: true,
     },
+    routestaken_id: {
+      type: String,
+      required: true,
+    },
     overall_exp: {
       type: Number,
       required: true,

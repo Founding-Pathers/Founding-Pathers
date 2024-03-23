@@ -72,7 +72,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, selectedMode, setSelectedMode, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -100,19 +100,15 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setSelectedPaths(chipLabel);
   };
 
-  useEffect(() => {
-    console.log("Selected mode changed:", selectedMode);
-  }, [selectedMode]);
-
   //Travel Mode State
   const handleChipClickTravelMode = (chipLabel) => {
-    setSelectedMode(chipLabel);
     setShowButton(true);
     setOpen(false);
     handleSelecting();
+    handleRemoveMarks();
     setNavigating(true);
-    if (calculateRoute && selectedMode !== null) {
-      calculateRoute();
+    if (calculateRoute && chipLabel !== null) {
+      calculateRoute(chipLabel);
     }
   };
 
@@ -325,40 +321,38 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           <Box sx={{
           display: isTextFieldFocused ? 'block' : 'none', // Conditionally display based on text field focus
           }}>
+            <Typography variant="filterh1" sx={{ px: 3.5, pb: 1, display: "block" }}>Past Searches</Typography>
             <List dictionary={{'Current Location': ''}} icon={NearMeIcon} onItemClick={handleListClick}></List>
             {/* Replace dictionary with actual values */}
             <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}
-            onItemClick={handleListClick}></List>
-            <Typography variant="filterh1" sx={{ px: 3.5, pt: 2, display: "block" }}>Saved Locations</Typography>
-            <List dictionary={{'Toa Payoh Public Library': '0.7km away'}} icon={Saved}
             onItemClick={handleListClick}></List>
           </Box>
 
           <Box sx={{
           display: isTextFieldFocused ? 'none' : 'block', // Conditionally display based on text field focus
           }}>
-          <Typography variant="filterh1" sx={{ px: 3.5, py: 1, display: "block" }}>1. Search Filters</Typography>
-          <Typography variant="filterh2" sx={{ px: 3.5, py: 1, display: "block"  }}>Points of Interest:</Typography>
+          <Typography variant="filterh1" sx={{ px: 3.5, py: 0.5, display: "block" }}>1. Search Filters</Typography>
+          <Typography variant="filterh2" sx={{ px: 3.5, py: 0.5, display: "block"  }}>Points of Interest:</Typography>
           <ChipBox>
           <Chip icon={foodIcon} iconWidth="20px" iconHeight="20px" label="Food & Beverages" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            isSelected={selectedPOIs.includes("Food & Beverages")}
-            onClick={() => handleChipClick("Food & Beverages")}
+            isSelected={selectedPOIs.includes("FNB")}
+            onClick={() => handleChipClick("FNB")}
             ></Chip>
           <Chip icon={AttractionsOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Attractions" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            isSelected={selectedPOIs.includes("Attractions")}
-            onClick={() => handleChipClick("Attractions")}
+            isSelected={selectedPOIs.includes("TOURISM")}
+            onClick={() => handleChipClick("TOURISM")}
             ></Chip>
           <Chip icon={DirectionsBusFilledOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Bus Stops" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            isSelected={selectedPOIs.includes("Bus Stops")}
-            onClick={() => handleChipClick("Bus Stops")}
+            isSelected={selectedPOIs.includes("BUSSTOP")}
+            onClick={() => handleChipClick("BUSSTOP")}
             ></Chip>
           <Chip icon={trainIcon} iconWidth="20px" iconHeight="20px" label="MRT Stations" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            isSelected={selectedPOIs.includes("MRTs")}
-            onClick={() => handleChipClick("MRTs")}
+            isSelected={selectedPOIs.includes("MRT")}
+            onClick={() => handleChipClick("MRT")}
             ></Chip>
           <Chip icon={carIcon} iconWidth="20px" iconHeight="20px" label="Pick-up / Drop-off" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
-            isSelected={selectedPOIs.includes("Pick Ups")}
-            onClick={() => handleChipClick("Pick Ups")}
+            isSelected={selectedPOIs.includes("PICKUP")}
+            onClick={() => handleChipClick("PICKUP")}
             ></Chip>
           </ChipBox>
 
@@ -374,38 +368,38 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
           <ChipBox>
           <Chip icon={shelterIcon} iconWidth="20px" iconHeight="20px" label="Sheltered" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
-          isSelected={selectedPaths == "Sheltered"}
-          onClick={() => handleChipClickPath("Sheltered")}
+          isSelected={selectedPaths == "sheltered"}
+          onClick={() => handleChipClickPath("sheltered")}
           ></Chip>
           <Chip label="Nature" icon={ParkOutlinedIcon} iconWidth="20px" iconHeight="20px" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
-          isSelected={selectedPaths == "Nature"}
-          onClick={() => handleChipClickPath("Nature")}
+          isSelected={selectedPaths == "nature"}
+          onClick={() => handleChipClickPath("nature")}
           ></Chip>
           </ChipBox>
-          <Box sx={{mx: 3.5, my: 1}}>
+          <Box sx={{mx: 3.5, my: 0.5}}>
           <Checkbox width="17px" fontSize="14px" label="Remember my preferences for future paths"></Checkbox>
           </Box>
 
-          <Typography variant="filterh1" sx={{ px: 3.5, py: 1.5, display: "block" }}>2. Travelling Mode</Typography>
+          <Typography variant="filterh1" sx={{ px: 3.5, pt: 1.5, pb: 0.5, display: "block" }}>2. Travelling Mode</Typography>
           <ChipBox sx={{justifyContent: "space-evenly"}}>
             <Box sx={{textAlign: "center"}}>
             <Chip icon={DirectionsWalkIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
-            isSelected={selectedMode === "Walk"}
-            onClick={() => handleChipClickTravelMode("Walk")}
+            // isSelected={selectedMode === "walk"}
+            onClick={() => handleChipClickTravelMode("walk")}
             ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Walking</Typography>
             </Box>
             <Box>
             <Chip icon={DirectionsBikeIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
-            isSelected={selectedMode === "Cycle"}
-            onClick={() => handleChipClickTravelMode("Cycle")}
+            // isSelected={selectedMode === "cycling"}
+            onClick={() => handleChipClickTravelMode("cycling")}
             ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Cycling</Typography>
             </Box>
             <Box>
             <Chip icon={AccessibleForwardIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
-            isSelected={selectedMode === "Wheelchair"}
-            onClick={() => handleChipClickTravelMode("Wheelchair")}
+            // isSelected={selectedMode === "bfa"}
+            onClick={() => handleChipClickTravelMode("bfa")}
             ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Wheelchair</Typography>
             </Box>
