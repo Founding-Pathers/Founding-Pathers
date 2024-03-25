@@ -148,12 +148,8 @@ router.route("/route").post(async function (req, res) {
           route_coords[i][1],
           route_coords[i][0]
         );
-        // if first point, halfway point or last point, calculate the third point in the opposite bearing direction
-        if (
-          i == 1 ||
-          i == Math.floor(route_coords.length / 2) ||
-          i == route_coords.length - 1
-        ) {
+        // if first point or halfway point, calculate the third point in the opposite bearing direction
+        if (i == 1 || i == Math.floor(route_coords.length / 2)) {
           let new_point = calculateDestinationPoint(
             route_coords[i - 1][1],
             route_coords[i - 1][0],
