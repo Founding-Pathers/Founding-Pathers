@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import Box from '@mui/material/Box';
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
@@ -258,7 +259,7 @@ function Home() {
       }
 
       // Fetch the route using the obtained coordinates
-      const response = await fetch(`http://localhost:5000/route`, {
+      const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/route`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -439,7 +440,6 @@ async function renderMarkers(poiArr, map) {
         </>
         )}
         <Drawer duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
-        <></>
       </GoogleMap>
   ) : <></>
 }

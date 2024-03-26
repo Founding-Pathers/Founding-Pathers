@@ -127,20 +127,20 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     console.log("Destination:", destination);
   }, [location, destination]);
 
-  const [isTextFieldFocused, setTextFieldFocused] = useState(false);
-
+  const [isTextFieldFocused, setTextFieldFocused] = useState('');
+  
   useEffect(() => {
     const handleClickOutsideTextField = (event) => {
       if (
         originRef.current &&
         originRef.current.contains(event.target)
       ) {
-        setTextFieldFocused(true);
+        setTextFieldFocused('location');
       } else if (
         destinationRef.current &&
         destinationRef.current.contains(event.target)
       ) {
-        setTextFieldFocused(true);
+        setTextFieldFocused('destination');
       } else {
         setTextFieldFocused(false);
       }
@@ -154,17 +154,15 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   }, []);
 
   // Function to handle opening the drawer and focusing on the text field
-  const handleOpenDrawer = () => {
+  const handleOpenDrawer = (field) => {
     setOpen(true);
-    console.log(open);
-    setTextFieldFocused(true);
+    setTextFieldFocused(field);
+    console.log(isTextFieldFocused)
   };
 
   // Function to handle clicking on a list item
   const handleListClick = (key) => {
-    setTextFieldFocused(false);
-    console.log("hello");
-    setLocation(key);
+    console.log('hello')
     if (isTextFieldFocused === 'location') {
       setLocation(key);
     } else if (isTextFieldFocused === 'destination') {
@@ -190,9 +188,17 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
       <CssBaseline />
       <Global
         styles={{
-          '.MuiDrawer-root > .MuiPaper-root': {
-            height: `calc(90% - 70px)`,
-            overflow: 'visible',
+          '@media (min-height: 755px)': {
+            '.MuiDrawer-root > .MuiPaper-root': {
+              height: 'calc(80% - 70px)',
+              overflow: 'visible',
+            },
+          },
+          '@media (max-height: 755px)': {
+            '.MuiDrawer-root > .MuiPaper-root': {
+              height: 'calc(90% - 70px)',
+              overflow: 'visible',
+            },
           },
         }}
       />
@@ -270,7 +276,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 id="outlined-basic"
                 label=""
                 variant="outlined"
-                onClick={() => handleOpenDrawer(originRef)}
+                onClick={() => handleOpenDrawer('location')}
                 />
           </Box>
 
@@ -314,7 +320,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 id="outlined-basic"
                 label="Where to?"
                 variant="outlined"
-                onClick={() => handleOpenDrawer(destinationRef)}
+                onClick={() => handleOpenDrawer('destination')}
                 />
           </Box>
 
