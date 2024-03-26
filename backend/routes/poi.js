@@ -1,4 +1,6 @@
+const turf = require("@turf/turf");
 const express = require("express");
+const simplepolygon = require("simplepolygon");
 
 // router will be added as a middleware
 // and will take control of requests starting with path /computedroutes.
@@ -65,41 +67,89 @@ router.route("/poi").get(async (req, res) => {
   let route_coords = route[0].geometry.coordinates;
   route_coords = route_coords[0];
 
-  for (let i = 0; i < route_coords.length; i++) {
-    for (let j = 0; j < poi_type.length; j++) {
-      let poi_near = await db_connect
-        .collection("poi_info")
-        .find({
-          geometry: {
-            $near: {
-              $geometry: {
-                type: "Point",
-                coordinates: [route_coords[i][0], route_coords[i][1]],
-              },
-              $maxDistance: poi_dist,
-            },
-          },
-          "properties.type": poi_type[j],
-        })
-        .toArray();
-      for (let j = 0; j < poi_near.length; j++) {
-        poi.push(poi_near[j]);
+  // append route_coords[0: route_coords.length-1] reversed to route_coords
+  route_coords = route_coords.concat(
+    route_coords.slice(0, route_coords.length - 1).reverse()
+  );
+
+  let linear_ring = [];
+  let first_point = [];
+
+  for (let i = 1; i < route_coords.length; i++) {
+    // calculate the bearing between two points
+    let bearing = calculateBearing(
+      route_coords[i - 1][1],
+      route_coords[i - 1][0],
+      route_coords[i][1],
+      route_coords[i][0]
+    );
+    // if first point, halfway point or last point, calculate the third point in the opposite bearing direction
+    if (
+      i == 1 ||
+      i == Math.floor(route_coords.length / 2) ||
+      i == route_coords.length - 1
+    ) {
+      let new_point = calculateDestinationPoint(
+        route_coords[i - 1][1],
+        route_coords[i - 1][0],
+        poi_dist,
+        bearing - 180
+      );
+      linear_ring.push([new_point.lon, new_point.lat]);
+      if (i == 1) {
+        first_point = [new_point.lon, new_point.lat];
       }
     }
-  }
 
-  let unique_poi_ids = [...new Set(poi.map((item) => item.properties.fid))];
-
-  // Get unique POIs
-  let unique_pois = [];
-  for (let i = 0; i < unique_poi_ids.length; i++) {
-    let unique_poi = poi.find(
-      (element) => element.properties.fid === unique_poi_ids[i]
+    let new_point = calculateDestinationPoint(
+      route_coords[i - 1][1],
+      route_coords[i - 1][0],
+      poi_dist,
+      bearing - 90
     );
-    unique_pois.push(unique_poi);
+    linear_ring.push([new_point.lon, new_point.lat]);
+  }
+  linear_ring.push(first_point);
+
+  // Create a polygon from the linear ring
+  let polygon = turf.polygon([linear_ring]);
+  let simple_polygon = simplepolygon(polygon);
+  let polygons = simple_polygon.features;
+
+  let poi_query = [];
+
+  // create or operator for each poi type
+  for (let i = 0; i < poi_type.length; i++) {
+    poi_query.push({ "properties.type": poi_type[i] });
   }
 
-  res.json(unique_pois);
+  // throw error if no poi type is selected
+  if (poi_query == "") {
+    res.json({ error: "No POI type selected" });
+    return;
+  }
+
+  // Find POIs within the polygon for each poi type
+  for (let j = 0; j < polygons.length; j++) {
+    let pois = await db_connect
+      .collection("poi_info")
+      .find({
+        geometry: {
+          $geoWithin: {
+            $geometry: {
+              type: "Polygon",
+              coordinates: polygons[j].geometry.coordinates,
+            },
+          },
+        },
+        $or: poi_query,
+      })
+      .toArray();
+    poi = poi.concat(pois);
+  }
+
+  res.json(poi);
+  return;
 });
 
 module.exports = router;
