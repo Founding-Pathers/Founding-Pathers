@@ -12,8 +12,8 @@ export default function BasicList({ dictionary, icon: IconComponent, onItemClick
       <nav aria-label="main mailbox folders">
         <List sx={{ py: 0 }}>
           {Object.entries(dictionary).map(([key, value]) => (
-            <ListItem key={key} disablePadding onClick={()=>onItemClick(key)}>
-              <ListItemButton>
+            <ListItem key={key} disablePadding>
+              <ListItemButton onClick={() => onItemClick(key)}>
                 <ListItemIcon>
                 {typeof IconComponent === 'string' ? 
                     <img src={IconComponent} alt={key} style={{ width: "28px", height: "28px", marginLeft: "10px" }} /> : 

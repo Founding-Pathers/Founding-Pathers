@@ -259,7 +259,7 @@ function Home() {
       }
 
       // Fetch the route using the obtained coordinates
-      const response = await fetch(`http://localhost:5000/route`, {
+      const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/route`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
