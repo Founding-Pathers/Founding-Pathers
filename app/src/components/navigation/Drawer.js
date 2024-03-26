@@ -255,6 +255,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 label=""
                 variant="outlined"
                 onClick={() => handleOpenDrawer('location')}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    setTextFieldFocused(null);
+                  }
+                }}
                 />
           </Box>
 
@@ -299,6 +304,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 label="Where to?"
                 variant="outlined"
                 onClick={() => handleOpenDrawer('destination')}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    setTextFieldFocused(null);
+                  }
+                }}
                 />
           </Box>
 
