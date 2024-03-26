@@ -72,9 +72,10 @@ function Home() {
         drawPolyline(coors);
 
         //RENDER MARKERS
-        var poiArr = data.pois;
-        renderMarkers(poiArr, map);
-
+        if (data.pois != null) {
+          var poiArr = data.pois;
+          renderMarkers(poiArr, map);
+        }
     })
     .catch(error => {
       console.error('Error:', error); // Handle errors here

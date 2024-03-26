@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@turf/turf": "^6.5.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -25,8 +24,7 @@
     "mongodb-memory-server": "^9.1.7",
     "mongoose": "^6.12.6",
     "node-gyp": "^10.0.1",
-    "nodemon": "^3.0.3",
-    "simplepolygon": "^1.2.3"
+    "nodemon": "^3.0.3"
   },
   "jest": {
     "testEnvironment": "node"
