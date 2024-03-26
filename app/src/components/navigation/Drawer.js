@@ -190,9 +190,17 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
       <CssBaseline />
       <Global
         styles={{
-          '.MuiDrawer-root > .MuiPaper-root': {
-            height: `calc(90% - 70px)`,
-            overflow: 'visible',
+          '@media (min-height: 755px)': {
+            '.MuiDrawer-root > .MuiPaper-root': {
+              height: 'calc(80% - 70px)',
+              overflow: 'visible',
+            },
+          },
+          '@media (max-height: 755px)': {
+            '.MuiDrawer-root > .MuiPaper-root': {
+              height: 'calc(90% - 70px)',
+              overflow: 'visible',
+            },
           },
         }}
       />
