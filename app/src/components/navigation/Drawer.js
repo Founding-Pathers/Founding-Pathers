@@ -140,7 +140,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   // Function to handle clicking on a list item
   const handleListClick = (key) => {
-    console.log('hello')
     if (isTextFieldFocused === 'location') {
       setLocation(key);
     } else if (isTextFieldFocused === 'destination') {
@@ -224,7 +223,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
-            <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
+            <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 3px 0px 3px' }}></img>
             {/* <SearchBox
             //  value={location}
              location={location}
@@ -264,8 +263,12 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
 
           <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
-            '@media (min-width: 390px)': {
+            '@media (min-width: 385px)': {
               ml: 3.5,
+              mr: 0.5,
+            },
+            '@media (max-width: 385px)': {
+              ml: 2,
               mr: 0.5,
             }}}>
             <img src={DottedLine} style={{ width: '2px', height: '18px' }}></img>
@@ -273,11 +276,14 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
-            <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
+            <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 3px',
+          '@media (max-width: 360px)': {
+            margin: '9px 2px', // Adjusted margin for screens up to 360px width
+          } }}></img>
               {/* <SearchBox
               // value={destination}
               location={destination}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => setLocation(e.target.value)},
               /> */}
               <TextField
                 inputRef={destinationRef}
@@ -387,6 +393,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <Chip icon={DirectionsBikeIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
             // isSelected={selectedMode === "cycling"}
             onClick={() => handleChipClickTravelMode("cycling")}
+            disabled={selectedPaths === "sheltered"}
             ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Cycling</Typography>
             </Box>

@@ -14,6 +14,7 @@ export default function ClickableChips({
   selectedColor,
   isSelected = false,
   onClick,
+  disabled
 }) {
   return (
     <Chip
@@ -32,6 +33,7 @@ export default function ClickableChips({
           backgroundColor: selectedColor,
         },
       }}
+      disabled={disabled}
     />
   );
 }
