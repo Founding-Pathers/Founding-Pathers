@@ -14,7 +14,7 @@ const StyledContainer = styled('div')({
 const StyledFormContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  paddingTop: '64px',
+  paddingTop: '14px',
 });
 
 const VerticalSpace = styled('div')({
@@ -38,7 +38,7 @@ const CenterItem = styled('div')({
 
 const FrozenBar = styled('div')({
   width: '100%',
-  height: '100px',
+  height: '50px',
   position: 'fixed',
   top: 0,
   left: 0,

@@ -23,7 +23,7 @@ const StyledContainer = styled('div')({
 const StyledFormContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  paddingTop: '64px'
+  paddingTop: '14px'
 });
 
 const VerticalSpace = styled('div')({
@@ -53,7 +53,7 @@ const CenterItem = styled('div')({
 
 const FrozenBar = styled('div')({
   width: '100%',
-  height: '100px',
+  height: '50px',
   position: 'fixed',
   top: 0,
   left: 0,
@@ -71,17 +71,17 @@ const UserGuidelines = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
+      if (window.scrollY > 0) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
   }, []);
 
   const handleGuidelinePage = (page) => () => setPage(page);
@@ -132,16 +132,16 @@ const UserGuidelines = () => {
           <React.Fragment key={index}>
             {page === guidelinePage && (
               <React.Fragment>
-                <LeftItem style={{ paddingTop: '25px' }}>
+                <LeftItem style={{ paddingTop: '15px' }}>
                   <VerticalSpace>
                     <Typography variant="body1" sx={{ color: '#FF9900', fontSize: '20px', fontWeight: '600' }}>{text}</Typography>
                     <Typography sx={{ textAlign: 'start', marginTop: '10px' }}>{description}</Typography>
                   </VerticalSpace>
                 </LeftItem>
 
-                {image && <img src={image} alt={`User Guideline ${index + 1}`} style={{ width: '330px', height: 'auto', marginTop: '15px' }} />}
+                {image && <img src={image} alt={`User Guideline ${index + 1}`} style={{ width: '100%', height: 'auto', marginTop: '15px' }} />}
 
-                <VerticalSpace data-testid="userguideline-content" style={{ display: 'flex', position: 'absolute', bottom: '22px', left: '30px', right: '30px', justifyContent: 'space-between' }}>
+                <VerticalSpace data-testid="userguideline-content" style={{ display: 'flex', position: 'fixed', bottom: '22px', left: '30px', right: '30px', justifyContent: 'space-between' }}>
                   <LeftItem>
                     {page !== "introduction" && <Button text="BACK" onClick={handleGuidelinePage(guidelines[index - 1]?.page)} color="primary" height="40px" width="120px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />}
                   </LeftItem>
