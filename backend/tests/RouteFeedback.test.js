@@ -47,6 +47,7 @@ describe('route feedback', () => {
 const testRouteFeedBack = {
     _id: "testID1",
     overall_exp: 4,
+    routestaken_id: "123",
     general_comments: "test123",
     previous_use: true,
     faster_path: true,
@@ -56,6 +57,7 @@ const testRouteFeedBack = {
 
 const testRouteFeedBackWithoutOverall = {
     _id: "testID2",
+    routestaken_id: "123", 
     general_comments: "test123",
     previous_use: true,
     faster_path: true,
@@ -66,6 +68,7 @@ const testRouteFeedBackWithoutOverall = {
 const testRouteFeedBackWithoutComments = {
     _id: "testID3",
     overall_exp: 4,
+    routestaken_id: "123", 
     previous_use: true,
     faster_path: true,
     more_suited: true,
@@ -75,6 +78,7 @@ const testRouteFeedBackWithoutComments = {
 const testRouteFeedBackWithIncorrectType = {
     _id: "testID4",
     overall_exp: 4,
+    routestaken_id: "123", 
     general_comments: [123],
     previous_use: true,
     faster_path: true,
