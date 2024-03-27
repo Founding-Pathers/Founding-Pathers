@@ -34,6 +34,7 @@ router.post("/register", async (req, res, next) => {
     // Set the token as a cookie in the response
     res.cookie("token", token, {
       httpOnly: true,
+      secure: true,
       sameSite: "strict",
       maxAge: 86400000,
     });
@@ -75,16 +76,14 @@ router.post("/login", async (req, res, next) => {
       next()
     }
     else{
-    const token = createSecretToken(existingUser._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
-    // returns that user has logged in successfully
+    const token = createSecretToken(existingUser.email);
     res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+      })
       .status(200)
-      .json("Success");
-    next();
+      .json({ message: "Success" });
   }
   } catch (error) {
     console.error(error);
