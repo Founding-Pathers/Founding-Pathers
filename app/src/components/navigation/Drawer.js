@@ -79,6 +79,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [rememberPreferences, setRememberPreferences] = useState(false); 
+
+  const handlePreferencesChange = () => {
+    setRememberPreferences(!rememberPreferences); 
+  };
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -113,6 +118,77 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
       calculateRoute(chipLabel);
     }
   };
+
+  //Remember preferences
+  const handleRememberPreferences = async () => {
+    // Check if the checkbox is checked
+    console.log(rememberPreferences)
+    if (rememberPreferences) {
+      var map = { FNB: "f_and_b", sheltered: "is_sheltered", TOURISM: "tourist_attraction", BUSSTOP: "bus_stop", MRT: "mrt", PICKUP: "pickup_dropoff", nature: "nature" }
+      var mapped = { f_and_b: false, sheltered: false, tourist_attraction: false, bus_stop: false, mrt: false, pickup_dropoff: false, nature: false }
+
+      for (var i=0; i<selectedPaths.size; i++) {
+        mapped[map[selectedPaths[i]]] = true;
+      }
+      for (var i=0; i<selectedPOIs.size; i++) {
+        mapped[map[selectedPOIs[i]]] = true;
+      }
+
+      try {
+        const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/update`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: 'user@example.com', 
+            f_and_b: mapped[f_and_b],
+            is_sheltered: mapped[is_sheltered],
+            tourist_attraction: mapped[tourist_attraction],
+            bus_stop: mapped[bus_stop],
+            mrt: mapped[mrt],
+            pickup_dropoff: mapped[pickup_dropoff],
+            nature: mapped[nature]
+          })
+        });
+
+        if (response.ok) {
+          console.log('User preference updated successfully');
+        } else {
+          console.error('Failed to update user preference');
+        }
+      } catch (error) {
+        console.error('Error updating user preference:', error.message);
+      }
+    } else {
+      console.log('Checkbox is not checked');
+    }
+  };
+
+  //get remembered preferences
+  async function getUserPreferences(email) {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email })
+      });
+  
+      if (response.ok) {
+        const preferences = await response.json();
+        console.log('User preferences:', preferences);
+        return preferences;
+      } else {
+        console.error('Failed to fetch user preferences');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching user preferences:', error.message);
+      return null;
+    }
+  }
 
   //Switch start and destination
   const [location, setLocation] = useState('');
@@ -377,7 +453,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           ></Chip>
           </ChipBox>
           <Box sx={{mx: 3.5, my: 0.5}}>
-          <Checkbox width="17px" fontSize="14px" label="Remember my preferences for future paths"></Checkbox>
+          <Checkbox checked={rememberPreferences} onChange={handlePreferencesChange} width="17px" fontSize="14px" label="Remember my preferences for future paths"></Checkbox>
           </Box>
 
           <Typography variant="filterh1" sx={{ px: 3.5, pt: 1.5, pb: 0.5, display: "block" }}>2. Travelling Mode</Typography>
