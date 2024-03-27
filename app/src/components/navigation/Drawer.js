@@ -91,6 +91,9 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setShowButton(((!open) && navigating));
   }, [open, navigating]);
 
+  const userEmail = localStorage.getItem('userEmail');
+  console.log(userEmail)
+
   //POIs
   const handleChipClick = (chipLabel) => {
     setSelectedPOIs((prevSelected) => {
@@ -113,6 +116,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setOpen(false);
     handleSelecting();
     handleRemoveMarks();
+    handleRememberPreferences();
     setNavigating(true);
     if (calculateRoute && chipLabel !== null) {
       calculateRoute(chipLabel);
@@ -142,13 +146,13 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           },
           body: JSON.stringify({
             email: 'user@example.com', 
-            f_and_b: mapped[f_and_b],
-            is_sheltered: mapped[is_sheltered],
-            tourist_attraction: mapped[tourist_attraction],
-            bus_stop: mapped[bus_stop],
-            mrt: mapped[mrt],
-            pickup_dropoff: mapped[pickup_dropoff],
-            nature: mapped[nature]
+            f_and_b: mapped["f_and_b"],
+            is_sheltered: mapped["is_sheltered"],
+            tourist_attraction: mapped["tourist_attraction"],
+            bus_stop: mapped["bus_stop"],
+            mrt: mapped["mrt"],
+            pickup_dropoff: mapped["pickup_dropoff"],
+            nature: mapped["nature"]
           })
         });
 
@@ -353,7 +357,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 3px',
-          '@media (max-width: 360px)': {
+          '@media (maxWidth: 360px)': {
             margin: '9px 2px', // Adjusted margin for screens up to 360px width
           } }}></img>
               {/* <SearchBox

@@ -80,10 +80,13 @@ router.post("/login", async (req, res, next) => {
       withCredentials: true,
       httpOnly: false,
     });
+
+    console.log(existingUser.email)
+
+    localStorage.setItem('userEmail', existingUser.email);
+
     // returns that user has logged in successfully
-    res
-      .status(200)
-      .json("Success");
+    res.status(200).json({ message: "Success", email: existingUser.email });
     next();
   }
   } catch (error) {
