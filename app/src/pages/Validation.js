@@ -50,7 +50,7 @@ const CenterItem = styled('div')({
 
 const FrozenBar = styled('div')({
   width: '100%',
-  height: '100px',
+  height: '50px',
   position: 'fixed',
   top: 0,
   left: 0,
@@ -68,8 +68,6 @@ const Validation = () => {
   const [thumbnails, setThumbnails] = useState([]);
   const [page, setPage] = useState("destination1");
   const inputRef = useRef(null);
-
-  // <- for frozen bar
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -86,7 +84,6 @@ const Validation = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  // for frozen bar ->
 
   const handleTextFieldChange = (event) => {
     setTextFieldValue(event.target.value);
@@ -153,9 +150,6 @@ const Validation = () => {
   };
 
   useEffect(() => {
-    // Prevent scrolling on mount
-    document.body.style.overflow = 'hidden';
-
     // Add event listener to handle clicks outside of thumbnails
     const handleClickOutside = (event) => {
       if (!event.target.closest('.thumbnail-container')) {
@@ -276,12 +270,12 @@ const Validation = () => {
                 whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
               }}
             >
-              Terms and Conditions
+              Issue Reporting Form
             </Typography>
           )}
         </FrozenBar>
 
-        <StyledFormContainer style={{ paddingTop: '64px' }}>
+        <StyledFormContainer style={{ paddingTop: '14px' }}>
 
           <VerticalSpace>
             <CenterItem>
