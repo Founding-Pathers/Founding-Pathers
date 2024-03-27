@@ -16,7 +16,7 @@ import Chip from '../ui/Chip';
 import Checkbox from '../ui/Checkbox';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import List from '../ui/List';
+import LocationList from '../ui/List';
 import { useTheme } from '@mui/material/styles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
@@ -39,10 +39,12 @@ const Root = styled('div')(({ theme }) => ({
   height: '100%',
   backgroundColor:
     theme.palette.mode === 'light' ? grey[100] : theme.palette.background.default,
+  overflowY: 'auto'
 }));
 
 const StyledBox = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'light' ? '#fff' : grey[800],
+  overflowY: 'auto'
 }));
 
 const ChipBox = styled('div')({
@@ -55,7 +57,7 @@ const ChipBox = styled('div')({
     marginTop: 7,
     marginRight: 5
   },
-  '@media (max-width:390px)': {
+  '@media (max-width:300px)': {
     flexDirection: "column",
   },
 });
@@ -127,31 +129,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     console.log("Destination:", destination);
   }, [location, destination]);
 
-  const [isTextFieldFocused, setTextFieldFocused] = useState('');
-  
-  useEffect(() => {
-    const handleClickOutsideTextField = (event) => {
-      if (
-        originRef.current &&
-        originRef.current.contains(event.target)
-      ) {
-        setTextFieldFocused('location');
-      } else if (
-        destinationRef.current &&
-        destinationRef.current.contains(event.target)
-      ) {
-        setTextFieldFocused('destination');
-      } else {
-        setTextFieldFocused(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutsideTextField);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideTextField);
-    };
-  }, []);
+  const [isTextFieldFocused, setTextFieldFocused] = useState(null);
 
   // Function to handle opening the drawer and focusing on the text field
   const handleOpenDrawer = (field) => {
@@ -168,7 +146,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     } else if (isTextFieldFocused === 'destination') {
       setDestination(key);
     }
-    setOpen(false);
+    setTextFieldFocused(null);
   };
 
   const [isEditing, setEditing] = useState(false);
@@ -277,6 +255,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 label=""
                 variant="outlined"
                 onClick={() => handleOpenDrawer('location')}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    setTextFieldFocused(null);
+                  }
+                }}
                 />
           </Box>
 
@@ -321,6 +304,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
                 label="Where to?"
                 variant="outlined"
                 onClick={() => handleOpenDrawer('destination')}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    setTextFieldFocused(null);
+                  }
+                }}
                 />
           </Box>
 
@@ -328,10 +316,10 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           display: isTextFieldFocused ? 'block' : 'none', // Conditionally display based on text field focus
           }}>
             <Typography variant="filterh1" sx={{ px: 3.5, pb: 1, display: "block" }}>Past Searches</Typography>
-            <List dictionary={{'Current Location': ''}} icon={NearMeIcon} onItemClick={handleListClick}></List>
+            <LocationList dictionary={{'Current Location': ''}} icon={NearMeIcon} onItemClick={handleListClick}></LocationList>
             {/* Replace dictionary with actual values */}
-            <List dictionary={{'Bukit Timah Hill': '9km away', 'Pasir Ris Way': '17.4km away', 'East Coast Park': '9.9km away'}} icon={HistoryIcon}
-            onItemClick={handleListClick}></List>
+            <LocationList dictionary={{'City Hall MRT': '9km away', 'Clarke Quay': '17.4km away', 'Fort Canning': '9.9km away'}} icon={HistoryIcon}
+            onItemClick={handleListClick}></LocationList>
           </Box>
 
           <Box sx={{
