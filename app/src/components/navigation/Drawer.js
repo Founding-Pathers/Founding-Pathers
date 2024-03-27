@@ -82,6 +82,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   const [rememberPreferences, setRememberPreferences] = useState(false); 
 
   const handlePreferencesChange = () => {
+    console.log(rememberPreferences)
     setRememberPreferences(!rememberPreferences); 
   };
 
@@ -90,9 +91,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   useEffect(() => {
     setShowButton(((!open) && navigating));
   }, [open, navigating]);
-
-  const userEmail = localStorage.getItem('userEmail');
-  console.log(userEmail)
 
   //POIs
   const handleChipClick = (chipLabel) => {
@@ -123,9 +121,13 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     }
   };
 
+  //get email
+  const [userEmail, setUserEmail] = useState(''); 
+
   //Remember preferences
   const handleRememberPreferences = async () => {
     // Check if the checkbox is checked
+    setUserEmail(localStorage.getItem('userEmail'));
     console.log(rememberPreferences)
     if (rememberPreferences) {
       var map = { FNB: "f_and_b", sheltered: "is_sheltered", TOURISM: "tourist_attraction", BUSSTOP: "bus_stop", MRT: "mrt", PICKUP: "pickup_dropoff", nature: "nature" }
@@ -145,7 +147,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            email: 'user@example.com', 
+            email: userEmail, 
             f_and_b: mapped["f_and_b"],
             is_sheltered: mapped["is_sheltered"],
             tourist_attraction: mapped["tourist_attraction"],
@@ -170,18 +172,27 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   };
 
   //get remembered preferences
-  async function getUserPreferences(email) {
+  async function getUserPreferences() {
+    setUserEmail(localStorage.getItem('userEmail'));
     try {
       const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ email: userEmail })
       });
   
-      if (response.ok) {
-        const preferences = await response.json();
+      console.log('Response status code:', response.status);
+  
+      if (response.status === 200) {
+        const responseBody = await response.text();
+        if (!responseBody) {
+          console.log('Empty response body');
+          return null;
+        }
+
+        const preferences = JSON.parse(responseBody);
         console.log('User preferences:', preferences);
         return preferences;
       } else {
@@ -193,6 +204,10 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
       return null;
     }
   }
+
+  useEffect(() => {
+    getUserPreferences();
+  }, []);
 
   //Switch start and destination
   const [location, setLocation] = useState('');

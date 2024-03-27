@@ -21,7 +21,7 @@ router.route("/userpref").get(async function (req, res) {
 });
 
 // Retrieve user preference by useraccount email
-router.route("/userpref/").get(function (req, res, next) {
+router.route("/userpref/").post(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { email: req.body.email };
   db_connect
