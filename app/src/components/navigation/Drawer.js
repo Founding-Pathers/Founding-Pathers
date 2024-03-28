@@ -111,7 +111,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
       setSelectedPaths(chipLabel); 
     }
   };
-  
+
   //Travel Mode State
   const handleChipClickTravelMode = (chipLabel) => {
     setShowButton(true);
@@ -135,14 +135,18 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     console.log(rememberPreferences)
     if (rememberPreferences) {
       var map = { FNB: "f_and_b", sheltered: "is_sheltered", TOURISM: "tourist_attraction", BUSSTOP: "bus_stop", MRT: "mrt", PICKUP: "pickup_dropoff", nature: "nature" }
-      var mapped = { f_and_b: false, sheltered: false, tourist_attraction: false, bus_stop: false, mrt: false, pickup_dropoff: false, nature: false }
+      var mapped = { f_and_b: "false", sheltered: "false", tourist_attraction: "false", bus_stop: "false", mrt: "false", pickup_dropoff: "false", nature: "false" }
 
-      for (var i=0; i<selectedPaths.size; i++) {
-        mapped[map[selectedPaths[i]]] = true;
+      for (var i = 0; i < selectedPaths.split(", ").length; i++) { 
+        mapped[map[selectedPaths.split(", ")[i]]] = "true";
       }
-      for (var i=0; i<selectedPOIs.size; i++) {
-        mapped[map[selectedPOIs[i]]] = true;
+      
+      console.log(selectedPOIs);
+      for (var i = 0; i < selectedPOIs.split(", ").length; i++) { 
+        mapped[map[selectedPOIs.split(", ")[i]]] = "true";
       }
+
+      console.log(mapped)
 
       try {
         const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/update`, {
@@ -151,7 +155,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            email: userEmail, 
+            email: localStorage.getItem("userEmail"), 
             f_and_b: mapped["f_and_b"],
             is_sheltered: mapped["is_sheltered"],
             tourist_attraction: mapped["tourist_attraction"],
@@ -161,7 +165,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             nature: mapped["nature"]
           })
         });
-
         if (response.ok) {
           console.log('User preference updated successfully');
         } else {
@@ -178,13 +181,14 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   //get remembered preferences
   async function getUserPreferences() {
     setUserEmail(localStorage.getItem('userEmail'));
+    console.log(userEmail)
     try {
       const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: userEmail })
+        body: JSON.stringify({ email: localStorage.getItem('userEmail') })
       });
   
       console.log('Response status code:', response.status);
@@ -198,6 +202,22 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
         const preferences = JSON.parse(responseBody);
         console.log('User preferences:', preferences);
+
+        var map = { f_and_b: "FNB", is_sheltered: "sheltered", tourist_attraction: "TOURISM" , bus_stop : "BUSSTOP", mrt: "MRT", pickup_dropoff: "PICKUP", nature: "nature" }
+
+        for (var key in map) {
+          if (preferences[key] == true) {
+            if (key == "is_sheltered" || key == "nature") {
+              console.log(map[key]);
+              handleChipClickPath(map[key]);
+            }
+            else {
+              console.log(map[key])
+              handleChipClick(map[key]);
+            }
+          }
+        }
+
         return preferences;
       } else {
         console.error('Failed to fetch user preferences');
