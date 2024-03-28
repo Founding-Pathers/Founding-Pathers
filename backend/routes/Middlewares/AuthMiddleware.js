@@ -6,7 +6,7 @@ const dbo = require("../../db/conn");
 require("dotenv").config();
 
 // to check for user cookies, whether user authentication is valid using JWToken
-router.post("/", async (req, res) => {
+router.post("/authenticate", async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     return res.json({ status: false });
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
       return res.json({ status: false });
     } else {
       let db_connect = dbo.getDbLogging();
-      const user = await db_connect.collection("userAccount").find(data.id);
+      const user = await db_connect.collection("userAccount").find(data.email);
       if (user) return res.json({ status: true, user: user.username });
       else return res.json({ status: false });
     }

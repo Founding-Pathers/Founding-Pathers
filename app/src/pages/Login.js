@@ -83,6 +83,7 @@ async function onSubmit(e){
     headers: {
       "Content-Type" : "application/json",
     },
+    credentials: 'include',
     body: JSON.stringify(form),
   })
   // handles response object from backend
@@ -95,7 +96,7 @@ async function onSubmit(e){
   // receive parsed JSON response of the above .then(response)
   .then((data) => {
     console.log(data);
-    if (data === "Success") {
+    if (data.message === "Success") {
       navigate("/home");
     }
     else if (data === "User does not exist"){

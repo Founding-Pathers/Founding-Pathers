@@ -13,6 +13,9 @@ import { Typography } from '@mui/material';
 import { useNavigate } from "react-router";
 import LogoutIcon from '@mui/icons-material/Logout';
 
+const namePort = process.env.REACT_APP_NAMEPORT;
+const protocol = process.env.REACT_APP_PROTOCOL;
+
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
 
@@ -41,6 +44,25 @@ export default function TemporaryDrawer() {
         navigate('/guidelines');
         break;
       case 'Log Out':
+          // Call logout endpoint to clear the cookie
+          const logout = async () => {
+            try {
+              const response = await fetch(`${protocol}://${namePort}/logout`, {
+                method: 'POST',
+                credentials: 'include' // Include cookies in the request
+              });
+              console.log(response)
+              if (response.ok) {
+                console.log('Logout successful');
+              } else {
+                console.error('Logout failed:', response.statusText);
+              }
+            } catch (error) {
+              console.error('Error during logout:', error);
+            }
+          };
+      
+          logout();
         navigate('/logout');
         break;
       default:

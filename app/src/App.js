@@ -3,17 +3,17 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 
-function App() {
-  return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <Router></Router>
-      </ThemeProvider>
-    </div>
-  );
-}
+  function App() {
+    return (
+      <div className="App">
+        <ThemeProvider theme={theme}>
+          <Router></Router>
+        </ThemeProvider>
+      </div>
+    );
+  }
 
-export default App;
+  export default App;
 
 // DB testing form - to test, uncomment and comment out above code
 // import React from 'react';

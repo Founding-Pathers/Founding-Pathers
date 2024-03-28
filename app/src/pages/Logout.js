@@ -30,6 +30,7 @@ const CenterItem = styled('div')({
     paddingLeft: 7
 });
 
+
 const Deleted = () => {
     return (
       <StyledContainer>
