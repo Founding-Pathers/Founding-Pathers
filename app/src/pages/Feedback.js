@@ -19,7 +19,7 @@ const StyledContainer = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  maxHeight: '100vh',
+  minHeight: '100vh',
 });
 
 const StyledFormContainer = styled('div')({
@@ -179,6 +179,14 @@ const Feedback = () => {
     }
   }, [page]);
 
+  const submitOnClick = () => {
+    onSubmit();
+    handleThanksPage();
+  };
+
+  async function onSubmit(){
+  }
+
   if (page === "no") {
     return (
       <StyledContainer style={{ padding: '30px' }}>
@@ -204,7 +212,7 @@ const Feedback = () => {
           )}
         </FrozenBar>
 
-        <StyledFormContainer style={{ paddingTop: '14px' }}>
+        <StyledFormContainer style={{ paddingTop: '14px' }} onSubmit={onSubmit}>
 
           <VerticalSpace>
             <CenterItem>
@@ -301,7 +309,7 @@ const Feedback = () => {
           <VerticalSpace style={{ display: 'flex', marginTop: '27px', marginBottom: '30px', justifyContent: 'space-between' }}>
             <RightItem>
               {selectedRating && yesClicked1 && textFieldsFilled1 && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
-              {selectedRating && noClicked1 && textFieldsFilled1 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+              {selectedRating && noClicked1 && textFieldsFilled1 && <ReusableButton text="SUBMIT" onClick={submitOnClick} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
             </RightItem>
           </VerticalSpace>
 
