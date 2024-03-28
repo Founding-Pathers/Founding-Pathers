@@ -105,9 +105,13 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   //Path Preferences State
   const handleChipClickPath = (chipLabel) => {
-    setSelectedPaths(chipLabel);
+    if (selectedPaths === chipLabel) {
+      setSelectedPaths(null); 
+    } else {
+      setSelectedPaths(chipLabel); 
+    }
   };
-
+  
   //Travel Mode State
   const handleChipClickTravelMode = (chipLabel) => {
     setShowButton(true);
