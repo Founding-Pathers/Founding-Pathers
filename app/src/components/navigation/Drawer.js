@@ -205,6 +205,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
         var map = { f_and_b: "FNB", is_sheltered: "sheltered", tourist_attraction: "TOURISM" , bus_stop : "BUSSTOP", mrt: "MRT", pickup_dropoff: "PICKUP", nature: "nature" }
 
+        var pois = [];
         for (var key in map) {
           if (preferences[key] == true) {
             if (key == "is_sheltered" || key == "nature") {
@@ -213,10 +214,12 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             }
             else {
               console.log(map[key])
-              handleChipClick(map[key]);
+              pois.push(map[key]);
+              // handleChipClick(map[key]);
             }
           }
         }
+        setSelectedPOIs(pois);
 
         return preferences;
       } else {

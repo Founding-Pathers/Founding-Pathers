@@ -94,11 +94,9 @@ const Create = () => {
           throw new Error('Failed to register');
         }
 
-        console.log(localStorage.getItem("userEmail"))
-
         //add user preferences for later use
         const userData = {
-          email: localStorage.getItem("userEmail"),
+          email: form.email,
           wheelchair_friendly: false,
           f_and_b: false,
           is_sheltered: false,

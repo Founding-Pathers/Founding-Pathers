@@ -12,7 +12,7 @@ export default function ClickableChips({
   pl,
   unselectedColor,
   selectedColor,
-  isSelected = false,
+  isSelected,
   onClick,
   disabled
 }) {
