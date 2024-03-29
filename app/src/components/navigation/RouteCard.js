@@ -9,7 +9,11 @@ import RouteIcon from '../../assets/Route.png';
 
 export default function RouteCard({ time, distance, mode, filters, routeNo, onClick, display }) {
   return (
-    <Card sx={{ width: '293px', height: '100px', bottom: '40px', left: '50px', borderRadius: '20px 75px 75px 20px', position: 'absolute', display: {display}, justifyContent: 'space-evenly', alignItems: 'center' }}>
+    <Card sx={{ width: '293px', height: '100px', bottom: '150px', left: '50px', borderRadius: '20px 75px 75px 20px', position: 'fixed', display: {display}, justifyContent: 'space-evenly', alignItems: 'center',
+    '@media (max-height: 855px)': {
+      marginBottom: 'calc(env(safe-area-inset-bottom) - 50px)'
+    },
+    }}>
         <Box sx={{ textAlign: 'center' }}>
           <img src={RouteIcon} style={{ width:"25px", height:"25px" }}/>
           <Typography variant="cardDesc" component="div" sx={{ ml: 1 }}>

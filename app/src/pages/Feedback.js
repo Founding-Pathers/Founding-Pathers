@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Rating1Img from '../assets/Rating1.png';
 import Rating2Img from '../assets/Rating2.png';
 import Rating3Img from '../assets/Rating3.png';
@@ -53,7 +54,7 @@ const CenterItem = styled('div')({
 
 const FrozenBar = styled('div')({
   width: '100%',
-  height: '100px',
+  height: '50px',
   position: 'fixed',
   top: 0,
   left: 0,
@@ -79,6 +80,21 @@ const Feedback = () => {
   const [textFieldsFilled2, setTextFieldsFilled2] = useState(false);
   const [page, setPage] = useState("no");
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleTextFieldChange1 = (event) => {
     setTextFieldValue1(event.target.value);
@@ -122,6 +138,10 @@ const Feedback = () => {
     setyesClicked3(false);
   };
 
+  const handleNoPage = () => {
+    setPage("no");
+  };
+  
   const handleYesPage = () => {
     setPage("yes");
   };
@@ -129,11 +149,6 @@ const Feedback = () => {
   const handleThanksPage = () => {
     setPage("thanks");
   };
-
-  useEffect(() => {
-    // Prevent scrolling on mount
-    document.body.style.overflow = 'hidden';
-  });
 
   useEffect(() => {
     // Check if all text fields are filled
@@ -164,6 +179,14 @@ const Feedback = () => {
     }
   }, [page]);
 
+  const submitOnClick = () => {
+    onSubmit();
+    handleThanksPage();
+  };
+
+  async function onSubmit(){
+  }
+
   if (page === "no") {
     return (
       <StyledContainer style={{ padding: '30px' }}>
@@ -184,12 +207,12 @@ const Feedback = () => {
                 whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
               }}
             >
-              Terms and Conditions
+              Feedback Form
             </Typography>
           )}
         </FrozenBar>
 
-        <StyledFormContainer style={{ paddingTop: '64px' }}>
+        <StyledFormContainer style={{ paddingTop: '14px' }} onSubmit={onSubmit}>
 
           <VerticalSpace>
             <CenterItem>
@@ -283,10 +306,12 @@ const Feedback = () => {
             </VerticalSpace>
           </CenterItem>
 
-          <RightItem style={{ marginTop: '27px' }} >
-            {yesClicked1 && textFieldsFilled1 && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
-            {noClicked1 && textFieldsFilled1 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
-          </RightItem>
+          <VerticalSpace style={{ display: 'flex', marginTop: '27px', marginBottom: '30px', justifyContent: 'space-between' }}>
+            <RightItem>
+              {selectedRating && yesClicked1 && textFieldsFilled1 && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+              {selectedRating && noClicked1 && textFieldsFilled1 && <ReusableButton text="SUBMIT" onClick={submitOnClick} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+            </RightItem>
+          </VerticalSpace>
 
         </StyledFormContainer>
 
@@ -317,7 +342,7 @@ const Feedback = () => {
           )}
         </FrozenBar>
 
-        <StyledFormContainer style={{ paddingTop: '64px' }}>
+        <StyledFormContainer style={{ paddingTop: '14px' }}>
 
           <VerticalSpace>
             <CenterItem>
@@ -381,12 +406,12 @@ const Feedback = () => {
           </CenterItem>
 
           <CenterItem>
-            <VerticalSpace>
+            <VerticalSpace style={{ width: '100%' }}>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>Please provide your reasons.</Typography>
               <TextField
                 multiline
                 rows={4}
-                style={{ width: '325px' }}
+                style={{ width: '100%' }}
                 value={textFieldValue2}
                 onChange={handleTextFieldChange2}
                 InputProps={{
@@ -399,9 +424,14 @@ const Feedback = () => {
             </VerticalSpace>
           </CenterItem>
 
-          <RightItem style={{ marginTop: '61px' }} >
-            {(yesClicked2 || noClicked2) && (yesClicked3 || noClicked3) && textFieldsFilled2 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
-          </RightItem>
+          <VerticalSpace style={{ display: 'flex', marginTop: '27px', marginBottom: '30px', justifyContent: 'space-between' }}>
+            <LeftItem>
+              <ReusableButton text="BACK" onClick={handleNoPage} color="primary" height="40px" width="130px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />
+            </LeftItem>
+            <RightItem>
+              {(yesClicked2 || noClicked2) && (yesClicked3 || noClicked3) && textFieldsFilled2 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+            </RightItem>
+          </VerticalSpace>
 
         </StyledFormContainer>
 
