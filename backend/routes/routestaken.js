@@ -9,9 +9,6 @@ const routesTaken = express.Router();
 const dbo = require("../db/conn");
 const { base } = require("../models/RoutesTaken");
 
-// Converts the id from string to ObjectId for the _id.
-const ObjectId = require("mongodb").ObjectId;
-
 // Retrieve list of all routes taken
 routesTaken.route("/routehistory").get(async function (req, res) {
   let db_connect = dbo.getDbLogging();
@@ -25,37 +22,12 @@ routesTaken.route("/routehistory").get(async function (req, res) {
     });
 });
 
-// Retrieve list of all routes taken that were not deleted
-routesTaken.route("/routehistory").get(async function (req, res) {
-  let db_connect = dbo.getDbLogging();
-  db_connect
-    .collection("routesTaken")
-    .find({ deleted: false })
-    .toArray()
-    .then((data) => {
-      console.log(data);
-      res.json(data);
-    });
-});
-
-// Retrieve specific route by routestaken id
-routesTaken.route("/routehistory/:id").get(function (req, res) {
-  let db_connect = dbo.getDbLogging();
-  let myquery = { _id: ObjectId(req.body.id) };
-  db_connect
-    .collection("routesTaken")
-    .findOne(myquery, { deleted: false }, function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-});
-
 // Retrieve all routes taken by current user email
-routesTaken.route("/routehistory/user").get(function (req, res) {
+routesTaken.route("/routehistory/user").post(async function (req, res) {
   try {
     let db_connect = dbo.getDbLogging();
     let myquery = { email: req.body.email };
-    const records = db_connect
+    const records = await db_connect
       .collection("routesTaken")
       .find(myquery, { deleted: false })
       .toArray();
@@ -67,7 +39,7 @@ routesTaken.route("/routehistory/user").get(function (req, res) {
 });
 
 // Create a new record
-routesTaken.route("/routehistory/add").post(function (req, res) {
+routesTaken.route("/routehistory/add").post(async function (req, response) {
   let db_connect = dbo.getDbLogging();
   let edges_validation = req.body.edges_validation;
 
@@ -75,12 +47,13 @@ routesTaken.route("/routehistory/add").post(function (req, res) {
   for (let key in edges_validation) {
     let edge = edges_validation[key];
     let pictures = edge.pictures;
+    let validated = edge.validation;
     let base64Images = [];
-    if (pictures.length === 0) {
+    if (validated === false) {
       continue;
     }
     for (let i = 0; i < pictures.length; i++) {
-      imageToBase64(pictures[i])
+      await imageToBase64(pictures[i])
         .then((response) => {
           base64Images.push(response);
         })
@@ -88,10 +61,8 @@ routesTaken.route("/routehistory/add").post(function (req, res) {
           console.log(error); // Expection error....
         });
     }
-    // ERROR: array of pictures is not changing
     edge.pictures = base64Images;
   }
-  console.log(edges_validation);
 
   let myobj = {
     email: req.body.email, // email
@@ -101,11 +72,10 @@ routesTaken.route("/routehistory/add").post(function (req, res) {
     edges_validation: edges_validation,
     deleted: false,
   };
-  // db_connect.collection("routesTaken").insertOne(myobj, function (err, res) {
-  //   if (err) throw err;
-  //   response.json(res);
-  // });
-  res.json(myobj);
+  db_connect.collection("routesTaken").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+    response.json(res);
+  });
 });
 
 module.exports = routesTaken;
