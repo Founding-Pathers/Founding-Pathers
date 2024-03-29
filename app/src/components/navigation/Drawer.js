@@ -74,7 +74,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -329,7 +329,10 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           <Puller />
           {/* IS ROUTING */}
           <Box sx={{display: (isRouting && !isEditing) ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'start'}}>
-            <Box sx={{textAlign: 'center', ml: 12}}>
+            <Box sx={{ml: 2}}>
+              <Button text="Arrived" onClick={handleOpenDestinationModal} color="green" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
+            </Box>
+            <Box sx={{textAlign: 'center'}}>
               <Typography variant="navigatingSubtitle" sx={{display: 'block'}}>Estimated Arrival Time:</Typography>
               <Typography variant="navigatingTitle" sx={{display: 'block', mt: 0.5}}>{(duration/1).toFixed(0)} minutes</Typography>
               <Typography variant="filterLabel" sx={{display: 'block', mt: 0.5}}>{(distance/1000).toFixed(1)} km away</Typography>

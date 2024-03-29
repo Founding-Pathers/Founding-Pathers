@@ -3,12 +3,16 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
+import Modal from '../components/ui/RouteModal';
+import Button from '../components/ui/Button';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import locationIcon from '../assets/Location.png';
 import BusStops from '../assets/filters/bus.png';
 import Attractions from '../assets/filters/attractions.png';
 import PickUp from '../assets/filters/carIcon.png';
 import FNB from '../assets/filters/foodIcon.png';
 import MRTs from '../assets/filters/trainIcon.png';
+import { useNavigate } from "react-router-dom";
 
 const containerStyle = {
   width: '100%',
@@ -20,10 +24,13 @@ const center = {
   lng: 103.8
 };
 
+const libraries = ['places'];
+
 function Home() {
+  const navigate = useNavigate();
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_API_KEY,
-    libraries: ['places']
+    libraries: libraries
   })
 
   const [map, setMap] = React.useState(/** @type google.maps.Map*/ null)
@@ -414,6 +421,96 @@ async function renderMarkers(poiArr, map) {
       infowindow.open(map, marker);
     });
   }
+
+   //VALIDATION
+   const [isValidating, setIsValidating] = useState(false);
+   const [isDestinationModalOpen, setIsDestinationModalOpen] = useState(false);
+   const handleOpenDestinationModal = () => {
+     setIsDestinationModalOpen(true);
+   };
+ 
+   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+   const handleOpenFeedbackModal = () => {
+     setIsDestinationModalOpen(false);
+     setIsFeedbackModalOpen(true);
+   };
+ 
+   const [isInstructionsModalOpen, setIsInstructionsModalOpen] = useState(false);
+   const handleOpenInstructionsModal = () => {
+     setIsDestinationModalOpen(false);
+     setIsInstructionsModalOpen(true);
+   };
+   const handleCloseInstructionsModal = () => {
+     setIsValidating(true);
+     removeMarkers();
+     setIsInstructionsModalOpen(false);
+   };
+ 
+   const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
+   const handleOpenThankYouModal = () => {
+     setIsThankYouModalOpen(true);
+   };
+ 
+   //marker placing in validation
+   const [vadMarkers, setVadMarkers] = useState([]); 
+ 
+     function handleMapClick(event) {
+       // eslint-disable-next-line no-undef
+         const newMarker = new google.maps.Marker({
+             position: event.latLng,
+             map: map,
+             draggable: true
+         });
+ 
+         // eslint-disable-next-line no-undef
+         google.maps.event.addListener(newMarker, 'dragend', () => handleMarkerDrag(newMarker)); //drag marker
+         // eslint-disable-next-line no-undef
+         google.maps.event.addListener(newMarker, 'dblclick', () => removeMarker(newMarker)); //remove marker when double clicked
+ 
+         setVadMarkers(prevMarkers => [...prevMarkers, newMarker]);
+     }
+ 
+     function handleMarkerDrag(marker) {
+       console.log('Marker dragged:', marker.getPosition());
+   }
+ 
+     function removeMarker(markerToRemove) {
+       markerToRemove.setMap(null);
+       setVadMarkers(prevMarkers => prevMarkers.filter(marker => marker !== markerToRemove));
+   }
+ 
+   useEffect(() => {
+     if (isValidating) {
+       // eslint-disable-next-line no-undef
+         google.maps.event.addListener(map, 'click', handleMapClick);
+     } 
+ 
+     return () => {
+         vadMarkers.forEach(marker => marker.setMap(null));
+         setVadMarkers([]); 
+     };
+     }, [isValidating, map]);
+ 
+     const [validationComplete, setValidationComplete] = useState(false);
+ 
+     const endValidation = () => {
+       setValidationComplete(true);
+     }
+ 
+     useEffect(() => {
+       if (validationComplete) {
+         const markerPositions = [];
+     
+         // Loop through each marker to fetch its position
+         vadMarkers.forEach((marker, index) => {
+           const position = marker.position;
+          markerPositions.push({ lat: position.lat(), lng: position.lng() });
+         });
+         
+         console.log(markerPositions);
+          navigate('/validation', { state: markerPositions });
+       }
+     }, [validationComplete, vadMarkers]);
   
 
   return isLoaded ? (
@@ -427,6 +524,46 @@ async function renderMarkers(poiArr, map) {
       >
         { /* Child components, such as markers, info windows, etc. */ }
         <LeftDrawer></LeftDrawer>
+        <div>
+          <button onClick={handleOpenDestinationModal}>Destination</button>
+          <Modal isOpen={isDestinationModalOpen}
+            title1="You have reached your "
+            title2="destination"
+            title3="!"
+            description2="Please report any issues along your route, such as road closures"
+            buttonText1="Issue to Report"
+            onClick1={handleOpenInstructionsModal}
+            buttonText2="Nothing to Report"
+            onClick2={handleOpenFeedbackModal}
+          />
+
+          <Modal isOpen={isFeedbackModalOpen}
+            title1="Thank you for navigating with us!"
+            description2="Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!"
+            buttonText1="Feedback Form"
+            onClick1="/feedback"
+          />
+
+          <Modal isOpen={isInstructionsModalOpen}
+            title1="Report an issue"
+            description1="1. Tap on the point(s) "
+            description2="on the route where you encountered the issue"
+            description3="2. Tap 'NEXT' "
+            description4="to leave a comment on the issue"
+            buttonText1="START"
+            onClick1={handleCloseInstructionsModal}
+          />
+
+          <Modal isOpen={isThankYouModalOpen}
+            title1="Thank you for your input!"
+            description2="Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!"
+            buttonText1="Feedback Form"
+            onClick1="/feedback"
+          />
+        </div>
+        {isValidating && <div style={{marginLeft: 260, marginTop: 550}}>
+        <Button text="NEXT" onClick={endValidation} fontSize="18px" color="primary" height="40px" width="auto" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} ></Button>
+        </div>}
         {directionsResponse && (
         <>
           <Card
@@ -439,7 +576,8 @@ async function renderMarkers(poiArr, map) {
           />
         </>
         )}
-        <Drawer duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>
+        {!isValidating && <Drawer handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
+        handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>}
       </GoogleMap>
   ) : <></>
 }

@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useLocation } from 'react-router-dom';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -63,6 +64,10 @@ const FrozenBar = styled('div')({
 });
 
 const Validation = () => {
+  const location = useLocation();
+  const markerLocations = location.state;
+  console.log(markerLocations)
+
   const [textFieldValue, setTextFieldValue] = useState('');
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
