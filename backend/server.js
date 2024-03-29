@@ -9,6 +9,9 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 // for environment variables
 require("dotenv").config({ path: "../.env" });
 
+const protocol = process.env.ORIGIN_PROTOCOL;
+const namePort = process.env.ORIGIN_NAMEPORT;
+
 // get driver connection
 const dbo = require("./db/conn");
 
@@ -18,6 +21,7 @@ app.use(
   cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    origin: `${protocol}://${namePort}`
   })
 );
 

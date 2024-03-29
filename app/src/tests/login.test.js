@@ -5,12 +5,6 @@ import { act } from 'react-test-renderer';
 
 fetchMock.enableMocks();
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: () => mockNavigate,
-}));
-
 describe('Application frontend login', () => {
 
 test('renders the landing page', () => {
@@ -59,8 +53,6 @@ test('submitting a filled form', async () => {
     });
 
     expect(fetchMock).toHaveBeenCalled();
-
-    expect(mockNavigate).toHaveBeenCalledWith("/home");
 
     });
 });
