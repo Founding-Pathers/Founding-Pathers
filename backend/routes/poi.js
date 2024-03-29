@@ -1,4 +1,3 @@
-import * as turf from "@turf/turf";
 const express = require("express");
 
 // router will be added as a middleware
