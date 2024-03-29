@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AttachmentImg from '../assets/Attachment.png';
 import TextField from '@mui/material/TextField';
-import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -66,7 +66,6 @@ const Validation = () => {
   const [textFieldValue, setTextFieldValue] = useState('');
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
-  const [page, setPage] = useState("destination1");
   const inputRef = useRef(null);
   const [scrolled, setScrolled] = useState(false);
 
@@ -166,233 +165,126 @@ const Validation = () => {
     };
   }, [thumbnails]);
 
-  const handleDestinationValidation = () => {
-    setPage("destination2");
-  };
-  
-  const handleInstructionsValidation = () => {
-    setPage("instructions");
-  };
-  
-  const handleStartValidation = () => {
-    setPage("validating");
-  };
+  return (
+    <StyledContainer style={{ padding: '30px' }}>
 
-  const handleEndValidation = () => {
-    setPage("thanks");
-  };
+      <FrozenBar scrolled={scrolled}>
+        <Link to="/home"> {/* link to /home with FeedbackModal open: handleOpenFeedbackModal */} <ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+        {scrolled && (
+          <Typography
+            variant="body1"
+            sx={{
+              paddingBottom: '10px',
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: '#FF9900',
+              fontSize: '20px',
+              fontWeight: '600',
+              whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
+            }}
+          >
+            Issue Reporting Form
+          </Typography>
+        )}
+      </FrozenBar>
 
-  if (page === "destination1") {
-    return (
-      <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <StyledFormContainer style={{ maxWidth: '280px' }}>
-
-        <VerticalSpace>
-          
-        <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h1"><span style={{ color: 'black' }}>You have reached<br></br>your</span> destination!</Typography>
-          <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>Do report issues along your route, such as road closures, if any</Typography>
-        </CenterItem>
-
-        <CenterItem style={{ display: 'grid', gap: '10px' }}>
-          <Button text="Issue to report" onClick={handleInstructionsValidation} fontSize="18px" color="primary" height="40px" width="220px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-          <Button text="Nothing to report" onClick={handleDestinationValidation} fontSize="18px" color="darkGrey" height="40px" width="220px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-        </CenterItem>
-
-        </VerticalSpace>
-
-        </StyledFormContainer>
-      </StyledContainer>
-    );
-  } else if (page === "destination2") {
-      return (
-        <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <StyledFormContainer style={{ maxWidth: '280px' }}>
-  
-          <VerticalSpace>
-            
-          <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Typography variant="h1" style={{ color: 'black' }}>Thank you for <span style={{ color: '#FF9900' }}>navigating</span> with us!</Typography>
-            <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!</Typography>
-          </CenterItem>
-  
-          <CenterItem style={{ display: 'grid', gap: '10px' }}>
-            <Button text="Feedback Form" component={Link} to="/feedback" fontSize="18px" color="primary" height="40px" width="200px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-          </CenterItem>
-  
-          </VerticalSpace>
-  
-          </StyledFormContainer>
-        </StyledContainer>
-      );
-  } else if (page === "instructions") {
-    return (
-      <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <StyledFormContainer style={{ maxWidth: '270px' }}>
+      <StyledFormContainer style={{ paddingTop: '14px' }}>
 
         <VerticalSpace>
-          
-        <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h1" sx={{ color: '#000000' }}>Report an issue</Typography>
-          <br></br>
-          <span style={{ fontWeight: 'bold', color: '#FF9900' }}>1. Tap on the point(s)</span> on the route where you encountered the issue 
-          <br></br>
-          <br></br>
-          <span style={{ fontWeight: 'bold', color: '#FF9900' }}>2. Tap "NEXT"</span> to leave a comment on the issue
-        </CenterItem>
-
-        <CenterItem>
-          <Button text="START" onClick={handleStartValidation} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-        </CenterItem>
-
-        </VerticalSpace>
-
-        </StyledFormContainer>
-      </StyledContainer>
-    );
-  } else if (page === "validating") {
-    return (
-      <StyledContainer style={{ padding: '30px' }}>
-
-        <FrozenBar scrolled={scrolled}>
-          <Link to="/home"><ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
-          {scrolled && (
-            <Typography
-              variant="body1"
-              sx={{
-                paddingBottom: '10px',
-                position: 'absolute',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                color: '#FF9900',
-                fontSize: '20px',
-                fontWeight: '600',
-                whiteSpace: 'nowrap', // Prevent the text from wrapping to the next line
-              }}
-            >
-              Issue Reporting Form
-            </Typography>
-          )}
-        </FrozenBar>
-
-        <StyledFormContainer style={{ paddingTop: '14px' }}>
-
-          <VerticalSpace>
-            <CenterItem>
-              <LeftItem>
-                <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
-                <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Issue Reporting Form</Typography>
-              </LeftItem>
-            </CenterItem>
-          </VerticalSpace>
-
-          <CenterItem>
-            <VerticalSpace>
-              <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What issue(s) did you face with the selected point(s) on the route?</Typography>
-              <TextField
-                multiline
-                rows={8}
-                style={{ width: '100%', marginBottom: '10px' }}
-                value={textFieldValue}
-                onChange={handleTextFieldChange}
-                InputProps={{
-                    style: {
-                    borderRadius: "10px",
-                    borderColor: "black",
-                    }
-                }}
-              />
-            </VerticalSpace>
-          </CenterItem>
-
-          <LeftItem>
-            <div
-              onDrop={handleDrop}
-              onClick={handleClick}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img src={AttachmentImg} alt="Attachment" style={{ height: '14px', marginRight: '3px' }} />
-                <Typography variant="body1" style={{ marginLeft: '2px', fontWeight: '500', color: '#FF9900' }}>Upload supporting images</Typography>
-                <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleFileSelect} />
-              </div>
-            </div>
-
-            <div className="thumbnail-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(65px, 1fr))', gap: '10px', marginTop: '20px' }}>
-              {thumbnails.map((thumbnail, index) => {
-                const handleClickRemove = (e) => {
-                  e.stopPropagation(); // Prevent propagation to handleThumbnailClick
-                  removeThumbnail(index);
-                };
-
-                return (
-                  <div key={index} style={{ position: 'relative' }} onClick={() => handleThumbnailClick(index)}>
-                    <img src={thumbnail.url} alt={`Thumbnail ${index}`} style={{ height: '70px', width: '70px', borderRadius: '10px', objectFit: 'cover' }} />
-                    {thumbnail.selected && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '70px',
-                          height: '70px',
-                          background: 'rgba(0,0,0,0.5)',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderRadius: '10px'
-                        }}
-                      >
-                        <IconButton aria-label="remove" style={{ color: 'white' }} onClick={handleClickRemove}>
-                          <CloseIcon style={{ fontSize: '40px' }} />
-                        </IconButton>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-          </LeftItem>
-
           <CenterItem>
             <LeftItem>
-              <Button text="BACK" onClick={handleInstructionsValidation} color="primary" height="40px" width="130px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />
+              <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
+              <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Issue Reporting Form</Typography>
             </LeftItem>
-
-            {textFieldValue && (
-              <RightItem>
-                <Button text="SUBMIT" onClick={handleEndValidation} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-              </RightItem>
-            )}
           </CenterItem>
-
-        </StyledFormContainer>
-
-      </StyledContainer>
-    );
-  } else if (page === "thanks") {
-    return (
-      <StyledContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <StyledFormContainer style={{ maxWidth: '280px' }}>
-
-        <VerticalSpace>
-          
-        <CenterItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h1"><span style={{ color: 'black' }}>Thank you for<br></br>your</span> input!</Typography>
-          <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!</Typography>
-        </CenterItem>
-
-        <CenterItem>
-          <Button text="Feedback Form" component={Link} to="/feedback" fontSize="18px" color="primary" height="40px" width="200px" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-        </CenterItem>
-
         </VerticalSpace>
 
-        </StyledFormContainer>
-      </StyledContainer>
-    );
-  }
-}
+        <CenterItem>
+          <VerticalSpace>
+            <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What issue(s) did you face with the selected point(s) on the route?</Typography>
+            <TextField
+              multiline
+              rows={8}
+              style={{ width: '100%', marginBottom: '10px' }}
+              value={textFieldValue}
+              onChange={handleTextFieldChange}
+              InputProps={{
+                  style: {
+                  borderRadius: "10px",
+                  borderColor: "black",
+                  }
+              }}
+            />
+          </VerticalSpace>
+        </CenterItem>
+
+        <LeftItem>
+          <div
+            onDrop={handleDrop}
+            onClick={handleClick}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <img src={AttachmentImg} alt="Attachment" style={{ height: '14px', marginRight: '3px' }} />
+              <Typography variant="body1" style={{ marginLeft: '2px', fontWeight: '500', color: '#FF9900' }}>Upload supporting images</Typography>
+              <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleFileSelect} />
+            </div>
+          </div>
+
+          <div className="thumbnail-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(65px, 1fr))', gap: '10px', marginTop: '20px' }}>
+            {thumbnails.map((thumbnail, index) => {
+              const handleClickRemove = (e) => {
+                e.stopPropagation(); // Prevent propagation to handleThumbnailClick
+                removeThumbnail(index);
+              };
+
+              return (
+                <div key={index} style={{ position: 'relative' }} onClick={() => handleThumbnailClick(index)}>
+                  <img src={thumbnail.url} alt={`Thumbnail ${index}`} style={{ height: '70px', width: '70px', borderRadius: '10px', objectFit: 'cover' }} />
+                  {thumbnail.selected && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '70px',
+                        height: '70px',
+                        background: 'rgba(0,0,0,0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '10px'
+                      }}
+                    >
+                      <IconButton aria-label="remove" style={{ color: 'white' }} onClick={handleClickRemove}>
+                        <CloseIcon style={{ fontSize: '40px' }} />
+                      </IconButton>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+        </LeftItem>
+
+        <CenterItem>
+          <LeftItem>
+              <Button text="BACK" component={Link} to="/home" /* link to /home with InstructionsModal open: handleOpenInstructionsModal */ color="primary" height="40px" width="130px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />
+          </LeftItem>
+
+          {textFieldValue && (
+            <RightItem>
+              <Button text="SUBMIT" component={Link} to="/home" /* link to /home with ThankYouModal open: handleOpenThankYouModal */ color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
+            </RightItem>
+          )}
+        </CenterItem>
+
+      </StyledFormContainer>
+
+    </StyledContainer>
+  );
+};
 
 export default Validation;

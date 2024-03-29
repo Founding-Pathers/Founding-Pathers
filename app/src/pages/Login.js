@@ -83,6 +83,7 @@ async function onSubmit(e){
     headers: {
       "Content-Type" : "application/json",
     },
+    credentials: 'include',
     body: JSON.stringify(form),
   })
   // handles response object from backend

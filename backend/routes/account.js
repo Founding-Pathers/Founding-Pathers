@@ -32,16 +32,6 @@ router.post("/register", async (req, res, next) => {
     // Save the user to the database
     await db_connect.collection("userAccount").insertOne(newUser);
 
-    // Generate token using user's ID
-    const token = createSecretToken(newUser._id);
-
-    // Set the token as a cookie in the response
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 86400000,
-    });
-
     // Respond with a success message or error message
     res
       .status(201)
@@ -79,11 +69,14 @@ router.post("/login", async (req, res, next) => {
       next()
     }
     else{
-    const token = createSecretToken(existingUser._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
+    const token = createSecretToken(existingUser.email);
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      // .status(200)
+      // .json({ message: "Success" });
 
     // Store email in localStorage
     localStorage.setItem('userEmail', email);
