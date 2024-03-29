@@ -79,6 +79,12 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [rememberPreferences, setRememberPreferences] = useState(false); 
+
+  const handlePreferencesChange = () => {
+    console.log(rememberPreferences)
+    setRememberPreferences(!rememberPreferences); 
+  };
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -99,7 +105,11 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   //Path Preferences State
   const handleChipClickPath = (chipLabel) => {
-    setSelectedPaths(chipLabel);
+    if (selectedPaths === chipLabel) {
+      setSelectedPaths(null); 
+    } else {
+      setSelectedPaths(chipLabel); 
+    }
   };
 
   //Travel Mode State
@@ -108,11 +118,123 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
     setOpen(false);
     handleSelecting();
     handleRemoveMarks();
+    handleRememberPreferences();
     setNavigating(true);
     if (calculateRoute && chipLabel !== null) {
       calculateRoute(chipLabel);
     }
   };
+
+  //get email
+  const [userEmail, setUserEmail] = useState(''); 
+
+  //Remember preferences
+  const handleRememberPreferences = async () => {
+    // Check if the checkbox is checked
+    setUserEmail(localStorage.getItem('userEmail'));
+    console.log(rememberPreferences)
+    if (rememberPreferences) {
+      var map = { FNB: "f_and_b", sheltered: "is_sheltered", TOURISM: "tourist_attraction", BUSSTOP: "bus_stop", MRT: "mrt", PICKUP: "pickup_dropoff", nature: "nature" }
+      var mapped = { f_and_b: "false", sheltered: "false", tourist_attraction: "false", bus_stop: "false", mrt: "false", pickup_dropoff: "false", nature: "false" }
+
+      for (var i = 0; i < selectedPaths.split(", ").length; i++) { 
+        mapped[map[selectedPaths.split(", ")[i]]] = "true";
+      }
+      
+      console.log(selectedPOIs);
+      for (var i = 0; i < selectedPOIs.split(", ").length; i++) { 
+        mapped[map[selectedPOIs.split(", ")[i]]] = "true";
+      }
+
+      console.log(mapped)
+
+      try {
+        const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/update`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: localStorage.getItem("userEmail"), 
+            f_and_b: mapped["f_and_b"],
+            is_sheltered: mapped["is_sheltered"],
+            tourist_attraction: mapped["tourist_attraction"],
+            bus_stop: mapped["bus_stop"],
+            mrt: mapped["mrt"],
+            pickup_dropoff: mapped["pickup_dropoff"],
+            nature: mapped["nature"]
+          })
+        });
+        if (response.ok) {
+          console.log('User preference updated successfully');
+        } else {
+          console.error('Failed to update user preference');
+        }
+      } catch (error) {
+        console.error('Error updating user preference:', error.message);
+      }
+    } else {
+      console.log('Checkbox is not checked');
+    }
+  };
+
+  //get remembered preferences
+  async function getUserPreferences() {
+    setUserEmail(localStorage.getItem('userEmail'));
+    console.log(userEmail)
+    try {
+      const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/userpref/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: localStorage.getItem('userEmail') })
+      });
+  
+      console.log('Response status code:', response.status);
+  
+      if (response.status === 200) {
+        const responseBody = await response.text();
+        if (!responseBody) {
+          console.log('Empty response body');
+          return null;
+        }
+
+        const preferences = JSON.parse(responseBody);
+        console.log('User preferences:', preferences);
+
+        var map = { f_and_b: "FNB", is_sheltered: "sheltered", tourist_attraction: "TOURISM" , bus_stop : "BUSSTOP", mrt: "MRT", pickup_dropoff: "PICKUP", nature: "nature" }
+
+        var pois = [];
+        for (var key in map) {
+          if (preferences[key] == true) {
+            if (key == "is_sheltered" || key == "nature") {
+              console.log(map[key]);
+              handleChipClickPath(map[key]);
+            }
+            else {
+              console.log(map[key])
+              pois.push(map[key]);
+              // handleChipClick(map[key]);
+            }
+          }
+        }
+        setSelectedPOIs(pois);
+
+        return preferences;
+      } else {
+        console.error('Failed to fetch user preferences');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching user preferences:', error.message);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    getUserPreferences();
+  }, []);
 
   //Switch start and destination
   const [location, setLocation] = useState('');
@@ -140,7 +262,6 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
 
   // Function to handle clicking on a list item
   const handleListClick = (key) => {
-    console.log('hello')
     if (isTextFieldFocused === 'location') {
       setLocation(key);
     } else if (isTextFieldFocused === 'destination') {
@@ -224,7 +345,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
           </Box>
           <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
-            <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 6px 0px 6px' }}></img>
+            <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 3px 0px 3px' }}></img>
             {/* <SearchBox
             //  value={location}
              location={location}
@@ -264,8 +385,12 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
 
           <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
-            '@media (min-width: 390px)': {
+            '@media (min-width: 385px)': {
               ml: 3.5,
+              mr: 0.5,
+            },
+            '@media (max-width: 385px)': {
+              ml: 2,
               mr: 0.5,
             }}}>
             <img src={DottedLine} style={{ width: '2px', height: '18px' }}></img>
@@ -273,11 +398,14 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           </Box>
 
           <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
-            <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 6px' }}></img>
+            <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 3px',
+          '@media (maxWidth: 360px)': {
+            margin: '9px 2px', // Adjusted margin for screens up to 360px width
+          } }}></img>
               {/* <SearchBox
               // value={destination}
               location={destination}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => setLocation(e.target.value)},
               /> */}
               <TextField
                 inputRef={destinationRef}
@@ -371,7 +499,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
           ></Chip>
           </ChipBox>
           <Box sx={{mx: 3.5, my: 0.5}}>
-          <Checkbox width="17px" fontSize="14px" label="Remember my preferences for future paths"></Checkbox>
+          <Checkbox checked={rememberPreferences} onChange={handlePreferencesChange} width="17px" fontSize="14px" label="Remember my preferences for future paths"></Checkbox>
           </Box>
 
           <Typography variant="filterh1" sx={{ px: 3.5, pt: 1.5, pb: 0.5, display: "block" }}>2. Travelling Mode</Typography>
@@ -387,6 +515,7 @@ function SwipeableEdgeDrawer({window, originRef, destinationRef, calculateRoute,
             <Chip icon={DirectionsBikeIcon} height="74px" width="74px" iconWidth="55px" iconHeight="55px" pl={1.5} borderRadius="50%" unselectedColor={theme.palette.travelSelect.main} selectedColor={theme.palette.travelSelect.secondary}
             // isSelected={selectedMode === "cycling"}
             onClick={() => handleChipClickTravelMode("cycling")}
+            disabled={selectedPaths === "sheltered"}
             ></Chip>
             <Typography variant="filterLabel" sx={{ py: 1, display: "block", textAlign: "center" }}>Cycling</Typography>
             </Box>

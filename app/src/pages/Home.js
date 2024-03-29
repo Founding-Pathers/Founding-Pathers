@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import Box from '@mui/material/Box';
 import LeftDrawer from '../components/navigation/LeftDrawer';
 import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
@@ -434,7 +433,7 @@ async function renderMarkers(poiArr, map) {
             time={(directionsResponse.route[0].properties.TimeTaken).toFixed(0) + " minutes"}
             distance={((directionsResponse.route[0].properties.TRAVELLING)/1000).toFixed(1) + " km"}
             mode={(directionsResponse.route[0].properties.TRAVEL_MOD).split("_")[0]}
-            filters={selectedPOIs.join(", ")}
+            filters={selectedPOIs.join(", ") + ", " + (directionsResponse.route[0].properties.TRAVEL_MOD).split("_")[1]}
             onClick={() => startRouting()}
             display = { selecting ? 'flex' : 'none'}
           />

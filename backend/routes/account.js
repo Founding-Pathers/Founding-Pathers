@@ -2,9 +2,13 @@ const express = require("express");
 const User = require("../models/User");
 const { createSecretToken } = require("../util/SecretToken");
 const bcrypt = require("bcryptjs");
+const { LocalStorage } = require('node-localstorage');
 const dbo = require("../db/conn");
 
 const router = express.Router();
+
+// Create a new instance of LocalStorage
+const localStorage = new LocalStorage('./scratch');
 
 // Route for user registration
 router.post("/register", async (req, res, next) => {
@@ -71,8 +75,16 @@ router.post("/login", async (req, res, next) => {
         httpOnly: true,
         secure: true,
       })
-      .status(200)
-      .json({ message: "Success" });
+      // .status(200)
+      // .json({ message: "Success" });
+
+    // Store email in localStorage
+    localStorage.setItem('userEmail', email);
+
+    // returns that user has logged in successfully
+    res.status(200).json({ message: "Success", email: existingUser.email });
+    console.log(localStorage.getItem('userEmail'))
+    next();
   }
   } catch (error) {
     console.error(error);
@@ -82,6 +94,7 @@ router.post("/login", async (req, res, next) => {
 // logout user
 router.post("/logout", (req, res) => {
   // console.log("Logging out user");
+  localStorage.clear();
   res.clearCookie("token");
   res.redirect(200, "/logout");
 });
