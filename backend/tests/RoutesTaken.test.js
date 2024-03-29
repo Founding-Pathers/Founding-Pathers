@@ -40,7 +40,8 @@ describe('routes taken', () => {
 
 const newRoutesTaken = {
     email : "test@example.com",
-    route_index: "90123",
+    route_id: "90123",
+    travel_mode: "Walking",
     user_validated: true,
     edges_validation: new Map([
         ["entity1", 
@@ -54,8 +55,9 @@ const newRoutesTaken = {
 }
 
 const newRoutesTakenWithoutEmail = {
-    route_index: "90123",
+    route_id: "90123",
     user_validated: true,
+    travel_mode: "Walking",
     edges_validation:
         {
             validation: null,
