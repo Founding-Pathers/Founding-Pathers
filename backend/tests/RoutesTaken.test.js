@@ -51,7 +51,8 @@ const newRoutesTaken = {
             }
         ]
     ]),
-    deleted: false
+    deleted: false,
+    created_at: new Date()
 }
 
 const newRoutesTakenWithoutEmail = {
@@ -63,5 +64,6 @@ const newRoutesTakenWithoutEmail = {
             validation: null,
             issue_desc: null
         },
-    deleted: false
+    deleted: false,
+    created_at: new Date()
 }
