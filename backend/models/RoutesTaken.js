@@ -3,16 +3,20 @@ var mongoose = require("mongoose"),
 
 // Define a schema for the tuple
 const arraySchema = new mongoose.Schema({
-  validation: {
-    type: Boolean,
-    required: true,
+  lon: {
+    type: Number,
+    required: false,
   },
-  issue_desc: {
-    type: String,
+  lat: {
+    type: Number,
     required: false,
   },
   pictures: {
     type: [String],
+    required: false,
+  },
+  comments: {
+    type: String,
     required: false,
   },
 });

@@ -41,27 +41,25 @@ routesTaken.route("/routehistory/user").post(async function (req, res) {
 // Create a new record
 routesTaken.route("/routehistory/add").post(async function (req, response) {
   let db_connect = dbo.getDbLogging();
-  let edges_validation = req.body.edges_validation;
+  let point_validation = req.body.point_validation;
 
-  // edges_validation is a dictionary of dictionaries
-  for (let key in edges_validation) {
-    let edge = edges_validation[key];
-    let pictures = edge.pictures;
-    let validated = edge.validation;
-    let base64Images = [];
-    if (validated === false) {
-      continue;
+  if (req.body.user_validated == true) {
+    // point_validation is an dictionary of dictionaries
+    for (let edge in point_validation) {
+      let point = point_validation[edge];
+      let pictures = point.pictures;
+      let base64Images = [];
+      for (let i = 0; i < pictures.length; i++) {
+        await imageToBase64(pictures[i])
+          .then((response) => {
+            base64Images.push(response);
+          })
+          .catch((error) => {
+            console.log(error); // Expection error....
+          });
+      }
+      point.pictures = base64Images;
     }
-    for (let i = 0; i < pictures.length; i++) {
-      await imageToBase64(pictures[i])
-        .then((response) => {
-          base64Images.push(response);
-        })
-        .catch((error) => {
-          console.log(error); // Expection error....
-        });
-    }
-    edge.pictures = base64Images;
   }
 
   let myobj = {
@@ -69,7 +67,8 @@ routesTaken.route("/routehistory/add").post(async function (req, response) {
     route_id: req.body.route_id,
     travel_mode: req.body.travel_mode,
     user_validated: req.body.user_validated,
-    edges_validation: edges_validation,
+    comments: req.body.comments,
+    point_validation: point_validation,
     deleted: false,
     created_at: new Date(),
   };
