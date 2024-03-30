@@ -6,7 +6,7 @@ import CircleChecked from '@mui/icons-material/CheckCircleOutline';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked'; 
 import Typography from '@mui/material/Typography'; 
 
-export default function FormControlLabelPosition({ value, label, labelPlacement, width, fontSize }) {
+export default function FormControlLabelPosition({ value, label, labelPlacement, width, fontSize, checked, onChange }) {
   return (
     <FormControl component="fieldset">
       <FormControlLabel
@@ -14,6 +14,8 @@ export default function FormControlLabelPosition({ value, label, labelPlacement,
         control={<Checkbox 
           icon={<CircleUnchecked sx={{ width: width }}/>}
           checkedIcon={<CircleChecked sx={{ width: width }}/>}
+          checked={checked}
+          onChange={onChange}
         />}
         label={<Typography variant="body1" sx={{ fontSize: fontSize }}>{label}</Typography>}
         labelPlacement={labelPlacement}

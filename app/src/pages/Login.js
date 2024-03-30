@@ -97,9 +97,10 @@ async function onSubmit(e){
   .then((data) => {
     console.log(data);
     if (data.message === "Success") {
+      localStorage.setItem("userEmail",data.email);
       navigate("/home");
     }
-    else if (data === "User does not exist"){
+    else if (data.message === "User does not exist"){
       setErrors(prevErrors => ({
         ...prevErrors,
         userNotExist: "User does not exist / Invalid credentials"

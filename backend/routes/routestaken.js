@@ -17,7 +17,6 @@ routesTaken.route("/routehistory").get(async function (req, res) {
     .find()
     .toArray()
     .then((data) => {
-      console.log(data);
       res.json(data);
     });
 });

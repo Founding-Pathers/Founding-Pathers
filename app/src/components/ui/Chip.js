@@ -12,8 +12,9 @@ export default function ClickableChips({
   pl,
   unselectedColor,
   selectedColor,
-  isSelected = false,
+  isSelected,
   onClick,
+  disabled
 }) {
   return (
     <Chip
@@ -32,6 +33,7 @@ export default function ClickableChips({
           backgroundColor: selectedColor,
         },
       }}
+      disabled={disabled}
     />
   );
 }
