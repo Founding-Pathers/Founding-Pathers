@@ -49,9 +49,9 @@ router.route("/routefeedback/add").post(async function (req, resp, next) {
     email: email,
     overall_exp: overall_exp,
     general_comments: general_comments,
-    previous_use: previous_use === "true" ? true : false,
-    faster_path: faster_path === "true" ? true : false,
-    more_suited: more_suited === "true" ? true : false,
+    previous_use: previous_use,
+    faster_path: faster_path,
+    more_suited: more_suited,
     reasons: reasons,
     created_at: new Date(),
   };
