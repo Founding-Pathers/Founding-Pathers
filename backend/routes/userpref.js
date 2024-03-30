@@ -21,7 +21,7 @@ router.route("/userpref").get(async function (req, res) {
 });
 
 // Retrieve user preference by useraccount email
-router.route("/userpref/").get(function (req, res, next) {
+router.route("/userpref/").post(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
   let myquery = { email: req.body.email };
   db_connect
@@ -57,7 +57,6 @@ router.route("/userpref/add").post(async function (req, resp, next) {
   } else {
     let myobj = {
       email: email,
-      wheelchair_friendly: wheelchair_friendly === "true" ? true : false,
       f_and_b: f_and_b === "true" ? true : false,
       is_sheltered: is_sheltered === "true" ? true : false,
       tourist_attraction: tourist_attraction === "true" ? true : false,
@@ -85,8 +84,6 @@ router.route("/userpref/update").post(function (req, resp, next) {
   let myquery = { email: req.body.email };
   let newvalues = {
     $set: {
-      wheelchair_friendly:
-        req.body.wheelchair_friendly === "true" ? true : false,
       f_and_b: req.body.f_and_b === "true" ? true : false,
       is_sheltered: req.body.is_sheltered === "true" ? true : false,
       tourist_attraction: req.body.tourist_attraction === "true" ? true : false,

@@ -94,6 +94,39 @@ const Create = () => {
           throw new Error('Failed to register');
         }
 
+        //add user preferences for later use
+        const userData = {
+          email: form.email,
+          wheelchair_friendly: false,
+          f_and_b: false,
+          is_sheltered: false,
+          tourist_attraction: false,
+          bus_stop: false,
+          mrt: false,
+          pickup_dropoff: false,
+          nature: false
+        };
+        
+        await fetch(`${protocol}://${namePort}/userpref/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(userData)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error("There was a problem with the request:", error);
+        });
+
         setForm({ email: "", password: "", confirmPassword: "" });
         // Handle successful registration (redirect or show success message)
         navigate("/");

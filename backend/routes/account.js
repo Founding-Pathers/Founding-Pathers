@@ -2,9 +2,13 @@ const express = require("express");
 const User = require("../models/User");
 const { createSecretToken } = require("../util/SecretToken");
 const bcrypt = require("bcryptjs");
+const { LocalStorage } = require('node-localstorage');
 const dbo = require("../db/conn");
 
 const router = express.Router();
+
+// Create a new instance of LocalStorage
+const localStorage = new LocalStorage('./scratch');
 
 // Route for user registration
 router.post("/register", async (req, res, next) => {
@@ -27,16 +31,6 @@ router.post("/register", async (req, res, next) => {
     const newUser = new User({ first_name: firstName, last_name: lastName, email, password: hashPassword, createdAt: new Date(), updatedAt: new Date() });
     // Save the user to the database
     await db_connect.collection("userAccount").insertOne(newUser);
-
-    // Generate token using user's ID
-    const token = createSecretToken(newUser._id);
-
-    // Set the token as a cookie in the response
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 86400000,
-    });
 
     // Respond with a success message or error message
     res
@@ -75,15 +69,21 @@ router.post("/login", async (req, res, next) => {
       next()
     }
     else{
-    const token = createSecretToken(existingUser._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
-    // returns that user has logged in successfully
+    const token = createSecretToken(existingUser.email);
     res
-      .status(200)
-      .json("Success");
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      // .status(200)
+      // .json({ message: "Success" });
+
+    // Store email in localStorage
+    localStorage.setItem('userEmail', email);
+
+    // returns that user has logged in successfully
+    res.status(200).json({ message: "Success", email: existingUser.email });
+    console.log(localStorage.getItem('userEmail'))
     next();
   }
   } catch (error) {
@@ -94,6 +94,7 @@ router.post("/login", async (req, res, next) => {
 // logout user
 router.post("/logout", (req, res) => {
   // console.log("Logging out user");
+  localStorage.clear();
   res.clearCookie("token");
   res.redirect(200, "/logout");
 });
