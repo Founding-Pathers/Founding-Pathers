@@ -46,8 +46,10 @@ const newRoutesTaken = {
     edges_validation: new Map([
         ["entity1", 
             {
-                validation: true, 
-                issue_desc: "test description" 
+                lon: 123,
+                lat: 123,
+                pictures: "true", 
+                comments: "test description" 
             }
         ]
     ]),
@@ -59,11 +61,16 @@ const newRoutesTakenWithoutEmail = {
     route_id: "90123",
     user_validated: true,
     travel_mode: "Walking",
-    edges_validation:
-        {
-            validation: null,
-            issue_desc: null
-        },
+    edges_validation: new Map([
+        ["entity1", 
+            {
+                lon: 123,
+                lat: 123,
+                pictures: "true", 
+                comments: "test description" 
+            }
+        ]
+    ]),
     deleted: false,
     created_at: new Date()
 }
