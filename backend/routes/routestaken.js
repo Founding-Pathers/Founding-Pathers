@@ -71,6 +71,7 @@ routesTaken.route("/routehistory/add").post(async function (req, response) {
     user_validated: req.body.user_validated,
     edges_validation: edges_validation,
     deleted: false,
+    created_at: new Date(),
   };
   db_connect.collection("routesTaken").insertOne(myobj, function (err, res) {
     if (err) throw err;

@@ -45,6 +45,10 @@ const RoutesTakenSchema = new Schema(
       type: Boolean,
       required: true,
     },
+    created_at: {
+      type: Date,
+      required: true,
+    },
   },
   {
     timestamps: true,
