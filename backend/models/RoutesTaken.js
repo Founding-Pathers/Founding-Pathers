@@ -2,12 +2,20 @@ var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
 // Define a schema for the tuple
-const tupleSchema = new mongoose.Schema({
-  validation: {
-    type: Boolean,
-    required: true,
+const arraySchema = new mongoose.Schema({
+  lon: {
+    type: Number,
+    required: false,
   },
-  issue_desc: {
+  lat: {
+    type: Number,
+    required: false,
+  },
+  pictures: {
+    type: [String],
+    required: false,
+  },
+  comments: {
     type: String,
     required: false,
   },
@@ -20,7 +28,11 @@ const RoutesTakenSchema = new Schema(
       type: String,
       required: true,
     },
-    route_index: {
+    route_id: {
+      type: String,
+      required: true,
+    },
+    travel_mode: {
       type: String,
       required: true,
     },
@@ -30,11 +42,15 @@ const RoutesTakenSchema = new Schema(
     },
     edges_validation: {
       type: Map,
-      of: tupleSchema,
-      required: true,
+      of: arraySchema,
+      required: false,
     },
     deleted: {
       type: Boolean,
+      required: true,
+    },
+    created_at: {
+      type: Date,
       required: true,
     },
   },
