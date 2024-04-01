@@ -6,7 +6,6 @@ const router = express.Router();
 
 // Connect to the database
 const dbo = require("../db/conn");
-const { ObjectId } = require("mongodb");
 
 // Retrieve list of all user preferences (admin)
 router.route("/routefeedback").get(async function (req, res) {
@@ -16,15 +15,14 @@ router.route("/routefeedback").get(async function (req, res) {
     .find()
     .toArray()
     .then((data) => {
-      console.log(data);
       res.json(data);
     });
 });
 
-// Retrieve route feedback by routestaken_id
+// Retrieve route feedback by user email
 router.route("/routefeedback/user").get(function (req, res, next) {
   let db_connect = dbo.getDbLogging();
-  let myquery = { routestaken_id: ObjectId(req.body.id) };
+  let myquery = { email: req.body.email };
   db_connect
     .collection("routeFeedback")
     .findOne(myquery, function (err, result) {
@@ -38,7 +36,7 @@ router.route("/routefeedback/add").post(async function (req, resp, next) {
   let db_connect = dbo.getDbLogging();
 
   const {
-    routestaken_id,
+    email,
     overall_exp,
     general_comments,
     previous_use,
@@ -48,15 +46,14 @@ router.route("/routefeedback/add").post(async function (req, resp, next) {
   } = req.body;
 
   let myobj = {
-    routestaken_id: routestaken_id,
+    email: email,
     overall_exp: overall_exp,
     general_comments: general_comments,
-    previous_use: previous_use === "true" ? true : false,
-    faster_path: faster_path === "true" ? true : false,
-    more_suited: more_suited === "true" ? true : false,
+    previous_use: previous_use,
+    faster_path: faster_path,
+    more_suited: more_suited,
     reasons: reasons,
     created_at: new Date(),
-    updated_at: new Date(),
   };
   try {
     db_connect.collection("routeFeedback").insertOne(myobj);
