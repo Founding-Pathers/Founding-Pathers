@@ -328,7 +328,7 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
         >
           <Puller />
           {/* IS ROUTING */}
-          <Box sx={{display: (isRouting && !isEditing) ? 'flex':'none', mt: 3, justifyContent: 'space-evenly', alignItems: 'start'}}>
+          <Box sx={{display: (isRouting && !isEditing) ? 'flex':'none', mt: 5, mb:4, justifyContent: 'space-evenly', alignItems: 'start'}}>
             <Box sx={{ml: 2}}>
               <Button text="Arrived" onClick={handleOpenDestinationModal} color="green" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
             </Box>
@@ -337,7 +337,6 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
               <Typography variant="navigatingTitle" sx={{display: 'block', mt: 0.5}}>{(duration/1).toFixed(0)} minutes</Typography>
               <Typography variant="filterLabel" sx={{display: 'block', mt: 0.5}}>{(distance/1000).toFixed(1)} km away</Typography>
               <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{selectedPOIs}</Typography>
-              <Typography variant="navigatingSaveDest" sx={{display: 'block', mt: 0.5}}><img src={Saved} style={{width:"18px", height:"16px", marginRight: "5px"}}></img>Save Destination</Typography>
             </Box>
             <Box sx={{ml: 2}}>
               <Button text="End" onClick={endRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
