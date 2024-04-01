@@ -67,15 +67,12 @@ const FrozenBar = styled('div')({
 });
 
 const Feedback = () => {
-  const [textFieldValue1, setTextFieldValue1] = useState('');
-  const [textFieldValue2, setTextFieldValue2] = useState('');
-  const [selectedRating, setSelectedRating] = useState(null);
-  const [yesClicked1, setyesClicked1] = useState(false);
-  const [noClicked1, setnoClicked1] = useState(false);
-  const [yesClicked2, setyesClicked2] = useState(false);
-  const [noClicked2, setnoClicked2] = useState(false);
-  const [yesClicked3, setyesClicked3] = useState(false);
-  const [noClicked3, setnoClicked3] = useState(false);
+  const [generalComments, setgeneralComments] = useState('');
+  const [reasonsComments, setreasonsComments] = useState('');
+  const [selectedRating, setSelectedRating] = useState('');
+  const [previousUse, setPreviousUse] = useState(false);
+  const [fasterPath, setFasterPath] = useState(false);
+  const [moreSuited, setMoreSuited] = useState(false);
   const [textFieldsFilled1, setTextFieldsFilled1] = useState(false);
   const [textFieldsFilled2, setTextFieldsFilled2] = useState(false);
   const [page, setPage] = useState("no");
@@ -96,46 +93,28 @@ const Feedback = () => {
     };
   }, []);
 
-  const handleTextFieldChange1 = (event) => {
-    setTextFieldValue1(event.target.value);
+  const handleGeneralCommentsChange = (event) => {
+    setgeneralComments(event.target.value);
   };
 
-  const handleTextFieldChange2 = (event) => {
-    setTextFieldValue2(event.target.value);
+  const handleReasonsCommentsChange = (event) => {
+    setreasonsComments(event.target.value);
   };
 
   const handleRatingClick = (rating) => {
     setSelectedRating(rating);
   };
 
-  const handleYesClick1 = () => {
-    setyesClicked1(true);
-    setnoClicked1(false);
-  };
-  
-  const handleNoClick1 = () => {
-    setnoClicked1(true);
-    setyesClicked1(false);
-  };  
-
-  const handleYesClick2 = () => {
-    setyesClicked2(true);
-    setnoClicked2(false);
-  };
-  
-  const handleNoClick2 = () => {
-    setnoClicked2(true);
-    setyesClicked2(false);
+  const handlePreviousUse = (boolean) => {
+    setPreviousUse(boolean);
   };
 
-  const handleYesClick3 = () => {
-    setyesClicked3(true);
-    setnoClicked3(false);
+  const handleFasterPath = (boolean) => {
+    setFasterPath(boolean);
   };
-  
-  const handleNoClick3 = () => {
-    setnoClicked3(true);
-    setyesClicked3(false);
+
+  const handleMoreSuited = (boolean) => {
+    setMoreSuited(boolean);
   };
 
   const handleNoPage = () => {
@@ -152,21 +131,21 @@ const Feedback = () => {
 
   useEffect(() => {
     // Check if all text fields are filled
-    if (textFieldValue1.trim() !== '') {
+    if (generalComments.trim() !== '') {
       setTextFieldsFilled1(true);
     } else {
       setTextFieldsFilled1(false);
     }
-  }, [textFieldValue1]);
+  }, [generalComments]);
 
   useEffect(() => {
     // Check if all text fields are filled
-    if (textFieldValue2.trim() !== '') {
+    if (reasonsComments.trim() !== '') {
       setTextFieldsFilled2(true);
     } else {
       setTextFieldsFilled2(false);
     }
-  }, [textFieldValue2]);
+  }, [reasonsComments]);
 
   useEffect(() => {
     if (page === "thanks") {
@@ -184,7 +163,36 @@ const Feedback = () => {
     handleThanksPage();
   };
 
-  async function onSubmit(){
+  async function onSubmit() {
+    try {
+      const email = localStorage.getItem("userEmail");
+
+      const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/routefeedback/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          overall_exp: selectedRating,
+          general_comments: generalComments,
+          previous_use: previousUse,
+          faster_path: fasterPath,
+          more_suited: moreSuited,
+          reasons: reasonsComments 
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const data = await response.json();
+      console.log("Feedback submitted:", data);
+      
+    } catch (error) {
+      throw new Error('Error submitting feedback: ', error);
+    }
   }
 
   if (page === "no") {
@@ -223,7 +231,7 @@ const Feedback = () => {
             </CenterItem>
           </VerticalSpace>
 
-          <CenterItem>
+          <LeftItem sx={{ paddingTop: '25px' }}>
             <VerticalSpace>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>How would you rate your overall experience using UR-Active?</Typography>
               <div className="emoji-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '45px' }}>
@@ -259,17 +267,17 @@ const Feedback = () => {
                   />
                 </div>
             </VerticalSpace>
-          </CenterItem>
+          </LeftItem>
 
-          <CenterItem>
+          <LeftItem sx={{ paddingTop: '25px' }}>
             <VerticalSpace>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>Do you have any general comments about your experience using UR-Active?</Typography>
               <TextField
                 multiline
                 rows={4}
                 style={{ width: '100%' }}
-                value={textFieldValue1}
-                onChange={handleTextFieldChange1}
+                value={generalComments}
+                onChange={handleGeneralCommentsChange}
                 InputProps={{
                   style: {
                     borderRadius: "10px",
@@ -278,9 +286,9 @@ const Feedback = () => {
                 }}
               />
             </VerticalSpace>
-          </CenterItem>
+          </LeftItem>
 
-          <CenterItem>
+          <LeftItem sx={{ paddingTop: '25px' }}>
             <VerticalSpace>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>Have you previously used this route or path on a different mapping application, such as Google Maps?</Typography>
               <LeftItem>
@@ -289,27 +297,27 @@ const Feedback = () => {
                     variant="outlined"
                     color="black"
                     size="small"
-                    style={{ backgroundColor: yesClicked1 ? '#FF9900' : noClicked1 ? '' : '',  color: yesClicked1 ? 'white' : noClicked1 ? '' : 'black',  fontWeight: yesClicked1 ? '600' : noClicked1 ? '' : '',  borderColor: yesClicked1 ? 'white' : noClicked1 ? '' : 'primary' }}
+                    style={{ backgroundColor: previousUse === true ? '#FF9900' : '',  color: previousUse === true ? 'white' : 'black',  fontWeight: previousUse === true ? '600' : '',  borderColor: previousUse === true ? '#FF9900' : 'black' }}
                     sx={{ fontSize: '16px', fontWeight: 'regular', textTransform: 'capitalize', borderRadius: '10px' }}
-                    onClick={handleYesClick1}
+                    onClick={() => handlePreviousUse(true)}
                   >Yes</Button>
                   <Button
                     variant="outlined"
                     color="black"
                     size="small"
-                    style={{ backgroundColor: noClicked1 ? '#FF9900' : yesClicked1 ? '' : '',  color: noClicked1 ? 'white' : yesClicked1 ? '' : 'black',  fontWeight: noClicked1 ? '600' : yesClicked1 ? '' : '',  borderColor: noClicked1 ? 'white' : yesClicked1 ? '' : 'primary' }}
+                    style={{ backgroundColor: previousUse === false ? '#FF9900' : '',  color: previousUse === false ? 'white' : 'black',  fontWeight: previousUse === false ? '600' : '',  borderColor: previousUse === false ? '#FF9900' : 'black' }}
                     sx={{ fontSize: '16px', fontWeight: 'regular', textTransform: 'capitalize', borderRadius: '10px' }}
-                    onClick={handleNoClick1}
+                    onClick={() => handlePreviousUse(false)}
                   >No</Button>
                 </div>
               </LeftItem>
             </VerticalSpace>
-          </CenterItem>
+          </LeftItem>
 
           <VerticalSpace style={{ display: 'flex', marginTop: '27px', marginBottom: '30px', justifyContent: 'space-between' }}>
             <RightItem>
-              {selectedRating && yesClicked1 && textFieldsFilled1 && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
-              {selectedRating && noClicked1 && textFieldsFilled1 && <ReusableButton text="SUBMIT" onClick={submitOnClick} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+              {selectedRating && previousUse === true && textFieldsFilled1 && <ReusableButton text="NEXT" onClick={handleYesPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+              {selectedRating && previousUse === false && textFieldsFilled1 && <ReusableButton text="SUBMIT" data-testid="submit-form" onClick={submitOnClick} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
             </RightItem>
           </VerticalSpace>
 
@@ -353,7 +361,7 @@ const Feedback = () => {
             </CenterItem>
           </VerticalSpace>
 
-          <CenterItem>
+          <LeftItem sx={{ paddingTop: '25px' }}>
             <VerticalSpace>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>Was the path generated by UR-Active faster than the paths you have previously used in other mapping applications?</Typography>
               <LeftItem>
@@ -362,24 +370,24 @@ const Feedback = () => {
                     variant="outlined"
                     color="black"
                     size="small"
-                    style={{ backgroundColor: yesClicked2 ? '#FF9900' : noClicked2 ? '' : '',  color: yesClicked2 ? 'white' : noClicked2 ? '' : 'black',  fontWeight: yesClicked2 ? '600' : noClicked2 ? '' : '',  borderColor: yesClicked2 ? 'white' : noClicked2 ? '' : 'primary' }}
+                    style={{ backgroundColor: fasterPath === true ? '#FF9900' : '',  color: fasterPath === true ? 'white' : 'black',  fontWeight: fasterPath === true ? '600' : '',  borderColor: fasterPath === true ? '#FF9900' : 'black' }}
                     sx={{ fontSize: '16px', fontWeight: 'regular', textTransform: 'capitalize', borderRadius: '10px' }}
-                    onClick={handleYesClick2}
+                    onClick={() => handleFasterPath(true)}
                   >Yes</Button>
                   <Button
                     variant="outlined"
                     color="black"
                     size="small"
-                    style={{ backgroundColor: noClicked2 ? '#FF9900' : yesClicked2 ? '' : '',  color: noClicked2 ? 'white' : yesClicked2 ? '' : 'black',  fontWeight: noClicked2 ? '600' : yesClicked2 ? '' : '',  borderColor: noClicked2 ? 'white' : yesClicked2 ? '' : 'primary' }}
+                    style={{ backgroundColor: fasterPath === false ? '#FF9900' : '',  color: fasterPath === false ? 'white' : 'black',  fontWeight: fasterPath === false ? '600' : '',  borderColor: fasterPath === false ? '#FF9900' : 'black' }}
                     sx={{ fontSize: '16px', fontWeight: 'regular', textTransform: 'capitalize', borderRadius: '10px' }}
-                    onClick={handleNoClick2}
+                    onClick={() => handleFasterPath(false)}
                   >No</Button>
                 </div>
               </LeftItem>
             </VerticalSpace>
-          </CenterItem>
+          </LeftItem>
 
-          <CenterItem>
+          <LeftItem sx={{ paddingTop: '25px' }}>
             <VerticalSpace>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>Was the route provided by UR-Active more suited to your needs?</Typography>
               <LeftItem>
@@ -388,32 +396,32 @@ const Feedback = () => {
                     variant="outlined"
                     color="black"
                     size="small"
-                    style={{ backgroundColor: yesClicked3 ? '#FF9900' : noClicked3 ? '' : '',  color: yesClicked3 ? 'white' : noClicked3 ? '' : 'black',  fontWeight: yesClicked3 ? '600' : noClicked3 ? '' : '',  borderColor: yesClicked3 ? 'white' : noClicked3 ? '' : 'primary' }}
+                    style={{ backgroundColor: moreSuited === true ? '#FF9900' : '',  color: moreSuited === true ? 'white' : 'black',  fontWeight: moreSuited === true ? '600' : '',  borderColor: moreSuited === true ? '#FF9900' : 'black' }}
                     sx={{ fontSize: '16px', fontWeight: 'regular', textTransform: 'capitalize', borderRadius: '10px' }}
-                    onClick={handleYesClick3}
+                    onClick={() => handleMoreSuited(true)}
                   >Yes</Button>
                   <Button
                     variant="outlined"
                     color="black"
                     size="small"
-                    style={{ backgroundColor: noClicked3 ? '#FF9900' : yesClicked3 ? '' : '',  color: noClicked3 ? 'white' : yesClicked3 ? '' : 'black',  fontWeight: noClicked3 ? '600' : yesClicked3 ? '' : '',  borderColor: noClicked3 ? 'white' : yesClicked3 ? '' : 'primary' }}
+                    style={{ backgroundColor: moreSuited === false ? '#FF9900' : '',  color: moreSuited === false ? 'white' : 'black',  fontWeight: moreSuited === false ? '600' : '',  borderColor: moreSuited === false ? '#FF9900' : 'black' }}
                     sx={{ fontSize: '16px', fontWeight: 'regular', textTransform: 'capitalize', borderRadius: '10px' }}
-                    onClick={handleNoClick3}
+                    onClick={() => handleMoreSuited(false)}
                   >No</Button>
                 </div>
               </LeftItem>
             </VerticalSpace>
-          </CenterItem>
+          </LeftItem>
 
-          <CenterItem>
+          <LeftItem sx={{ paddingTop: '25px' }}>
             <VerticalSpace style={{ width: '100%' }}>
               <Typography sx={{ textAlign: 'start', marginBottom: '20px' }}>Please provide your reasons.</Typography>
               <TextField
                 multiline
                 rows={4}
                 style={{ width: '100%' }}
-                value={textFieldValue2}
-                onChange={handleTextFieldChange2}
+                value={reasonsComments}
+                onChange={handleReasonsCommentsChange}
                 InputProps={{
                   style: {
                     borderRadius: "10px",
@@ -422,14 +430,14 @@ const Feedback = () => {
                 }}
               />
             </VerticalSpace>
-          </CenterItem>
+          </LeftItem>
 
           <VerticalSpace style={{ display: 'flex', marginTop: '27px', marginBottom: '30px', justifyContent: 'space-between' }}>
             <LeftItem>
               <ReusableButton text="BACK" onClick={handleNoPage} color="primary" height="40px" width="130px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />
             </LeftItem>
             <RightItem>
-              {(yesClicked2 || noClicked2) && (yesClicked3 || noClicked3) && textFieldsFilled2 && <ReusableButton text="SUBMIT" onClick={handleThanksPage} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
+              {(fasterPath === true || fasterPath === false) && (moreSuited === true || moreSuited === false) && textFieldsFilled2 && <ReusableButton text="SUBMIT" onClick={submitOnClick} color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />}
             </RightItem>
           </VerticalSpace>
 
