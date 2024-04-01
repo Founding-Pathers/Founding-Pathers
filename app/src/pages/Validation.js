@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import ValidationForm from '../components/ValidationForm';
+import ValidationForm from '../components/validation/ValidationForm';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Modal from '../components/ui/RouteModal';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -30,8 +30,21 @@ const FrozenBar = styled('div')({
 const Validation = () => {
   const location = useLocation();
   const state = location.state;
-  const [markerLocations, setMarkerLocations] = useState(state);
-  console.log(markerLocations);
+  const [prevState, setPrevState] = useState(state);
+  console.log(prevState);
+
+  const [markerLocations, setMarkerLocations] = useState(["dummy"]);
+  const [routeId, setRouteId] = useState(0);
+  const [travelMode, setTravelMode] = useState("");
+
+  useEffect(() => {
+    if (prevState) {
+      setMarkerLocations(prevState.markerLocations);
+      setRouteId(prevState.route_id);
+      setTravelMode(prevState.travel_mode);
+    }
+  }, [prevState]);
+
   console.log(localStorage.getItem("userEmail"));
   const [scrolled, setScrolled] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -63,6 +76,40 @@ const Validation = () => {
   // Handler to submit collected data
   const handleSubmit = () => {
     console.log("Submitted data:", collectedData);
+
+    var point_validation = {};
+    for (var i = 0; i<collectedData.length; i++) {
+      point_validation[i] = {};
+      point_validation[i]["lon"] = markerLocations[i]["lng"];
+      point_validation[i]["lat"] = markerLocations[i]["lat"];
+      point_validation[i]["comments"] = collectedData[i]["textFieldValue"];
+      var img_arr = [];
+      for (var j=0; j<collectedData[i]["thumbnails"].length; j++) {
+        img_arr.push(collectedData[i]["thumbnails"][j]["url"]);
+      }
+      point_validation[i]["pictures"] = img_arr;
+    }
+    console.log(point_validation)
+
+    const requestData = {
+      email: localStorage.getItem("userEmail"),
+      route_id: routeId,
+      travel_mode: travelMode,
+      user_validated: true,
+      point_validation: point_validation
+    };
+    
+    fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/routehistory/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+
     handleOpenFeedbackModal();
   };
 

@@ -508,9 +508,24 @@ async function renderMarkers(poiArr, map) {
          });
          
          console.log(markerPositions);
-          navigate('/validation', { state: markerPositions });
+         navigate('/validation', {
+          state: {
+            markerLocations: markerPositions,
+            route_id: directionsResponse.route[0].properties.ROUTE_ID,
+            travel_mode: directionsResponse.route[0].properties.TRAVEL_MOD
+          }
+        });
        }
      }, [validationComplete, vadMarkers]);
+
+     const goToFeedback = () => {
+      navigate('/feedback', {
+        state: {
+          route_id: directionsResponse.route[0].properties.ROUTE_ID,
+          travel_mode: directionsResponse.route[0].properties.TRAVEL_MOD
+        }
+      });
+    }
   
 
   return isLoaded ? (
@@ -546,10 +561,14 @@ async function renderMarkers(poiArr, map) {
 
           <Modal isOpen={isInstructionsModalOpen}
             title1="Report an issue"
-            description1="1. Tap on the point(s) "
-            description2="on the route where you encountered the issue"
-            description3="2. Tap 'NEXT' "
-            description4="to leave a comment on the issue"
+            description1="1. Tap to place markers "
+            description2="on the point(s) of the route where you encountered issue(s)"
+            description3="2. Drag the markers "
+            description4="to shift their locations"
+            description5="3. Double-click the markers "
+            description6="to remove them"
+            description7="4. Tap 'NEXT' "
+            description8="to add a comment about the issue"
             buttonText1="START"
             onClick1={handleCloseInstructionsModal}
           />
@@ -558,7 +577,7 @@ async function renderMarkers(poiArr, map) {
             title1="Thank you for your input!"
             description2="Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!"
             buttonText1="Feedback Form"
-            onClick1="/feedback"
+            onClick1={goToFeedback}
           />
         </div>
         {isValidating && <div style={{marginLeft: 260, marginTop: 550}}>
@@ -570,7 +589,7 @@ async function renderMarkers(poiArr, map) {
             time={(directionsResponse.route[0].properties.TimeTaken).toFixed(0) + " minutes"}
             distance={((directionsResponse.route[0].properties.TRAVELLING)/1000).toFixed(1) + " km"}
             mode={(directionsResponse.route[0].properties.TRAVEL_MOD).split("_")[0]}
-            filters={selectedPOIs.join(", ") + ", " + (directionsResponse.route[0].properties.TRAVEL_MOD).split("_")[1]}
+            filters={(selectedPOIs.length > 0 ? selectedPOIs.join(", ") + ", " : "") + (directionsResponse.route[0].properties.TRAVEL_MOD).split("_")[1]}
             onClick={() => startRouting()}
             display = { selecting ? 'flex' : 'none'}
           />
