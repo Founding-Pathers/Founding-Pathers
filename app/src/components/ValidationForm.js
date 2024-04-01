@@ -159,15 +159,17 @@ const ValidationForm = ({page, formData, onNext, finished, collectFormData}) => 
 
   //collect form data
   const handleCollect = () => {
-    const formData = {
+    const data = {
       textFieldValue,
       droppedFiles,
       thumbnails,
     };
 
-    collectFormData(formData);
-    
-    page !== formData.length - 1 ? onNext() : finished();
+    console.log(data);
+    collectFormData(data);
+    console.log(page);
+    console.log(formData.length);
+    onNext();
   };
 
   return (

@@ -43,9 +43,16 @@ const Validation = () => {
     console.log(collectedData);
   };
 
+  useEffect(() => {
+    console.log("Collected data:", collectedData);
+    
+    if (collectedData.length == markerLocations.length) {
+      handleSubmit();
+    }
+  }, [collectedData]);
+
   // Handler to submit collected data
   const handleSubmit = () => {
-    // Submit collectedData here
     console.log("Submitted data:", collectedData);
     handleOpenFeedbackModal();
   };
