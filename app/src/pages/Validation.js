@@ -39,7 +39,16 @@ const Validation = () => {
 
   // Handler to collect data from ValidationForm
   const collectFormData = (data) => {
-    setCollectedData(prevData => [...prevData, data]);
+    setCollectedData(prevData => {
+      const newData = [...prevData];
+      const index = currentPage;
+      if (index >= 0 && index < newData.length) {
+        newData[index] = data;
+      } else {
+        newData.push(data);
+      }
+      return newData;
+    });
     console.log(collectedData);
   };
 
@@ -85,6 +94,12 @@ const Validation = () => {
     }
   };
 
+  const handleBackPage = () => { // Define handleBackPage function
+    if (currentPage > 0) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
+
   return (
     <StyledContainer style={{ padding: '30px' }}>
 
@@ -109,7 +124,7 @@ const Validation = () => {
         )}
       </FrozenBar>
 
-      <ValidationForm page={currentPage} formData={markerLocations} onNext={handleNextPage} finished={handleSubmit} collectFormData={collectFormData} />
+      <ValidationForm page={currentPage} formData={markerLocations} onNext={handleNextPage} onBack={handleBackPage} collectFormData={collectFormData} />
 
       <Modal isOpen={isFeedbackModalOpen}
           title1="Thank you for navigating with us!"

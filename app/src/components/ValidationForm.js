@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AttachmentImg from '../assets/Attachment.png';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -53,7 +54,7 @@ const FrozenBar = styled('div')({
   transition: 'all 0.3s ease',
 });
 
-const ValidationForm = ({page, formData, onNext, finished, collectFormData}) => {
+const ValidationForm = ({page, formData, onNext, onBack, collectFormData}) => {
 
   const [textFieldValue, setTextFieldValue] = useState('');
   const [droppedFiles, setDroppedFiles] = useState([]);
@@ -253,6 +254,19 @@ const ValidationForm = ({page, formData, onNext, finished, collectFormData}) => 
         </LeftItem>
 
         <CenterItem>
+            {page > 0 && ( // Render back button only if not on the first page
+            <LeftItem>
+                <Button
+                    text="Back"
+                    onClick={onBack}
+                    color="darkGrey"
+                    height="40px"
+                    width="130px"
+                    startIcon={<ArrowBackIcon style={{ color: 'white' }} />}
+                />
+            </LeftItem>
+            )}
+
           {textFieldValue && (
             <RightItem>
               <Button
