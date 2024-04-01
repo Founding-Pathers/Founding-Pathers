@@ -13,7 +13,7 @@ const CenterItem = styled('div')({
   display: 'flex'
 });
 
-export default function CustomModal({ isOpen, title1, title2, title3, description1, description2, description3, description4, icon, buttonText1, buttonText2, onClick1, onClick2 }) {
+export default function CustomModal({ isOpen, title1, title2, title3, description1, description2, description3, description4, description5, description6, description7, description8, icon, buttonText1, buttonText2, onClick1, onClick2 }) {
   const handleOnClick1 = () => {
     if (typeof onClick1 === 'function') {
       onClick1();
@@ -43,6 +43,8 @@ export default function CustomModal({ isOpen, title1, title2, title3, descriptio
           <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>
             <span style={{ color: '#FF9900', fontWeight: '700' }}>{description1}</span>{description2}
             {description3 && <><br /><br /><span style={{ color: '#FF9900', fontWeight: '700' }}>{description3}</span>{description4}</>}
+            {description5 && <><br /><br /><span style={{ color: '#FF9900', fontWeight: '700' }}>{description5}</span>{description6}</>}
+            {description7 && <><br /><br /><span style={{ color: '#FF9900', fontWeight: '700' }}>{description7}</span>{description8}</>}
           </Typography>
         </CenterItem>
 

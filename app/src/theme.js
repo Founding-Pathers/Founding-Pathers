@@ -27,6 +27,9 @@ const theme = createTheme({
     endNavigation: {
       main: '#EE6161'
     },
+    green: {
+      main: '#6ECC4D'
+    },
     black: {
       main: '#000000'
     },

@@ -1,51 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import { Link } from 'react-router-dom';
-import Button from '../components/ui/Button';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AttachmentImg from '../assets/Attachment.png';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import ValidationForm from '../components/validation/ValidationForm';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import Modal from '../components/ui/RouteModal';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-start',
   minHeight: '100vh',
-});
-
-const StyledFormContainer = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const VerticalSpace = styled('div')({
-  margin: '8px 0',
-});
-
-const LeftItem = styled('div')({
-  textAlign: 'start',
-  alignItems: 'end',
-  width: '100%'
-});
-
-const RightItem = styled('div')({
-  textAlign: 'end',
-  alignItems: 'end',
-  width: '100%'
-});
-
-const CenterItem = styled('div')({
-  textAlign: 'center',
-  alignItems: 'center',
-  width: '100%',
-  paddingTop: '25px',
-  justifyContent: 'center',
-  display: 'flex'
 });
 
 const FrozenBar = styled('div')({
@@ -63,11 +28,90 @@ const FrozenBar = styled('div')({
 });
 
 const Validation = () => {
-  const [textFieldValue, setTextFieldValue] = useState('');
-  const [droppedFiles, setDroppedFiles] = useState([]);
-  const [thumbnails, setThumbnails] = useState([]);
-  const inputRef = useRef(null);
+  const location = useLocation();
+  const state = location.state;
+  const [prevState, setPrevState] = useState(state);
+  console.log(prevState);
+
+  const [markerLocations, setMarkerLocations] = useState(["dummy"]);
+  const [routeId, setRouteId] = useState(0);
+  const [travelMode, setTravelMode] = useState("");
+
+  useEffect(() => {
+    if (prevState) {
+      setMarkerLocations(prevState.markerLocations);
+      setRouteId(prevState.route_id);
+      setTravelMode(prevState.travel_mode);
+    }
+  }, [prevState]);
+
+  console.log(localStorage.getItem("userEmail"));
   const [scrolled, setScrolled] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [collectedData, setCollectedData] = useState([]); 
+
+  // Handler to collect data from ValidationForm
+  const collectFormData = (data) => {
+    setCollectedData(prevData => {
+      const newData = [...prevData];
+      const index = currentPage;
+      if (index >= 0 && index < newData.length) {
+        newData[index] = data;
+      } else {
+        newData.push(data);
+      }
+      return newData;
+    });
+    console.log(collectedData);
+  };
+
+  useEffect(() => {
+    console.log("Collected data:", collectedData);
+    
+    if (collectedData.length == markerLocations.length) {
+      handleSubmit();
+    }
+  }, [collectedData]);
+
+  // Handler to submit collected data
+  const handleSubmit = () => {
+    console.log("Submitted data:", collectedData);
+
+    var point_validation = {};
+    for (var i = 0; i<collectedData.length; i++) {
+      point_validation[i] = {};
+      point_validation[i]["lon"] = markerLocations[i]["lng"];
+      point_validation[i]["lat"] = markerLocations[i]["lat"];
+      point_validation[i]["comments"] = collectedData[i]["textFieldValue"];
+      var img_arr = [];
+      for (var j=0; j<collectedData[i]["thumbnails"].length; j++) {
+        img_arr.push(collectedData[i]["thumbnails"][j]["url"]);
+      }
+      point_validation[i]["pictures"] = img_arr;
+    }
+    console.log(point_validation)
+
+    const requestData = {
+      email: localStorage.getItem("userEmail"),
+      route_id: routeId,
+      travel_mode: travelMode,
+      user_validated: true,
+      point_validation: point_validation
+    };
+    
+    fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/routehistory/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+
+    handleOpenFeedbackModal();
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,92 +128,30 @@ const Validation = () => {
     };
   }, []);
 
-  const handleTextFieldChange = (event) => {
-    setTextFieldValue(event.target.value);
+  //to feedback
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const handleOpenFeedbackModal = () => {
+    setIsFeedbackModalOpen(true);
   };
 
-  // Function to handle file drop
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const files = Array.from(event.dataTransfer.files);
-    const newDroppedFiles = [...droppedFiles, ...files];
-    setDroppedFiles(newDroppedFiles);
-
-    // Generate thumbnails
-    const newThumbnails = [...thumbnails];
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        newThumbnails.push({ url: e.target.result, selected: false });
-        setThumbnails([...newThumbnails]);
-      };
-      reader.readAsDataURL(file);
-    });
+  //between pages
+  const handleNextPage = () => {
+    if (currentPage < markerLocations.length - 1) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
   };
 
-  // Function to trigger file input click
-  const handleClick = () => {
-    inputRef.current.click();
+  const handleBackPage = () => { // Define handleBackPage function
+    if (currentPage > 0) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
   };
-
-  // Function to handle file selection
-  const handleFileSelect = (event) => {
-    const files = Array.from(event.target.files);
-    const newDroppedFiles = [...droppedFiles, ...files];
-    setDroppedFiles(newDroppedFiles);
-
-    // Generate thumbnails
-    const newThumbnails = [...thumbnails];
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        newThumbnails.push({ url: e.target.result, selected: false });
-        setThumbnails([...newThumbnails]);
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  // Function to handle thumbnail click
-  const handleThumbnailClick = (index) => {
-    const newThumbnails = thumbnails.map((thumbnail, i) => ({
-      ...thumbnail,
-      selected: i === index ? !thumbnail.selected : thumbnail.selected,
-    }));
-    setThumbnails(newThumbnails);
-  };
-
-  // Function to remove thumbnail
-  const removeThumbnail = (index) => {
-    const updatedThumbnails = thumbnails.filter((_, i) => i !== index);
-    setThumbnails(updatedThumbnails);
-
-    const updatedDroppedFiles = droppedFiles.filter((_, i) => i !== index);
-    setDroppedFiles(updatedDroppedFiles);
-  };
-
-  useEffect(() => {
-    // Add event listener to handle clicks outside of thumbnails
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.thumbnail-container')) {
-        setThumbnails(thumbnails.map(thumbnail => ({ ...thumbnail, selected: false })));
-      }
-    };
-
-    document.body.addEventListener('click', handleClickOutside);
-
-    // Re-enable scrolling and remove event listener on unmount
-    return () => {
-      document.body.style.overflow = 'auto';
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, [thumbnails]);
 
   return (
     <StyledContainer style={{ padding: '30px' }}>
 
       <FrozenBar scrolled={scrolled}>
-        <Link to="/home"> {/* link to /home with FeedbackModal open: handleOpenFeedbackModal */} <ArrowBackIosNewIcon sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} /></Link>
+        <ArrowBackIosNewIcon onClick={handleOpenFeedbackModal} sx={{ color: '#000000', paddingLeft: '30px', paddingBottom: '10px' }} />
         {scrolled && (
           <Typography
             variant="body1"
@@ -189,99 +171,14 @@ const Validation = () => {
         )}
       </FrozenBar>
 
-      <StyledFormContainer style={{ paddingTop: '14px' }}>
+      <ValidationForm page={currentPage} formData={markerLocations} onNext={handleNextPage} onBack={handleBackPage} collectedData={collectedData} collectFormData={collectFormData} />
 
-        <VerticalSpace>
-          <CenterItem>
-            <LeftItem>
-              <Typography sx={{ textAlign: 'start' }} variant="h1">UR-Active</Typography>
-              <Typography sx={{ textAlign: 'start', marginBottom: '-15px' }} variant="h1" color="#000000">Issue Reporting Form</Typography>
-            </LeftItem>
-          </CenterItem>
-        </VerticalSpace>
-
-        <CenterItem>
-          <VerticalSpace>
-            <Typography sx={{ textAlign: 'start', marginBottom: '10px' }}>What issue(s) did you face with the selected point(s) on the route?</Typography>
-            <TextField
-              multiline
-              rows={8}
-              style={{ width: '100%', marginBottom: '10px' }}
-              value={textFieldValue}
-              onChange={handleTextFieldChange}
-              InputProps={{
-                  style: {
-                  borderRadius: "10px",
-                  borderColor: "black",
-                  }
-              }}
-            />
-          </VerticalSpace>
-        </CenterItem>
-
-        <LeftItem>
-          <div
-            onDrop={handleDrop}
-            onClick={handleClick}
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img src={AttachmentImg} alt="Attachment" style={{ height: '14px', marginRight: '3px' }} />
-              <Typography variant="body1" style={{ marginLeft: '2px', fontWeight: '500', color: '#FF9900' }}>Upload supporting images</Typography>
-              <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleFileSelect} />
-            </div>
-          </div>
-
-          <div className="thumbnail-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(65px, 1fr))', gap: '10px', marginTop: '20px' }}>
-            {thumbnails.map((thumbnail, index) => {
-              const handleClickRemove = (e) => {
-                e.stopPropagation(); // Prevent propagation to handleThumbnailClick
-                removeThumbnail(index);
-              };
-
-              return (
-                <div key={index} style={{ position: 'relative' }} onClick={() => handleThumbnailClick(index)}>
-                  <img src={thumbnail.url} alt={`Thumbnail ${index}`} style={{ height: '70px', width: '70px', borderRadius: '10px', objectFit: 'cover' }} />
-                  {thumbnail.selected && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '70px',
-                        height: '70px',
-                        background: 'rgba(0,0,0,0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '10px'
-                      }}
-                    >
-                      <IconButton aria-label="remove" style={{ color: 'white' }} onClick={handleClickRemove}>
-                        <CloseIcon style={{ fontSize: '40px' }} />
-                      </IconButton>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-        </LeftItem>
-
-        <CenterItem>
-          <LeftItem>
-              <Button text="BACK" component={Link} to="/home" /* link to /home with InstructionsModal open: handleOpenInstructionsModal */ color="primary" height="40px" width="130px" startIcon={<ArrowBackIcon style={{ color: 'white' }} />} />
-          </LeftItem>
-
-          {textFieldValue && (
-            <RightItem>
-              <Button text="SUBMIT" component={Link} to="/home" /* link to /home with ThankYouModal open: handleOpenThankYouModal */ color="primary" height="40px" width="130px" icon={<ArrowForwardIcon style={{ color: 'white' }} />} />
-            </RightItem>
-          )}
-        </CenterItem>
-
-      </StyledFormContainer>
+      <Modal isOpen={isFeedbackModalOpen}
+          title1="Thank you for navigating with us!"
+          description2="Do take a short moment to fill up this feedback form to let us learn about your experience with UR-Active!"
+          buttonText1="Feedback Form"
+          onClick1="/feedback"
+        />
 
     </StyledContainer>
   );

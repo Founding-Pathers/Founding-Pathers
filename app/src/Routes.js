@@ -33,8 +33,8 @@ const Router = () => {
           <Route path='/home' element={<PrivateRoute/>}>
             <Route path='/home' element={<Home/>}/>
           </Route>
-          <Route path='/validation' element={<PrivateRoute/>}>
-            <Route path='/validation' element={<Validation/>}/>
+          <Route path="/validation/:pageNumber?" element={<PrivateRoute/>}>
+            <Route index element={<Validation />} />
           </Route>
           <Route path='/feedback' element={<PrivateRoute/>}>
             <Route path='/feedback' element={<Feedback/>}/>
