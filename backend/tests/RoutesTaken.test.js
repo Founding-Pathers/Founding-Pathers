@@ -40,26 +40,37 @@ describe('routes taken', () => {
 
 const newRoutesTaken = {
     email : "test@example.com",
-    route_index: "90123",
+    route_id: "90123",
+    travel_mode: "Walking",
     user_validated: true,
     edges_validation: new Map([
         ["entity1", 
             {
-                validation: true, 
-                issue_desc: "test description" 
+                lon: 123,
+                lat: 123,
+                pictures: "true", 
+                comments: "test description" 
             }
         ]
     ]),
-    deleted: false
+    deleted: false,
+    created_at: new Date()
 }
 
 const newRoutesTakenWithoutEmail = {
-    route_index: "90123",
+    route_id: "90123",
     user_validated: true,
-    edges_validation:
-        {
-            validation: null,
-            issue_desc: null
-        },
-    deleted: false
+    travel_mode: "Walking",
+    edges_validation: new Map([
+        ["entity1", 
+            {
+                lon: 123,
+                lat: 123,
+                pictures: "true", 
+                comments: "test description" 
+            }
+        ]
+    ]),
+    deleted: false,
+    created_at: new Date()
 }
