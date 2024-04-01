@@ -124,7 +124,7 @@ const Validation = () => {
         )}
       </FrozenBar>
 
-      <ValidationForm page={currentPage} formData={markerLocations} onNext={handleNextPage} onBack={handleBackPage} collectFormData={collectFormData} />
+      <ValidationForm page={currentPage} formData={markerLocations} onNext={handleNextPage} onBack={handleBackPage} collectedData={collectedData} collectFormData={collectFormData} />
 
       <Modal isOpen={isFeedbackModalOpen}
           title1="Thank you for navigating with us!"

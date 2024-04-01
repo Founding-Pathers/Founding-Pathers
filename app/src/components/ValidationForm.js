@@ -54,7 +54,7 @@ const FrozenBar = styled('div')({
   transition: 'all 0.3s ease',
 });
 
-const ValidationForm = ({page, formData, onNext, onBack, collectFormData}) => {
+const ValidationForm = ({page, formData, onNext, onBack, collectedData, collectFormData}) => {
 
   const [textFieldValue, setTextFieldValue] = useState('');
   const [droppedFiles, setDroppedFiles] = useState([]);
@@ -157,6 +157,22 @@ const ValidationForm = ({page, formData, onNext, onBack, collectFormData}) => {
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [thumbnails]);
+
+  //on render
+  useEffect(() => {
+    // Update form fields with data of current page if it exists
+    if (collectedData[page]) {
+      const { textFieldValue, droppedFiles, thumbnails } = collectedData[page];
+      setTextFieldValue(textFieldValue || '');
+      setDroppedFiles(droppedFiles || []);
+      setThumbnails(thumbnails || []);
+    } else {
+      // If no data exists for the current page, reset form fields
+      setTextFieldValue('');
+      setDroppedFiles([]);
+      setThumbnails([]);
+    }
+  }, [page, collectedData]);
 
   //collect form data
   const handleCollect = () => {
