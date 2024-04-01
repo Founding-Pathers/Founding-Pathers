@@ -70,9 +70,9 @@ const Feedback = () => {
   const [generalComments, setgeneralComments] = useState('');
   const [reasonsComments, setreasonsComments] = useState('');
   const [selectedRating, setSelectedRating] = useState('');
-  const [previousUse, setPreviousUse] = useState(false);
-  const [fasterPath, setFasterPath] = useState(false);
-  const [moreSuited, setMoreSuited] = useState(false);
+  const [previousUse, setPreviousUse] = useState('');
+  const [fasterPath, setFasterPath] = useState('');
+  const [moreSuited, setMoreSuited] = useState('');
   const [textFieldsFilled1, setTextFieldsFilled1] = useState(false);
   const [textFieldsFilled2, setTextFieldsFilled2] = useState(false);
   const [page, setPage] = useState("no");
