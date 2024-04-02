@@ -580,7 +580,7 @@ async function renderMarkers(poiArr, map) {
             onClick1={goToFeedback}
           />
         </div>
-        {isValidating && <div style={{left: 260, bottom: 100, position: 'fixed'}}>
+        {isValidating && vadMarkers.length > 0 && <div style={{left: 260, bottom: 100, position: 'fixed'}}>
         <Button text="NEXT" onClick={endValidation} fontSize="18px" color="primary" height="40px" width="auto" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} ></Button>
         </div>}
         {directionsResponse && (
