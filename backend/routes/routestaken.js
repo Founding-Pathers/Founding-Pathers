@@ -7,7 +7,6 @@ const routesTaken = express.Router();
 
 // Connect to the database
 const dbo = require("../db/conn");
-const { base } = require("../models/RoutesTaken");
 
 // Retrieve list of all routes taken
 routesTaken.route("/routehistory").get(async function (req, res) {

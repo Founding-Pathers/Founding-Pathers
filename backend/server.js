@@ -38,6 +38,7 @@ app.use(bodyParser.json(), urlencodedParser);
 app.use(require("./routes/account"));
 app.use(require("./routes/poi"));
 app.use(require("./routes/routefeedback"));
+app.use(require("./routes/export"));
 app.use(require("./routes/Middlewares/AuthMiddleware"));
 
 // starting of Server
