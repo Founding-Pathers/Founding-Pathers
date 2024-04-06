@@ -7,11 +7,11 @@ import Modal from '../components/ui/RouteModal';
 import Button from '../components/ui/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import locationIcon from '../assets/Location.png';
-import BusStops from '../assets/filters/bus.png';
-import Attractions from '../assets/filters/attractions.png';
-import PickUp from '../assets/filters/carIcon.png';
-import FNB from '../assets/filters/foodIcon.png';
-import MRTs from '../assets/filters/trainIcon.png';
+import FNB from '../assets/filters/fnb-circle.svg';
+import Attractions from '../assets/filters/attraction-circle.svg';
+import BusStops from '../assets/filters/bus-circle.svg';
+import MRTs from '../assets/filters/mrt-circle.svg';
+import PickUp from '../assets/filters/pickup-circle.svg';
 import { useNavigate } from "react-router-dom";
 
 const containerStyle = {
@@ -361,8 +361,8 @@ async function renderMarkers(poiArr, map) {
   for (var poiObj of poiArr) {
       var icon;
       const iconSize = {
-          width: 30,  
-          height: 30, 
+          width: 40,  
+          height: 40, 
       };
       var type = poiObj.properties.type;
       if (type == "FNB") {
