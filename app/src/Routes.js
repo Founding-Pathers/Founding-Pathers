@@ -13,6 +13,7 @@ import Feedback from './pages/Feedback';
 import UserGuideline from './pages/UserGuideline';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Admin from './pages/Admin';
 
 
 const Router = () => {
@@ -47,6 +48,9 @@ const Router = () => {
           </Route>
           <Route path='/privacy' element={<PrivateRoute/>}>
             <Route path='/privacy' element={<PrivacyPolicy/>}/>
+          </Route>
+          <Route path='/admin' element={<PrivateRoute/>}>
+            <Route path='/admin' element={<Admin/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
