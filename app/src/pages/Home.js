@@ -80,7 +80,6 @@ function Home() {
         //RENDER MARKERS
         if (data.poi != null) {
           var poiArr = data.poi;
-          console.log(poiArr);
           renderMarkers(poiArr, map);
         }
     })
@@ -431,7 +430,27 @@ async function renderMarkers(poiArr, map) {
    };
  
    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
-   const handleOpenFeedbackModal = () => {
+   const handleOpenFeedbackModal = async () => {
+      //send route taken first
+      const requestData = {
+        email: localStorage.getItem("userEmail"),
+        route_id: directionsResponse.route[0].properties.ROUTE_ID,
+        travel_mode: directionsResponse.route[0].properties.TRAVEL_MOD,
+        user_validated: false,
+        point_validation: []
+      };
+      
+      await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/routehistory/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+
      setIsDestinationModalOpen(false);
      setIsFeedbackModalOpen(true);
    };
