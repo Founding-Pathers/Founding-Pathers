@@ -126,7 +126,7 @@ router.route("/route").post(async function (req, res) {
 
     let poi_type = req.body.type;
 
-    if (!(poi_type == null)) {
+    if (!(poi_type == null || poi_type == "")) {
       let poi = [];
       let poi_dist = req.body.distance;
       let route_coords = route[0].geometry.coordinates;
