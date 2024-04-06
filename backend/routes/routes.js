@@ -126,7 +126,7 @@ router.route("/route").post(async function (req, res) {
 
     let poi_type = req.body.type;
 
-    if (!(poi_type == null || poi_type == "")) {
+    if (poi_type.length != 0) {
       let poi = [];
       let poi_dist = req.body.distance;
       let route_coords = route[0].geometry.coordinates;
@@ -183,11 +183,11 @@ router.route("/route").post(async function (req, res) {
         poi_query.push({ "properties.type": poi_type[i] });
       }
 
-      // throw error if no poi type is selected
-      if (poi_query == "") {
-        res.json({ error: "No POI type selected" });
-        return;
-      }
+      // // throw error if no poi type is selected
+      // if (poi_query == "") {
+      //   res.json({ error: "No POI type selected" });
+      //   return;
+      // }
 
       // Find POIs within the polygon for each poi type
       for (let j = 0; j < polygons.length; j++) {
