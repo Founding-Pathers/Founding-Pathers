@@ -78,8 +78,9 @@ function Home() {
         drawPolyline(coors);
 
         //RENDER MARKERS
-        if (data.pois != null) {
-          var poiArr = data.pois;
+        if (data.poi != null) {
+          var poiArr = data.poi;
+          console.log(poiArr);
           renderMarkers(poiArr, map);
         }
     })
