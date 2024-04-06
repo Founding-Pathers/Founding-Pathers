@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 const containerStyle = {
   width: '100%',
-  height: '93vh'
+  height: '100vh'
 };
 
 const center = {
@@ -561,11 +561,11 @@ async function renderMarkers(poiArr, map) {
 
           <Modal isOpen={isInstructionsModalOpen}
             title1="Report an issue"
-            description1="1. Tap to place markers "
-            description2="on the point(s) of the route where you encountered issue(s)"
+            description1="1. Tap or double-tap near the route "
+            description2="to place markers on the point(s) of the route where you encountered issue(s)"
             description3="2. Drag the markers "
             description4="to shift their locations"
-            description5="3. Double-click the markers "
+            description5="3. Double-tap the markers "
             description6="to remove them"
             description7="4. Tap 'NEXT' "
             description8="to add a comment about the issue"
@@ -580,7 +580,7 @@ async function renderMarkers(poiArr, map) {
             onClick1={goToFeedback}
           />
         </div>
-        {isValidating && vadMarkers.length > 0 && <div style={{left: 260, bottom: 100, position: 'fixed'}}>
+        {isValidating && vadMarkers.length > 0 && <div style={{right: 30, bottom: 30, position: 'fixed'}}>
         <Button text="NEXT" onClick={endValidation} fontSize="18px" color="primary" height="40px" width="auto" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} ></Button>
         </div>}
         {directionsResponse && (
