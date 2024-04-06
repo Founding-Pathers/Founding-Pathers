@@ -22,17 +22,16 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
-import DirectionsBusFilledOutlinedIcon from '@mui/icons-material/DirectionsBusFilledOutlined';
-import AttractionsOutlinedIcon from '@mui/icons-material/AttractionsOutlined';
-import ParkOutlinedIcon from '@mui/icons-material/ParkOutlined';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import HistoryIcon from '@mui/icons-material/History';
-import Saved from '../../assets/Saved.png';
 import Route from '../../assets/Route.png';
-import carIcon from '../../assets/filters/carIcon.png';
-import foodIcon from '../../assets/filters/foodIcon.png';
-import shelterIcon from '../../assets/filters/shelterIcon.png';
-import trainIcon from '../../assets/filters/trainIcon.png';
+import foodIcon from '../../assets/filters/fnb.svg';
+import attractionIcon from '../../assets/filters/attraction.svg';
+import busIcon from '../../assets/filters/bus.svg';
+import mrtIcon from '../../assets/filters/mrt.svg';
+import pickupIcon from '../../assets/filters/pickup.svg';
+import shelterIcon from '../../assets/filters/shelter.svg';
+import natureIcon from '../../assets/filters/nature.svg';
 import { useEffect, useState } from 'react';
 
 const Root = styled('div')(({ theme }) => ({
@@ -323,7 +322,7 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
             right: 0,
             left: 0,
             pointerEvents: 'all',
-            zIndex: 999
+            zIndex: 999,
           }}
         >
           <Puller />
@@ -338,7 +337,7 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
               <Typography variant="filterLabel" sx={{display: 'block', mt: 0.5}}>{(distance/1000).toFixed(1)} km away</Typography>
               <Typography variant="cardDesc" sx={{display: 'block', mt: 1}}><img src={Route} style={{width:"21px", height:"15px", marginRight: "5px"}}></img>{selectedPOIs}</Typography>
             </Box>
-            <Box sx={{ml: 2}}>
+            <Box sx={{mr: 2}}>
               <Button text="End" onClick={endRouting} color="endNavigation" width="60px" height="32px" fontSize="15px" textTransform="none" borderRadius="10px"/>
             </Box>
           </Box>
@@ -462,19 +461,19 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
             isSelected={selectedPOIs.includes("FNB")}
             onClick={() => handleChipClick("FNB")}
             ></Chip>
-          <Chip icon={AttractionsOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Attractions" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+          <Chip icon={attractionIcon} iconWidth="20px" iconHeight="20px" label="Attractions" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
             isSelected={selectedPOIs.includes("TOURISM")}
             onClick={() => handleChipClick("TOURISM")}
             ></Chip>
-          <Chip icon={DirectionsBusFilledOutlinedIcon} iconWidth="20px" iconHeight="20px" label="Bus Stops" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+          <Chip icon={busIcon} iconWidth="20px" iconHeight="20px" label="Bus Stops" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
             isSelected={selectedPOIs.includes("BUSSTOP")}
             onClick={() => handleChipClick("BUSSTOP")}
             ></Chip>
-          <Chip icon={trainIcon} iconWidth="20px" iconHeight="20px" label="MRT Stations" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+          <Chip icon={mrtIcon} iconWidth="20px" iconHeight="20px" label="MRT Stations" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
             isSelected={selectedPOIs.includes("MRT")}
             onClick={() => handleChipClick("MRT")}
             ></Chip>
-          <Chip icon={carIcon} iconWidth="20px" iconHeight="20px" label="Pick-up / Drop-off" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
+          <Chip icon={pickupIcon} iconWidth="20px" iconHeight="20px" label="Pick-up / Drop-off" borderRadius="10px" unselectedColor={theme.palette.poiSelect.main} selectedColor={theme.palette.poiSelect.secondary}
             isSelected={selectedPOIs.includes("PICKUP")}
             onClick={() => handleChipClick("PICKUP")}
             ></Chip>
@@ -495,7 +494,7 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
           isSelected={selectedPaths == "sheltered"}
           onClick={() => handleChipClickPath("sheltered")}
           ></Chip>
-          <Chip label="Nature" icon={ParkOutlinedIcon} iconWidth="20px" iconHeight="20px" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
+          <Chip label="Nature" icon={natureIcon} iconWidth="20px" iconHeight="20px" borderRadius="10px" unselectedColor={theme.palette.pathSelect.main} selectedColor={theme.palette.pathSelect.secondary}
           isSelected={selectedPaths == "nature"}
           onClick={() => handleChipClickPath("nature")}
           ></Chip>

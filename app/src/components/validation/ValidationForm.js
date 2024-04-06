@@ -273,9 +273,9 @@ const ValidationForm = ({page, formData, onNext, onBack, collectedData, collectF
             {page > 0 && ( // Render back button only if not on the first page
             <LeftItem>
                 <Button
-                    text="Back"
+                    text="BACK"
                     onClick={onBack}
-                    color="darkGrey"
+                    color="primary"
                     height="40px"
                     width="130px"
                     startIcon={<ArrowBackIcon style={{ color: 'white' }} />}
