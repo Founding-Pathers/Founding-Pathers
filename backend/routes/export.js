@@ -103,7 +103,7 @@ exportData.route("/export").get(async function (req, res) {
       console.log(
         "archiver has been finalized and the output file descriptor has closed."
       );
-      res.download("collections.zip"); // Send the ZIP file as a download attachment
+      res.download(zipPath, "collections.zip"); // Send the ZIP file as a download attachment
     });
 
     // Catch any errors during ZIP creation
