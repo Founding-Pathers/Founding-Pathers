@@ -74,15 +74,6 @@ const fetch = React.useMemo(
         marginBottom: 1,
         marginLeft: 0.5
       }}
-      InputProps={{
-        style: {
-          width: 310,
-          height: 40,
-          border: "1px solid var(--Black, #000)",
-          borderRadius: "50px",
-          padding: 0
-        },
-      }}
       getOptionLabel={(option) =>
         typeof option === 'string' ? option : option.description
       }
