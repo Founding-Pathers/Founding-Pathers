@@ -316,7 +316,7 @@ function SwipeableEdgeDrawer({window, autocompleteService, handleOpenDestination
         <StyledBox
           sx={{
             position: 'absolute',
-            top: (isRouting && !(isEditing)) ? -160 : -100,
+            top: (isRouting && !(isEditing)) ? -160 : -70,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
             visibility: 'visible',
