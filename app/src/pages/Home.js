@@ -33,6 +33,15 @@ function Home() {
     libraries: libraries
   })
 
+  const [autocompleteService, setAutocompleteService] = React.useState(null);
+
+  React.useEffect(() => {
+    if (isLoaded) {
+      // eslint-disable-next-line no-undef
+      setAutocompleteService(new window.google.maps.places.AutocompleteService());
+    }
+  }, [isLoaded]);
+
   const [map, setMap] = React.useState(/** @type google.maps.Map*/ null)
   const [directionsResponse, setDirectionsResponse] = useState(null)
   const [distance, setDistance] = useState('')
@@ -51,7 +60,7 @@ function Home() {
   const [ODMarkers, setODMarkers] = useState([]);
   const [path, setPath] = useState(null);
 
-  const originRef = useRef()
+  const originRef = React.useRef(null);
   const destinationRef = useRef()
 
   async function calculateRoute(travelMode) {
@@ -643,7 +652,7 @@ async function renderMarkers(poiArr, map) {
           />
         </>
         )}
-        {!isValidating && <Drawer handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
+        {!isValidating && <Drawer autocompleteService={autocompleteService} handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
         handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>}
       </GoogleMap>
   ) : <></>
