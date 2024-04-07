@@ -118,37 +118,65 @@ function Home() {
   }
 
   //current location
+  // async function handleCurrentLocation() {
+  //   // eslint-disable-next-line no-undef
+  //   let infoWindow = new google.maps.InfoWindow();
+  //   if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           const pos = {
+  //             lat: position.coords.latitude,
+  //             lng: position.coords.longitude,
+  //           };
+  
+  //            // eslint-disable-next-line no-undef
+  //           infoWindow.setPosition(pos);
+  //            // eslint-disable-next-line no-undef
+  //           infoWindow.setContent("Location found.");
+  //            // eslint-disable-next-line no-undef
+  //           infoWindow.open(map);
+  //           map.setCenter(pos);
+  //           setCurrentLocation(pos);
+  //         },
+  //         () => {
+  //            // eslint-disable-next-line no-undef
+  //           handleLocationError(true, infoWindow, map.getCenter());
+  //         },
+  //       );
+  //     } else {
+  //       // Browser doesn't support Geolocation
+  //        // eslint-disable-next-line no-undef
+  //       handleLocationError(false, infoWindow, map.getCenter());
+  //     }
+  // };
   async function handleCurrentLocation() {
     // eslint-disable-next-line no-undef
     let infoWindow = new google.maps.InfoWindow();
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
   
-             // eslint-disable-next-line no-undef
-            infoWindow.setPosition(pos);
-             // eslint-disable-next-line no-undef
-            infoWindow.setContent("Location found.");
-             // eslint-disable-next-line no-undef
-            infoWindow.open(map);
-            map.setCenter(pos);
-            setCurrentLocation(pos);
-          },
-          () => {
-             // eslint-disable-next-line no-undef
-            handleLocationError(true, infoWindow, map.getCenter());
-          },
-        );
-      } else {
-        // Browser doesn't support Geolocation
-         // eslint-disable-next-line no-undef
-        handleLocationError(false, infoWindow, map.getCenter());
-      }
-  };
+          // eslint-disable-next-line no-undef
+          infoWindow.setPosition(pos);
+          // eslint-disable-next-line no-undef
+          infoWindow.setContent("Location found.");
+          // eslint-disable-next-line no-undef
+          infoWindow.open(map);
+          map.setCenter(pos);
+          setCurrentLocation(pos);
+        },
+        (error) => {
+          handleLocationError(true, infoWindow, map.getCenter(), error);
+        }
+      );
+    } else {
+      handleLocationError(false, infoWindow, map.getCenter());
+    }
+  }
 
   useEffect(() => {
     if (isLoaded) {

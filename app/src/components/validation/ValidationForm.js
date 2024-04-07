@@ -141,23 +141,6 @@ const ValidationForm = ({page, formData, onNext, onBack, collectedData, collectF
     setDroppedFiles(updatedDroppedFiles);
   };
 
-  useEffect(() => {
-    // Add event listener to handle clicks outside of thumbnails
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.thumbnail-container')) {
-        setThumbnails(thumbnails.map(thumbnail => ({ ...thumbnail, selected: false })));
-      }
-    };
-
-    document.body.addEventListener('click', handleClickOutside);
-
-    // Re-enable scrolling and remove event listener on unmount
-    return () => {
-      document.body.style.overflow = 'auto';
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, [thumbnails]);
-
   //on render
   useEffect(() => {
     // Update form fields with data of current page if it exists
@@ -171,8 +154,15 @@ const ValidationForm = ({page, formData, onNext, onBack, collectedData, collectF
       setTextFieldValue('');
       setDroppedFiles([]);
       setThumbnails([]);
+      console.log(thumbnails);
+      console.log(droppedFiles);
     }
   }, [page, collectedData]);
+
+  useEffect(() => {
+    console.log("Thumbnails updated:", thumbnails);
+  
+  }, [thumbnails]);
 
   //collect form data
   const handleCollect = () => {
