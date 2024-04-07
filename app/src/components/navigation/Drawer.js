@@ -33,6 +33,7 @@ import pickupIcon from '../../assets/filters/pickup.svg';
 import shelterIcon from '../../assets/filters/shelter.svg';
 import natureIcon from '../../assets/filters/nature.svg';
 import { useEffect, useState } from 'react';
+import Autocomplete from "./Autocomplete";
 
 const Root = styled('div')(({ theme }) => ({
   height: '100%',
@@ -73,7 +74,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, autocompleteService, handleOpenDestinationModal, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -345,14 +346,14 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
           <Box sx={{textAlign: 'center', mt: 3, display: (showButton || isRouting) ? 'block' : 'none'}}>
             <Button text="Edit Filters" onClick={ ()=> setOpen(true) } width="120px" height="32px" fontSize="15px" textTransform="none"/>
           </Box>
-          <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'block' : 'none' }}>
+          <Box sx={{ textAlign: 'center', mt: 4, mr: 1, display: open ? 'flex' : 'none', justifyContent: "center" }}>
             <img src={Location} style={{ width: '18px', height: '18px', margin: '10px 3px 0px 3px' }}></img>
             {/* <SearchBox
             //  value={location}
              location={location}
              onChange={(e) => setLocation(e.target.value)}
             /> */}
-            <TextField
+            {/* <TextField
                 inputRef={originRef}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -382,7 +383,13 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
                     setTextFieldFocused(null);
                   }
                 }}
-                />
+                /> */}
+                <Autocomplete label="" onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    setTextFieldFocused(null);
+                  }
+                }} 
+                onClick={() => handleOpenDrawer('location')} autocompleteService={autocompleteService} inputRef={originRef} inputValue={location} setInputValue={setLocation}/>
           </Box>
 
           <Box sx={{display: open ? 'flex' : 'none', justifyContent: 'space-between',
@@ -398,7 +405,7 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
             <img src={Switch} style={{ width: '18px', height: '18px', margin: '0px 6px' }} onClick={switchValues}></img>
           </Box>
 
-          <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1 }}>
+          <Box sx={{ textAlign: 'center', mt: open ? 0:4, mb: 2, mr: 1, display: "flex", justifyContent: "center" }}>
             <img src={Destination} style={{ width: '18px', height: '18px', margin: '9px 3px',
           '@media (maxWidth: 360px)': {
             margin: '9px 2px', // Adjusted margin for screens up to 360px width
@@ -408,7 +415,7 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
               location={destination}
               onChange={(e) => setLocation(e.target.value)},
               /> */}
-              <TextField
+              {/* <TextField
                 inputRef={destinationRef}
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
@@ -438,7 +445,13 @@ function SwipeableEdgeDrawer({window, handleOpenDestinationModal, originRef, des
                     setTextFieldFocused(null);
                   }
                 }}
-                />
+                /> */}
+                <Autocomplete label="Where to?" onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    setTextFieldFocused(null);
+                  }
+                }}
+                onClick={() => handleOpenDrawer('destination')} autocompleteService={autocompleteService} inputRef={destinationRef} inputValue={destination} setInputValue={setDestination}/>
           </Box>
 
           <Box sx={{

@@ -33,6 +33,15 @@ function Home() {
     libraries: libraries
   })
 
+  const [autocompleteService, setAutocompleteService] = React.useState(null);
+
+  React.useEffect(() => {
+    if (isLoaded) {
+      // eslint-disable-next-line no-undef
+      setAutocompleteService(new window.google.maps.places.AutocompleteService());
+    }
+  }, [isLoaded]);
+
   const [map, setMap] = React.useState(/** @type google.maps.Map*/ null)
   const [directionsResponse, setDirectionsResponse] = useState(null)
   const [distance, setDistance] = useState('')
@@ -51,7 +60,7 @@ function Home() {
   const [ODMarkers, setODMarkers] = useState([]);
   const [path, setPath] = useState(null);
 
-  const originRef = useRef()
+  const originRef = React.useRef(null);
   const destinationRef = useRef()
 
   async function calculateRoute(travelMode) {
@@ -80,7 +89,6 @@ function Home() {
         //RENDER MARKERS
         if (data.poi != null) {
           var poiArr = data.poi;
-          console.log(poiArr);
           renderMarkers(poiArr, map);
         }
     })
@@ -119,37 +127,65 @@ function Home() {
   }
 
   //current location
+  // async function handleCurrentLocation() {
+  //   // eslint-disable-next-line no-undef
+  //   let infoWindow = new google.maps.InfoWindow();
+  //   if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           const pos = {
+  //             lat: position.coords.latitude,
+  //             lng: position.coords.longitude,
+  //           };
+  
+  //            // eslint-disable-next-line no-undef
+  //           infoWindow.setPosition(pos);
+  //            // eslint-disable-next-line no-undef
+  //           infoWindow.setContent("Location found.");
+  //            // eslint-disable-next-line no-undef
+  //           infoWindow.open(map);
+  //           map.setCenter(pos);
+  //           setCurrentLocation(pos);
+  //         },
+  //         () => {
+  //            // eslint-disable-next-line no-undef
+  //           handleLocationError(true, infoWindow, map.getCenter());
+  //         },
+  //       );
+  //     } else {
+  //       // Browser doesn't support Geolocation
+  //        // eslint-disable-next-line no-undef
+  //       handleLocationError(false, infoWindow, map.getCenter());
+  //     }
+  // };
   async function handleCurrentLocation() {
     // eslint-disable-next-line no-undef
     let infoWindow = new google.maps.InfoWindow();
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
   
-             // eslint-disable-next-line no-undef
-            infoWindow.setPosition(pos);
-             // eslint-disable-next-line no-undef
-            infoWindow.setContent("Location found.");
-             // eslint-disable-next-line no-undef
-            infoWindow.open(map);
-            map.setCenter(pos);
-            setCurrentLocation(pos);
-          },
-          () => {
-             // eslint-disable-next-line no-undef
-            handleLocationError(true, infoWindow, map.getCenter());
-          },
-        );
-      } else {
-        // Browser doesn't support Geolocation
-         // eslint-disable-next-line no-undef
-        handleLocationError(false, infoWindow, map.getCenter());
-      }
-  };
+          // eslint-disable-next-line no-undef
+          infoWindow.setPosition(pos);
+          // eslint-disable-next-line no-undef
+          infoWindow.setContent("Location found.");
+          // eslint-disable-next-line no-undef
+          infoWindow.open(map);
+          map.setCenter(pos);
+          setCurrentLocation(pos);
+        },
+        (error) => {
+          handleLocationError(true, infoWindow, map.getCenter(), error);
+        }
+      );
+    } else {
+      handleLocationError(false, infoWindow, map.getCenter());
+    }
+  }
 
   useEffect(() => {
     if (isLoaded) {
@@ -431,7 +467,27 @@ async function renderMarkers(poiArr, map) {
    };
  
    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
-   const handleOpenFeedbackModal = () => {
+   const handleOpenFeedbackModal = async () => {
+      //send route taken first
+      const requestData = {
+        email: localStorage.getItem("userEmail"),
+        route_id: directionsResponse.route[0].properties.ROUTE_ID,
+        travel_mode: directionsResponse.route[0].properties.TRAVEL_MOD,
+        user_validated: false,
+        point_validation: []
+      };
+      
+      await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/routehistory/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+
      setIsDestinationModalOpen(false);
      setIsFeedbackModalOpen(true);
    };
@@ -596,7 +652,7 @@ async function renderMarkers(poiArr, map) {
           />
         </>
         )}
-        {!isValidating && <Drawer handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
+        {!isValidating && <Drawer autocompleteService={autocompleteService} handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
         handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>}
       </GoogleMap>
   ) : <></>
