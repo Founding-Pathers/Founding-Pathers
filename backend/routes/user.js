@@ -23,14 +23,21 @@ router.route("/users").get(async function (req, res) {
   }
 });
 
-// Retrieve user by id (Admin)
-router.route("/user/:id").get(function (req, res) {
+// Retrieve user by email (Admin)
+router.route("/user").get(async function (req, res) {
   let db_connect = dbo.getDbLogging();
-  let myquery = { _id: ObjectId(req.params.id) };
-  db_connect.collection("userAccount").findOne(myquery, function (err, result) {
-    if (err) throw err;
-    res.json(result);
-  });
+  let myquery = { email: req.body.email };
+  try {
+    const result = await db_connect.collection("userAccount").findOne(myquery);
+    // if there is no user with the email
+    if (result === {}) {
+      res.status(404).json({ error: "User not found" });
+    } else {
+      res.json(result);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
 });
 
 // Update a user account details by email
@@ -39,9 +46,9 @@ router.route("/user/update").put(function (req, response) {
   let myquery = { email: req.body.email };
   let newvalues = {
     $set: {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      updated_at: new Date(),
+      first_name: req.body.firstName,
+      last_name: req.body.lastName,
+      updatedAt: new Date(),
     },
   };
   db_connect
@@ -51,6 +58,17 @@ router.route("/user/update").put(function (req, response) {
       console.log("1 user updated");
       response.json(res);
     });
+});
+
+// Delete a user account details by email
+router.route("/user/delete").delete(function (req, response) {
+  let db_connect = dbo.getDbLogging();
+  let myquery = { email: req.body.email };
+  db_connect.collection("userAccount").deleteOne(myquery, function (err, obj) {
+    if (err) throw err;
+    console.log("1 user deleted");
+    response.json(obj);
+  });
 });
 
 module.exports = router;
