@@ -33,29 +33,15 @@ router.route("/user/:id").get(function (req, res) {
   });
 });
 
-// Create a new user
-router.route("/user/add").post(function (req, response) {
+// Update a user account details by email
+router.route("/user/update").put(function (req, response) {
   let db_connect = dbo.getDbLogging();
-  let myobj = {
-    id: req.body.id,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-  };
-  db_connect.collection("userAccount").insertOne(myobj, function (err, res) {
-    if (err) throw err;
-    response.json(res);
-  });
-});
-
-// Update a user account details by id
-router.route("/user/update/:id").post(function (req, response) {
-  let db_connect = dbo.getDbLogging();
-  let myquery = { _id: ObjectId(req.params.id) };
+  let myquery = { email: req.body.email };
   let newvalues = {
     $set: {
-      wheelchair_friendly: req.body.wheelchair_friendly,
-      is_elderly: req.body.is_elderly,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      updated_at: new Date(),
     },
   };
   db_connect
