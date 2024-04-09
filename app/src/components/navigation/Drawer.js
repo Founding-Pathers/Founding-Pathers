@@ -74,7 +74,7 @@ const Puller = styled('div')(({ theme }) => ({
   transform: 'translateX(-50%)',
 }));
 
-function SwipeableEdgeDrawer({window, autocompleteService, handleOpenDestinationModal, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
+function SwipeableEdgeDrawer({window, autocompleteService, pastSearches, handleOpenDestinationModal, originRef, destinationRef, calculateRoute, duration, distance, selectedPaths, setSelectedPaths, selectedPOIs, setSelectedPOIs, isRouting, handleRemoveMarks, handleEndRouting, handleSelecting}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [navigating, setNavigating] = useState(false);
@@ -282,6 +282,17 @@ function SwipeableEdgeDrawer({window, autocompleteService, handleOpenDestination
     handleEndRouting();
   }
 
+  function processPastSearches(pastSearches) {
+    console.log(pastSearches);
+    var dictionary = {}
+    for (var search of pastSearches) {
+      var arr = search.split(',');
+      dictionary[arr[0]] = arr[1];
+    }
+    console.log(dictionary)
+    return dictionary;
+  }
+
   return (
     <Root>
       <CssBaseline />
@@ -459,9 +470,11 @@ function SwipeableEdgeDrawer({window, autocompleteService, handleOpenDestination
           }}>
             <Typography variant="filterh1" sx={{ px: 3.5, pb: 1, display: "block" }}>Past Searches</Typography>
             <LocationList dictionary={{'Current Location': ''}} icon={NearMeIcon} onItemClick={handleListClick}></LocationList>
-            {/* Replace dictionary with actual values */}
-            <LocationList dictionary={{'City Hall MRT': '9km away', 'Clarke Quay': '17.4km away', 'Fort Canning': '9.9km away'}} icon={HistoryIcon}
-            onItemClick={handleListClick}></LocationList>
+            {pastSearches && pastSearches.length > 0 ? (
+              <LocationList dictionary={processPastSearches(pastSearches)} icon={HistoryIcon} onItemClick={handleListClick} />
+            ) : (
+              <p style={{marginRight: 3}}>You have no past searches.</p>
+            )}
           </Box>
 
           <Box sx={{
