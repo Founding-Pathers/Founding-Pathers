@@ -62,7 +62,7 @@ const Login = () => {
       return { ...prev, ...value };
     });
   }
-  
+
 async function onSubmit(e){
   e.preventDefault();
   const validationErrors = {};
@@ -94,10 +94,42 @@ async function onSubmit(e){
     return response.json();
   })
   // receive parsed JSON response of the above .then(response)
-  .then((data) => {
+  .then(async (data) => {
     console.log(data);
     if (data.message === "Success") {
       localStorage.setItem("userEmail",data.email);
+
+      const userEmail = localStorage.getItem("userEmail");
+      //get user by email
+      try {
+        const response = await fetch(`${protocol}://${namePort}/user?email=${encodeURIComponent(userEmail)}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
+      
+        if (!response.ok) {
+          throw new Error('HTTP error, status = ' + response.status);
+        }
+      
+        const responseData = await response.text();
+        const data = responseData ? JSON.parse(responseData) : null; 
+      
+        if (!data) {
+          throw new Error('User not found');
+        }
+      
+        console.log('User:', data);
+        localStorage.setItem('fn', data.first_name);
+        localStorage.setItem('ln', data.last_name);
+
+      } catch (error) {
+        // Handle error
+        console.error('Error fetching user:', error);
+      }
+
       navigate("/home");
     }
     else if (data.message === "User does not exist"){

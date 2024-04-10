@@ -63,6 +63,86 @@ function Home() {
   const originRef = React.useRef(null);
   const destinationRef = useRef()
 
+  //PAST SEARCHES
+  const [pastSearches, setPastSearches] = useState([]);
+  useEffect(() => {
+    async function fetchPastSearches() {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/pastsearches`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: localStorage.getItem("userEmail")
+          })
+        });
+  
+        if (!response.ok) {
+          throw new Error('Server Error');
+        }
+  
+        const pastSearchesData = await response.json();
+
+        const sortedDestinations = pastSearchesData.sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          return dateB - dateA;
+        });
+
+        const uniqueDestinations = new Set();
+
+        const uniqueDestinationsArray = sortedDestinations.filter(search => {
+          if (!uniqueDestinations.has(search.destination)) {
+            uniqueDestinations.add(search.destination);
+            return true;
+          }
+          return false;
+        }).map(search => search.destination);
+
+        const topDestinations = uniqueDestinationsArray.slice(0, 5);
+
+        setPastSearches(topDestinations);
+      } catch (error) {
+        console.error('Failed to retrieve past searches:', error);
+      }
+    }
+  
+    fetchPastSearches();
+  }, []);
+
+  const [dlat, setdlat] = useState(null);
+  const [dlong, setdlong] = useState(null);
+  async function addPastSearch(email, lat, lon, destination) {
+    console.log(email, lat, lon, destination);
+    console.log("adding past search");
+    try {
+      const response = await fetch(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_NAMEPORT}/pastsearches/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          lat: lat,
+          lon: lon,
+          destination: destination
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Server Error');
+      }
+      
+      const pastSearch = await response.json();
+      console.log(pastSearch);
+      // return pastSearch;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async function calculateRoute(travelMode) {
     if (originRef.current.value === '' || destinationRef.current.value === ''){
         return
@@ -127,65 +207,65 @@ function Home() {
   }
 
   //current location
-  // async function handleCurrentLocation() {
-  //   // eslint-disable-next-line no-undef
-  //   let infoWindow = new google.maps.InfoWindow();
-  //   if (navigator.geolocation) {
-  //       navigator.geolocation.getCurrentPosition(
-  //         (position) => {
-  //           const pos = {
-  //             lat: position.coords.latitude,
-  //             lng: position.coords.longitude,
-  //           };
-  
-  //            // eslint-disable-next-line no-undef
-  //           infoWindow.setPosition(pos);
-  //            // eslint-disable-next-line no-undef
-  //           infoWindow.setContent("Location found.");
-  //            // eslint-disable-next-line no-undef
-  //           infoWindow.open(map);
-  //           map.setCenter(pos);
-  //           setCurrentLocation(pos);
-  //         },
-  //         () => {
-  //            // eslint-disable-next-line no-undef
-  //           handleLocationError(true, infoWindow, map.getCenter());
-  //         },
-  //       );
-  //     } else {
-  //       // Browser doesn't support Geolocation
-  //        // eslint-disable-next-line no-undef
-  //       handleLocationError(false, infoWindow, map.getCenter());
-  //     }
-  // };
   async function handleCurrentLocation() {
     // eslint-disable-next-line no-undef
     let infoWindow = new google.maps.InfoWindow();
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
   
-          // eslint-disable-next-line no-undef
-          infoWindow.setPosition(pos);
-          // eslint-disable-next-line no-undef
-          infoWindow.setContent("Location found.");
-          // eslint-disable-next-line no-undef
-          infoWindow.open(map);
-          map.setCenter(pos);
-          setCurrentLocation(pos);
-        },
-        (error) => {
-          handleLocationError(true, infoWindow, map.getCenter(), error);
-        }
-      );
-    } else {
-      handleLocationError(false, infoWindow, map.getCenter());
-    }
-  }
+             // eslint-disable-next-line no-undef
+            infoWindow.setPosition(pos);
+             // eslint-disable-next-line no-undef
+            infoWindow.setContent("Location found.");
+             // eslint-disable-next-line no-undef
+            infoWindow.open(map);
+            map.setCenter(pos);
+            setCurrentLocation(pos);
+          },
+          () => {
+             // eslint-disable-next-line no-undef
+            handleLocationError(true, infoWindow, map.getCenter());
+          },
+        );
+      } else {
+        // Browser doesn't support Geolocation
+         // eslint-disable-next-line no-undef
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
+  };
+  // async function handleCurrentLocation() {
+  //   // eslint-disable-next-line no-undef
+  //   let infoWindow = new google.maps.InfoWindow();
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.watchPosition(
+  //       (position) => {
+  //         const pos = {
+  //           lat: position.coords.latitude,
+  //           lng: position.coords.longitude,
+  //         };
+  
+  //         // eslint-disable-next-line no-undef
+  //         infoWindow.setPosition(pos);
+  //         // eslint-disable-next-line no-undef
+  //         infoWindow.setContent("Location found.");
+  //         // eslint-disable-next-line no-undef
+  //         infoWindow.open(map);
+  //         map.setCenter(pos);
+  //         setCurrentLocation(pos);
+  //       },
+  //       (error) => {
+  //         handleLocationError(true, infoWindow, map.getCenter(), error);
+  //       }
+  //     );
+  //   } else {
+  //     handleLocationError(false, infoWindow, map.getCenter());
+  //   }
+  // }
 
   useEffect(() => {
     if (isLoaded) {
@@ -272,10 +352,12 @@ function Home() {
         origin_lat = o_results.lat;
         origin_long = o_results.long;
       }
-      
+    
       const d_results = await codeAddress(destinationRef.current.value);
       dest_lat = d_results.lat;
       dest_long = d_results.long;
+      setdlat(dest_lat);
+      setdlong(dest_long);
   
       console.log(origin_lat, origin_long);
       console.log(dest_lat, dest_long);
@@ -462,8 +544,9 @@ async function renderMarkers(poiArr, map) {
    //VALIDATION
    const [isValidating, setIsValidating] = useState(false);
    const [isDestinationModalOpen, setIsDestinationModalOpen] = useState(false);
-   const handleOpenDestinationModal = () => {
+   const handleOpenDestinationModal = async () => {
      setIsDestinationModalOpen(true);
+     await addPastSearch(localStorage.getItem("userEmail"), dlat, dlong, destinationRef.current.value);
    };
  
    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
@@ -595,7 +678,7 @@ async function renderMarkers(poiArr, map) {
         onUnmount={onUnmount}
       >
         { /* Child components, such as markers, info windows, etc. */ }
-        <LeftDrawer></LeftDrawer>
+        <LeftDrawer firstname={localStorage.getItem("fn")} lastname={localStorage.getItem("ln")} email={localStorage.getItem("userEmail")}></LeftDrawer>
         <div>
           <button onClick={handleOpenDestinationModal}>Destination</button>
           <Modal isOpen={isDestinationModalOpen}
@@ -652,7 +735,7 @@ async function renderMarkers(poiArr, map) {
           />
         </>
         )}
-        {!isValidating && <Drawer autocompleteService={autocompleteService} handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
+        {!isValidating && <Drawer pastSearches={pastSearches} autocompleteService={autocompleteService} handleOpenDestinationModal={handleOpenDestinationModal} duration={duration} distance={distance} selectedPaths={selectedPaths} setSelectedPaths={setSelectedPaths} selectedPOIs={selectedPOIs.join(", ")} setSelectedPOIs={setSelectedPOIs} 
         handleSelecting={handleSelecting} isRouting={isRouting} handleRemoveMarks={handleRemoveMarks} handleEndRouting={handleEndRouting} originRef={originRef} destinationRef={destinationRef} calculateRoute={calculateRoute}></Drawer>}
       </GoogleMap>
   ) : <></>

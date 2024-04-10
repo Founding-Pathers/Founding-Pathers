@@ -16,7 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 const namePort = process.env.REACT_APP_NAMEPORT;
 const protocol = process.env.REACT_APP_PROTOCOL;
 
-export default function TemporaryDrawer() {
+export default function TemporaryDrawer({firstname, lastname, email}) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -74,8 +74,8 @@ export default function TemporaryDrawer() {
     <Box sx={{ width: 210, height: '100%' }} role="presentation" onClick={toggleDrawer(false)}>
       <Box sx={{ height: 200, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         <img src={UserIcon} onClick={goProfile} style={{width:"50px", height: "50px", padding: 2}}/>
-        <Typography variant="profile" sx={{pt: 1}}>John Doe</Typography>
-        <Typography variant="cardDesc" sx={{pt: 1}}>johndoe@gmail.com</Typography>
+        <Typography variant="profile" sx={{pt: 1}}>{firstname} {lastname}</Typography>
+        <Typography variant="cardDesc" sx={{pt: 1}}>{email}</Typography>
       </Box>
       <Divider />
       <Box sx={{backgroundColor: "#FF9900", height: "100%", display: "flex", alignItems: "flex-start"}}>
