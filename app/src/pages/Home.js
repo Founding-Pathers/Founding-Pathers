@@ -83,17 +83,17 @@ function Home() {
         }
   
         const pastSearchesData = await response.json();
-        console.log(pastSearchesData);
-  
-        // Process pastSearchesData into topDestinations
-        const destinationCounts = {};
-        pastSearchesData.forEach(search => {
-          const { destination } = search;
-          destinationCounts[destination] = (destinationCounts[destination] || 0) + 1;
+
+        const sortedDestinations = pastSearchesData.sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          return dateB - dateA;
         });
-        const sortedDestinations = Object.keys(destinationCounts).sort((a, b) => destinationCounts[b] - destinationCounts[a]);
-        const topDestinations = sortedDestinations.slice(0, 5);
-  
+
+        const createdDatesArray = sortedDestinations.map(search => search.destination);
+
+        const topDestinations = createdDatesArray.slice(0, 5);
+
         // Set the state with the processed topDestinations
         setPastSearches(topDestinations);
       } catch (error) {
