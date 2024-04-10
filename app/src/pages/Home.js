@@ -90,11 +90,18 @@ function Home() {
           return dateB - dateA;
         });
 
-        const createdDatesArray = sortedDestinations.map(search => search.destination);
+        const uniqueDestinations = new Set();
 
-        const topDestinations = createdDatesArray.slice(0, 5);
+        const uniqueDestinationsArray = sortedDestinations.filter(search => {
+          if (!uniqueDestinations.has(search.destination)) {
+            uniqueDestinations.add(search.destination);
+            return true;
+          }
+          return false;
+        }).map(search => search.destination);
 
-        // Set the state with the processed topDestinations
+        const topDestinations = uniqueDestinationsArray.slice(0, 5);
+
         setPastSearches(topDestinations);
       } catch (error) {
         console.error('Failed to retrieve past searches:', error);
