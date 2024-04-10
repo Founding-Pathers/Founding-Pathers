@@ -26,11 +26,11 @@ router.route("/users").get(async function (req, res) {
 // Retrieve user by email (Admin)
 router.route("/user").get(async function (req, res) {
   let db_connect = dbo.getDbLogging();
-  let myquery = { email: req.body.email };
+  let myquery = { email: req.query.email };
   try {
     const result = await db_connect.collection("userAccount").findOne(myquery);
     // if there is no user with the email
-    if (result === {}) {
+    if (!result) {
       res.status(404).json({ error: "User not found" });
     } else {
       res.json(result);

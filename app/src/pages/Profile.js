@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReusableButton from '../components/ui/Button.js';
 import TextField from '../components/ui/TextField.js';
 import { Typography } from '@mui/material';
@@ -43,14 +43,55 @@ const CenterItem = styled('div')({
 });
 
 const Profile = () => {
+  const namePort = process.env.REACT_APP_NAMEPORT;
+  const protocol = process.env.REACT_APP_PROTOCOL;
+
   const [editMode, setEditMode] = useState(false);
   const [showUpdateAlert, setShowUpdateAlert] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleEditClick = () => {
+  useEffect(() => {
+    setFirstName(localStorage.getItem("fn") || '');
+    setLastName(localStorage.getItem("ln") || '');
+    setEmail(localStorage.getItem("userEmail") || '');
+    // setPassword(localStorage.getItem("password") || '');
+  }, []);
+
+  const handleEditClick = async () => {
     setEditMode(!editMode);
     if (editMode) {
-      // Add logic here for checking successful update before showing alert
-      setShowUpdateAlert(true);
+      try {
+        const requestBody = {
+          email: localStorage.getItem("email"),
+          firstName: firstName,
+          lastName: lastName,
+        };
+    
+        const response = await fetch(`${protocol}://${namePort}/user/update`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+    
+        if (!response.ok) {
+          throw new Error("Failed to update user");
+        }
+  
+        console.log("User updated successfully");
+        localStorage.setItem("fn", firstName);
+        localStorage.setItem("ln", lastName)
+        localStorage.setItem("userEmail", email);
+        setShowUpdateAlert(true); // Show update alert
+        
+      } catch (error) {
+        // Handle errors
+        console.error("Error updating user:", error);
+      }
     }
   };
 
@@ -85,7 +126,7 @@ const Profile = () => {
         />
 
         <CenterItem>
-            <Typography variant="h2">John Doe</Typography>
+            <Typography variant="h2">{localStorage.getItem('fn')} {localStorage.getItem('ln')}</Typography>
         </CenterItem>
 
         <CenterItem>
@@ -111,6 +152,8 @@ const Profile = () => {
             id="outlined-required"
             label=""
             disabled={!editMode}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           />
         </VerticalSpace>
 
@@ -121,6 +164,8 @@ const Profile = () => {
             id="outlined-required"
             label=""
             disabled={!editMode}
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
           />
         </VerticalSpace>
 
@@ -131,6 +176,8 @@ const Profile = () => {
             id="outlined-required"
             label=""
             disabled={!editMode}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </VerticalSpace>
 
@@ -142,6 +189,8 @@ const Profile = () => {
             type="password"
             label=""
             disabled={!editMode}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </VerticalSpace>
 

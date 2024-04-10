@@ -671,7 +671,7 @@ async function renderMarkers(poiArr, map) {
         onUnmount={onUnmount}
       >
         { /* Child components, such as markers, info windows, etc. */ }
-        <LeftDrawer></LeftDrawer>
+        <LeftDrawer firstname={localStorage.getItem("fn")} lastname={localStorage.getItem("ln")} email={localStorage.getItem("userEmail")}></LeftDrawer>
         <div>
           <button onClick={handleOpenDestinationModal}>Destination</button>
           <Modal isOpen={isDestinationModalOpen}
