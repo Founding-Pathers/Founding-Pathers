@@ -5,6 +5,8 @@ import Drawer from '../components/navigation/Drawer';
 import Card from '../components/navigation/RouteCard';
 import Modal from '../components/ui/RouteModal';
 import Button from '../components/ui/Button';
+import Alert from '../components/ui/Alert';
+import ErrorImg from '../assets/Error.png';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import locationIcon from '../assets/Location.png';
 import FNB from '../assets/filters/fnb-circle.svg';
@@ -41,6 +43,9 @@ function Home() {
       setAutocompleteService(new window.google.maps.places.AutocompleteService());
     }
   }, [isLoaded]);
+
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [map, setMap] = React.useState(/** @type google.maps.Map*/ null)
   const [directionsResponse, setDirectionsResponse] = useState(null)
@@ -79,7 +84,11 @@ function Home() {
         });
   
         if (!response.ok) {
-          throw new Error('Server Error');
+          // throw new Error('Server Error');
+          console.error('Server error');
+          setShowErrorAlert(true);
+          setErrorMessage('An error occurred. Please try again later.');
+          return;
         }
   
         const pastSearchesData = await response.json();
@@ -104,6 +113,8 @@ function Home() {
 
         setPastSearches(topDestinations);
       } catch (error) {
+        setShowErrorAlert(true);
+        setErrorMessage('App is currently unable to fetch past searches.');
         console.error('Failed to retrieve past searches:', error);
       }
     }
@@ -131,7 +142,11 @@ function Home() {
       });
   
       if (!response.ok) {
-        throw new Error('Server Error');
+        console.error('Server error');
+        setShowErrorAlert(true);
+        setErrorMessage('An error occurred. Please try again later.');
+        return;
+        // throw new Error('Server Error');
       }
       
       const pastSearch = await response.json();
@@ -139,7 +154,8 @@ function Home() {
       // return pastSearch;
     } catch (error) {
       console.error(error);
-      throw error;
+      return;
+      // throw error;
     }
   }
 
@@ -238,34 +254,6 @@ function Home() {
         handleLocationError(false, infoWindow, map.getCenter());
       }
   };
-  // async function handleCurrentLocation() {
-  //   // eslint-disable-next-line no-undef
-  //   let infoWindow = new google.maps.InfoWindow();
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.watchPosition(
-  //       (position) => {
-  //         const pos = {
-  //           lat: position.coords.latitude,
-  //           lng: position.coords.longitude,
-  //         };
-  
-  //         // eslint-disable-next-line no-undef
-  //         infoWindow.setPosition(pos);
-  //         // eslint-disable-next-line no-undef
-  //         infoWindow.setContent("Location found.");
-  //         // eslint-disable-next-line no-undef
-  //         infoWindow.open(map);
-  //         map.setCenter(pos);
-  //         setCurrentLocation(pos);
-  //       },
-  //       (error) => {
-  //         handleLocationError(true, infoWindow, map.getCenter(), error);
-  //       }
-  //     );
-  //   } else {
-  //     handleLocationError(false, infoWindow, map.getCenter());
-  //   }
-  // }
 
   useEffect(() => {
     if (isLoaded) {
@@ -437,7 +425,10 @@ function Home() {
       return data;
   
     } catch (error) {
-      throw new Error('Error fetching route: ' + error);
+      // throw new Error('Error fetching route: ' + error);
+      console.error('Error fetching route: ' + error);
+      setShowErrorAlert(true);
+      setErrorMessage('Unable to fetch directions. Please try again later.');
     }
   }
 
@@ -723,6 +714,10 @@ async function renderMarkers(poiArr, map) {
         {isValidating && vadMarkers.length > 0 && <div style={{right: 30, bottom: 30, position: 'fixed'}}>
         <Button text="NEXT" onClick={endValidation} fontSize="18px" color="primary" height="40px" width="auto" textTransform="capitalize" icon={<ArrowForwardIcon style={{ color: 'white' }} />} ></Button>
         </div>}
+
+        {showErrorAlert && (
+                    <Alert alertMessage={errorMessage} src={ErrorImg} onClick={() => setShowErrorAlert(false)} />
+                )}
         {directionsResponse && (
         <>
           <Card

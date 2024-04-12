@@ -3,10 +3,12 @@ import ReusableButton from '../components/ui/Button';
 import TextField from '../components/ui/TextField';
 import Checkbox from '../components/ui/Checkbox';
 import Link from '../components/ui/Link';
+import Alert from '../components/ui/Alert';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from "react-router";
 import Logo from '../assets/Logo.png';
+import ErrorImg from '../assets/Error.png';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const StyledContainer = styled('div')({
@@ -44,6 +46,9 @@ const CenterItem = styled('div')({
 const Login = () => {
   const namePort = process.env.REACT_APP_NAMEPORT;
   const protocol = process.env.REACT_APP_PROTOCOL;
+
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   const [errors, setErrors] = useState({
     email: '',
@@ -63,86 +68,84 @@ const Login = () => {
     });
   }
 
-async function onSubmit(e){
-  e.preventDefault();
-  const validationErrors = {};
+  async function onSubmit(e) {
+    e.preventDefault();
+    const validationErrors = {};
 
-  if (!form.email) {
-    validationErrors.email = "Email is required";
-  }
-  if (!form.password) {
-    validationErrors.password = "Password is required";
-  }
-
-  setErrors(validationErrors); // Set the errors state
-  
-  if (Object.keys(validationErrors).length === 0) {
-
-    await fetch(`${protocol}://${namePort}/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type" : "application/json",
-    },
-    credentials: 'include',
-    body: JSON.stringify(form),
-  })
-  // handles response object from backend
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("HTTP error, status = " + response.status);
+    if (!form.email) {
+        validationErrors.email = "Email is required";
     }
-    return response.json();
-  })
-  // receive parsed JSON response of the above .then(response)
-  .then(async (data) => {
-    console.log(data);
-    if (data.message === "Success") {
-      localStorage.setItem("userEmail",data.email);
+    if (!form.password) {
+        validationErrors.password = "Password is required";
+    }
 
-      const userEmail = localStorage.getItem("userEmail");
-      //get user by email
-      try {
-        const response = await fetch(`${protocol}://${namePort}/user?email=${encodeURIComponent(userEmail)}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include'
-        });
-      
-        if (!response.ok) {
-          throw new Error('HTTP error, status = ' + response.status);
+    setErrors(validationErrors); // Set the errors state
+
+    if (Object.keys(validationErrors).length === 0) {
+        try {
+            const response = await fetch(`${protocol}://${namePort}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify(form),
+            });
+
+            if (!response.ok) {
+                throw new Error("HTTP error, status = " + response.status);
+            }
+
+            const data = await response.json();
+
+            if (data.message === "Success") {
+                localStorage.setItem("userEmail", data.email);
+
+                const userEmail = localStorage.getItem("userEmail");
+
+                try {
+                    const response = await fetch(`${protocol}://${namePort}/user?email=${encodeURIComponent(userEmail)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('HTTP error, status = ' + response.status);
+                    }
+
+                    const responseData = await response.text();
+                    const userData = responseData ? JSON.parse(responseData) : null;
+
+                    if (!userData) {
+                        throw new Error('User not found');
+                    }
+
+                    localStorage.setItem('fn', userData.first_name);
+                    localStorage.setItem('ln', userData.last_name);
+
+                } catch (error) {
+                    setShowErrorAlert(true);
+                    setErrorMessage('An error occurred while fetching user data. Please try again later.');
+                    return;
+                }
+
+                navigate("/home");
+            } else if (data.message === "User does not exist") {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    userNotExist: "User does not exist / Invalid credentials"
+                }));
+            } else {
+                navigate("/");
+            }
+        } catch (error) {
+            setShowErrorAlert(true);
+            setErrorMessage('An error occurred during login. Please try again later.');
         }
-      
-        const responseData = await response.text();
-        const data = responseData ? JSON.parse(responseData) : null; 
-      
-        if (!data) {
-          throw new Error('User not found');
-        }
-      
-        console.log('User:', data);
-        localStorage.setItem('fn', data.first_name);
-        localStorage.setItem('ln', data.last_name);
-
-      } catch (error) {
-        // Handle error
-        console.error('Error fetching user:', error);
-      }
-
-      navigate("/home");
     }
-    else if (data.message === "User does not exist"){
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        userNotExist: "User does not exist / Invalid credentials"
-      }));
-    }
-    else {
-      navigate("/");
-    }
-    })
-  }
 }
 
   return (
@@ -168,6 +171,10 @@ async function onSubmit(e){
         </VerticalSpace>
 
         {errors.userNotExist && <span className="error" style={{ color: 'red', backgroundColor: 'pink', borderRadius: '10px', padding: '5px', marginBottom: '10px', textAlign: 'center', display: 'block' }}>{errors.userNotExist}</span>}
+
+        {showErrorAlert && (
+                    <Alert alertMessage={errorMessage} src={ErrorImg} onClick={() => setShowErrorAlert(false)} />
+                )}
 
         <VerticalSpace>
         <Checkbox labelPlacement="end" label="Keep me signed in" value="isLoggedIn" />
